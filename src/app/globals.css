@@ -1,26 +1,326 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-teal-400: #2dd4bf;
+  --color-teal-500: #14b8a6;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: #050f0a;
+  --foreground: #f0fdf4;
+  --nav-height: 68px;
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Page-level scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.15); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(16,185,129,0.3); }
+
+/* ============================================
+   SCREEN SHOWCASE — scrollable, no frame
+   ============================================ */
+.screen-showcase {
+  width: 260px;
+  max-height: 598px;
+  border-radius: 26px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #030f08;
+  flex-shrink: 0;
+  position: relative;
+  /* Scrollbar for inner scroll */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16,185,129,0.25) transparent;
+}
+
+.screen-showcase::-webkit-scrollbar { width: 3px; }
+.screen-showcase::-webkit-scrollbar-track { background: transparent; }
+.screen-showcase::-webkit-scrollbar-thumb {
+  background: rgba(16,185,129,0.25);
+  border-radius: 2px;
+}
+
+.screen-showcase-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ============================================
+   SECTION TEXT — opacity fade only, no slide
+   ============================================ */
+.section-text {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.section-text.visible {
+  opacity: 1;
+}
+
+/* ============================================
+   GRADIENT TEXT
+   ============================================ */
+.gradient-text {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 45%, #5eead4 75%, #10b981 100%);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 300% center; }
+}
+
+/* ============================================
+   HERO BADGE
+   ============================================ */
+.hero-badge {
+  background: rgba(16,185,129,0.08);
+  border: 1px solid rgba(16,185,129,0.2);
+  backdrop-filter: blur(12px);
+}
+
+/* ============================================
+   STORE BUTTONS
+   ============================================ */
+.store-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 28px;
+  border-radius: 14px;
+  background: rgba(16,185,129,0.08);
+  border: none;
+  color: white;
+  text-decoration: none;
+  transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.store-button:hover {
+  background: rgba(16,185,129,0.15);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(16,185,129,0.12);
+}
+
+/* ============================================
+   FEATURE BADGE
+   ============================================ */
+.feature-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ============================================
+   SCROLL INDICATOR
+   ============================================ */
+.scroll-indicator {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(-50%); }
+  50%       { transform: translateY(-8px) translateX(-50%); }
+}
+
+/* ============================================
+   PAGE SECTIONS
+   ============================================ */
+.page-section {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.nav-glass {
+  background: rgba(5,15,10,0.88);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+.nav-link {
+  color: rgba(240,253,244,0.35);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: rgba(240,253,244,0.85);
+}
+
+.nav-link.active {
+  color: #34d399;
+}
+
+/* ============================================
+   FORM INPUTS — more visible
+   ============================================ */
+.form-input {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(16,185,129,0.06);
+  border: 1px solid rgba(16,185,129,0.12);
+  border-left: 3px solid rgba(16,185,129,0.25);
+  border-radius: 0 10px 10px 0;
+  color: #f0fdf4;
+  font-size: 15px;
+  transition: all 0.25s;
+  outline: none;
+  font-family: inherit;
+}
+
+.form-input:focus {
+  border-left-color: #10b981;
+  background: rgba(16,185,129,0.1);
+  border-color: rgba(16,185,129,0.2);
+  border-left-color: #10b981;
+}
+
+.form-input::placeholder {
+  color: rgba(134,239,172,0.25);
+}
+
+/* ============================================
+   DOT INDICATORS
+   ============================================ */
+.dot-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(16,185,129,0.2);
+  transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+
+.dot-indicator.active {
+  background: #10b981;
+  width: 22px;
+  border-radius: 3px;
+}
+
+/* ============================================
+   LEGAL PAGES
+   ============================================ */
+.legal-content h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 0.875rem;
+  color: #f0fdf4;
+  letter-spacing: -0.02em;
+}
+
+.legal-content h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.625rem;
+  color: #bbf7d0;
+}
+
+.legal-content p {
+  margin-bottom: 1rem;
+  line-height: 1.8;
+  color: rgba(134,239,172,0.5);
+}
+
+.legal-content ul,
+.legal-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  color: rgba(134,239,172,0.5);
+}
+
+.legal-content li {
+  margin-bottom: 0.4rem;
+  line-height: 1.8;
+}
+
+.legal-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 13px;
+}
+
+.legal-content th,
+.legal-content td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(16,185,129,0.08);
+  color: rgba(134,239,172,0.5);
+}
+
+.legal-content th {
+  color: #bbf7d0;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(16,185,129,0.04);
+}
+
+.legal-content strong {
+  color: #d1fae5;
+  font-weight: 600;
+}
+
+.legal-content a {
+  color: #34d399;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(52,211,153,0.25);
+  transition: border-color 0.2s;
+}
+
+.legal-content a:hover {
+  border-color: #34d399;
 }

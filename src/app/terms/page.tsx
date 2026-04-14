@@ -514,7 +514,7 @@ export default function TermsPage() {
           <p>
             You may terminate your account at any time by deleting your account
             through the App&rsquo;s settings or by contacting us at{" "}
-            <a href="mailto:support@pantrypilot.app">support@pantrypilot.app</a>
+            <a href="mailto:support@pantrypilot.net">support@pantrypilot.net</a>
             .
           </p>
 
@@ -623,8 +623,8 @@ export default function TermsPage() {
           <ul>
             <li>
               <strong>Email:</strong>{" "}
-              <a href="mailto:support@pantrypilot.app">
-                support@pantrypilot.app
+              <a href="mailto:support@pantrypilot.net">
+                support@pantrypilot.net
               </a>
             </li>
             <li>
@@ -634,11 +634,11 @@ export default function TermsPage() {
             <li>
               <strong>Website:</strong>{" "}
               <a
-                href="https://pantrypilot.app"
+                href="https://pantrypilot.net"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                https://pantrypilot.app
+                https://pantrypilot.net
               </a>
             </li>
           </ul>

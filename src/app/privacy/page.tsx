@@ -675,10 +675,10 @@ export default function PrivacyPolicyPage() {
             <li>
               Request a copy of your data by contacting us at{" "}
               <a
-                href="mailto:privacy@pantrypilot.app"
+                href="mailto:privacy@pantrypilot.net"
                 className="text-emerald-400 hover:text-emerald-300"
               >
-                privacy@pantrypilot.app
+                privacy@pantrypilot.net
               </a>
               .
             </li>
@@ -706,10 +706,10 @@ export default function PrivacyPolicyPage() {
             <li>
               Contacting us at{" "}
               <a
-                href="mailto:privacy@pantrypilot.app"
+                href="mailto:privacy@pantrypilot.net"
                 className="text-emerald-400 hover:text-emerald-300"
               >
-                privacy@pantrypilot.app
+                privacy@pantrypilot.net
               </a>
               .
             </li>
@@ -801,10 +801,10 @@ export default function PrivacyPolicyPage() {
           <p className="mb-8 leading-relaxed">
             To exercise CCPA rights, contact us at{" "}
             <a
-              href="mailto:privacy@pantrypilot.app"
+              href="mailto:privacy@pantrypilot.net"
               className="text-emerald-400 hover:text-emerald-300"
             >
-              privacy@pantrypilot.app
+              privacy@pantrypilot.net
             </a>
             .
           </p>
@@ -855,10 +855,10 @@ export default function PrivacyPolicyPage() {
           <p className="">
             To exercise GDPR rights, contact us at{" "}
             <a
-              href="mailto:privacy@pantrypilot.app"
+              href="mailto:privacy@pantrypilot.net"
               className="text-emerald-400 hover:text-emerald-300"
             >
-              privacy@pantrypilot.app
+              privacy@pantrypilot.net
             </a>
             .
           </p>
@@ -876,10 +876,10 @@ export default function PrivacyPolicyPage() {
             will delete that data promptly. If you believe a child under 13 has
             provided us with personal information, please contact us at{" "}
             <a
-              href="mailto:privacy@pantrypilot.app"
+              href="mailto:privacy@pantrypilot.net"
               className="text-emerald-400 hover:text-emerald-300"
             >
-              privacy@pantrypilot.app
+              privacy@pantrypilot.net
             </a>
             .
           </p>
@@ -950,19 +950,19 @@ export default function PrivacyPolicyPage() {
             <li>
               Privacy Email:{" "}
               <a
-                href="mailto:privacy@pantrypilot.app"
+                href="mailto:privacy@pantrypilot.net"
                 className="text-emerald-400 hover:text-emerald-300"
               >
-                privacy@pantrypilot.app
+                privacy@pantrypilot.net
               </a>
             </li>
             <li>
               General Support:{" "}
               <a
-                href="mailto:support@pantrypilot.app"
+                href="mailto:support@pantrypilot.net"
                 className="text-emerald-400 hover:text-emerald-300"
               >
-                support@pantrypilot.app
+                support@pantrypilot.net
               </a>
             </li>
             <li>In-App: Settings &rarr; Support &rarr; Send Feedback</li>

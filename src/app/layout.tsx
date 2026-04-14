@@ -23,6 +23,10 @@ export const metadata: Metadata = {
     "AI recipes",
     "nutrition tracker",
   ],
+  icons: {
+    icon: "/logoIcon2.png",
+    apple: "/logoIcon2.png",
+  },
 };
 
 export default function RootLayout({

@@ -202,7 +202,7 @@ export default function ScrollSections() {
       const scrollProgress =
         scrollY / (document.documentElement.scrollHeight - windowHeight);
       const ty = Math.sin(scrollProgress * Math.PI) * 10;
-      showcaseRef.current.style.transform = `translateY(calc(-50% + ${ty}px))`;
+      showcaseRef.current.style.transform = `translateY(${ty}px)`;
     }
   }, []);
 
@@ -217,25 +217,74 @@ export default function ScrollSections() {
   return (
     <div id="features">
       <div ref={containerRef} className="relative">
-        {/* Fixed showcase — desktop, right side */}
+        {/* Fixed Desktop Layout (Both Text and Showcase) */}
         <div
-          ref={showcaseRef}
-          className="hidden lg:block fixed right-[8%] top-1/2 z-20"
+          className="hidden lg:flex fixed inset-0 items-center justify-between max-w-7xl mx-auto px-8 md:px-16 z-20 pointer-events-none"
           style={{
-            transform: "translateY(-50%)",
-            willChange: "transform",
             opacity: showcaseVisible ? 1 : 0,
             transition: "opacity 0.4s ease",
-            pointerEvents: showcaseVisible ? "auto" : "none",
           }}
         >
-          <ScreenShowcase
-            images={currentSection.images}
-            activeIndex={activeSubImage}
-          />
+          {/* Left: Text */}
+          <div className="w-[46%] pr-8 pointer-events-auto">
+            {/* The key ensures React instantly swaps the content when the active section changes */}
+            <div key={currentSection.id} className="fade-in-section">
+              <span className={`feature-badge ${currentSection.badgeColor} mb-5`}>
+                {currentSection.badge}
+              </span>
+              <h2 className="text-[clamp(1.85rem,4vw,3rem)] font-bold mt-4 mb-3 leading-[1.08] tracking-[-0.03em]">
+                {currentSection.title}
+              </h2>
+              <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-emerald-400/45 mb-5">
+                {currentSection.subtitle}
+              </p>
+              <p className="text-emerald-200/40 text-[15px] leading-[1.85] mb-10 max-w-[420px]">
+                {currentSection.description}
+              </p>
+              <ul className="space-y-3">
+                {currentSection.features.map((feature, fi) => (
+                  <li
+                    key={fi}
+                    className="pl-4 py-0.5"
+                    style={{ borderLeft: `3px solid ${currentSection.accentColor}28` }}
+                  >
+                    <span className="text-[13px] font-semibold text-emerald-100/55 leading-relaxed">
+                      {feature}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Right: Showcase */}
+          <div className="w-[46%] flex flex-row items-center justify-center flex-shrink-0 pointer-events-auto gap-8">
+            {/* Vertical Image Indicator */}
+            {currentSection.images.length > 1 && (
+              <div className="flex flex-col gap-2.5 items-center justify-center">
+                {currentSection.images.map((_, i) => (
+                  <div
+                    key={i}
+                    className={`w-1.5 rounded-full transition-all duration-400 ${
+                      i === activeSubImage 
+                        ? "h-8 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]" 
+                        : "h-1.5 bg-emerald-800/50"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+
+            <div ref={showcaseRef} style={{ willChange: "transform" }}>
+              <ScreenShowcase
+                images={currentSection.images}
+                activeIndex={activeSubImage}
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Scrollable feature sections */}
+        {/* Scrollable Spacer Sections */}
         {sections.map((section, index) => (
           <div
             key={section.id}
@@ -245,34 +294,47 @@ export default function ScrollSections() {
               minHeight: `${Math.max(100, section.images.length * 75)}vh`,
             }}
           >
-            {/* Two-column layout: text left, showcase right (showcase is fixed, right col is spacer) */}
-            <div className="flex items-start justify-between max-w-7xl mx-auto px-8 md:px-16 w-full py-24">
-              {/* Text column — left half */}
-              <div className="w-full lg:w-[46%] lg:pr-8">
-                {/* Mobile screenshot — inline */}
-                <div className="lg:hidden flex justify-center mb-12">
-                  <ScreenShowcase
-                    images={section.images}
-                    activeIndex={activeSection === index ? activeSubImage : 0}
-                  />
-                </div>
+            {/* Mobile Layout (Visible only on small screens) */}
+            <div className="lg:hidden flex flex-col items-center max-w-7xl mx-auto px-8 md:px-16 w-full py-24">
+              <div className="flex flex-row items-center justify-center gap-6 mb-12">
+                {/* Vertical Image Indicator */}
+                {section.images.length > 1 && (
+                  <div className="flex flex-col gap-2.5 items-center justify-center">
+                    {section.images.map((_, i) => {
+                      const isActive = activeSection === index ? i === activeSubImage : i === 0;
+                      return (
+                        <div
+                          key={i}
+                          className={`w-1.5 rounded-full transition-all duration-400 ${
+                            isActive 
+                              ? "h-8 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]" 
+                              : "h-1.5 bg-emerald-800/50"
+                          }`}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
 
+                <ScreenShowcase
+                  images={section.images}
+                  activeIndex={activeSection === index ? activeSubImage : 0}
+                />
+              </div>
+
+              <div className="w-full">
                 <span className={`feature-badge ${section.badgeColor} mb-5`}>
                   {section.badge}
                 </span>
-
                 <h2 className="text-[clamp(1.85rem,4vw,3rem)] font-bold mt-4 mb-3 leading-[1.08] tracking-[-0.03em]">
                   {section.title}
                 </h2>
-
                 <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-emerald-400/45 mb-5">
                   {section.subtitle}
                 </p>
-
                 <p className="text-emerald-200/40 text-[15px] leading-[1.85] mb-10 max-w-[420px]">
                   {section.description}
                 </p>
-
                 <ul className="space-y-3">
                   {section.features.map((feature, fi) => (
                     <li
@@ -287,12 +349,20 @@ export default function ScrollSections() {
                   ))}
                 </ul>
               </div>
-
-              {/* Right spacer — reserved for the fixed showcase on desktop */}
-              <div className="hidden lg:block lg:w-[46%] flex-shrink-0" />
             </div>
           </div>
         ))}
+        
+        {/* CSS for simple fade in */}
+        <style dangerouslySetInnerHTML={{__html: `
+          @keyframes sectionFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          .fade-in-section {
+            animation: sectionFadeIn 0.4s ease-out forwards;
+          }
+        `}} />
       </div>
     </div>
   );

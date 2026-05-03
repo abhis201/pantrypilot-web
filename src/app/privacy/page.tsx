@@ -9,6 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPolicyPage() {
+  const privacyEmail = process.env.NEXT_PUBLIC_PRIVACY_EMAIL || "admin.pantrypilot@gmail.com";
+  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "admin.pantrypilot@gmail.com";
+
   return (
     <>
       <Navbar />
@@ -675,10 +678,10 @@ export default function PrivacyPolicyPage() {
             <li>
               Request a copy of your data by contacting us at{" "}
               <a
-                href="mailto:privacy@pantrypilot.net"
+                href={`mailto:${privacyEmail}`}
                 className="text-emerald-400 hover:text-emerald-300"
               >
-                privacy@pantrypilot.net
+                {privacyEmail}
               </a>
               .
             </li>
@@ -706,10 +709,10 @@ export default function PrivacyPolicyPage() {
             <li>
               Contacting us at{" "}
               <a
-                href="mailto:privacy@pantrypilot.net"
+                href={`mailto:${privacyEmail}`}
                 className="text-emerald-400 hover:text-emerald-300"
               >
-                privacy@pantrypilot.net
+                {privacyEmail}
               </a>
               .
             </li>
@@ -801,10 +804,10 @@ export default function PrivacyPolicyPage() {
           <p className="mb-8 leading-relaxed">
             To exercise CCPA rights, contact us at{" "}
             <a
-              href="mailto:privacy@pantrypilot.net"
+              href={`mailto:${privacyEmail}`}
               className="text-emerald-400 hover:text-emerald-300"
             >
-              privacy@pantrypilot.net
+              {privacyEmail}
             </a>
             .
           </p>
@@ -855,10 +858,10 @@ export default function PrivacyPolicyPage() {
           <p className="">
             To exercise GDPR rights, contact us at{" "}
             <a
-              href="mailto:privacy@pantrypilot.net"
+              href={`mailto:${privacyEmail}`}
               className="text-emerald-400 hover:text-emerald-300"
             >
-              privacy@pantrypilot.net
+              {privacyEmail}
             </a>
             .
           </p>
@@ -876,10 +879,10 @@ export default function PrivacyPolicyPage() {
             will delete that data promptly. If you believe a child under 13 has
             provided us with personal information, please contact us at{" "}
             <a
-              href="mailto:privacy@pantrypilot.net"
+              href={`mailto:${privacyEmail}`}
               className="text-emerald-400 hover:text-emerald-300"
             >
-              privacy@pantrypilot.net
+              {privacyEmail}
             </a>
             .
           </p>
@@ -950,19 +953,19 @@ export default function PrivacyPolicyPage() {
             <li>
               Privacy Email:{" "}
               <a
-                href="mailto:privacy@pantrypilot.net"
+                href={`mailto:${privacyEmail}`}
                 className="text-emerald-400 hover:text-emerald-300"
               >
-                privacy@pantrypilot.net
+                {privacyEmail}
               </a>
             </li>
             <li>
               General Support:{" "}
               <a
-                href="mailto:support@pantrypilot.net"
+                href={`mailto:${supportEmail}`}
                 className="text-emerald-400 hover:text-emerald-300"
               >
-                support@pantrypilot.net
+                {supportEmail}
               </a>
             </li>
             <li>In-App: Settings &rarr; Support &rarr; Send Feedback</li>

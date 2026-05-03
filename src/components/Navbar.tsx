@@ -9,15 +9,39 @@ export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [inFeatures, setInFeatures] = useState(false);
+  const [inWaitlist, setInWaitlist] = useState(false);
   const [atTop, setAtTop] = useState(true);
 
   const handleScroll = useCallback(() => {
     setAtTop(window.scrollY < 50);
     if (pathname !== "/") return;
+    
+    let currentHash = window.location.hash;
+
     const el = document.getElementById("features");
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    setInFeatures(rect.top <= 80 && rect.bottom > 80);
+    let featuresActive = false;
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      featuresActive = rect.top <= 100 && rect.bottom > 100;
+      setInFeatures(featuresActive);
+    }
+    
+    const waitlistEl = document.getElementById("waitlist");
+    let waitlistActive = false;
+    if (waitlistEl) {
+      const wRect = waitlistEl.getBoundingClientRect();
+      waitlistActive = wRect.top <= window.innerHeight / 2 && wRect.bottom > 100;
+      setInWaitlist(waitlistActive);
+    }
+
+    // Update URL natively on scroll so it stays perfectly synced
+    if (waitlistActive && currentHash !== "#waitlist") {
+      window.history.replaceState(null, "", "/#waitlist");
+    } else if (featuresActive && !waitlistActive && currentHash !== "#features") {
+      window.history.replaceState(null, "", "/#features");
+    } else if (!featuresActive && !waitlistActive && window.scrollY < 100 && currentHash !== "") {
+      window.history.replaceState(null, "", "/");
+    }
   }, [pathname]);
 
   useEffect(() => {
@@ -26,15 +50,39 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  const scrollToTop = () => {
+  const scrollToTop = (e?: React.MouseEvent) => {
     if (pathname === "/") {
+      if (e) e.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
-      window.history.replaceState(null, "", "/");
+      document.documentElement.scrollTo({ top: 0, behavior: "smooth" }); // Fallback
+      
+      // Delay history state update to ensure it doesn't cancel the smooth scroll in some browsers
+      if (window.location.hash) {
+        setTimeout(() => {
+          window.history.replaceState(null, "", "/");
+        }, 800);
+      }
     }
+  };
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (pathname === "/" && href.startsWith("/#")) {
+      e.preventDefault();
+      const targetId = href.substring(2);
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+        setTimeout(() => {
+          window.history.pushState(null, "", href);
+        }, 800);
+      }
+    }
+    setMenuOpen(false);
   };
 
   const navItems = [
     { href: "/#features", label: "Features", activeOn: () => pathname === "/" && inFeatures },
+    { href: "/#waitlist", label: "Waitlist", activeOn: () => pathname === "/" && inWaitlist },
     { href: "/terms",     label: "Terms",    activeOn: () => pathname === "/terms"   },
     { href: "/privacy",   label: "Privacy",  activeOn: () => pathname === "/privacy" },
     { href: "/contact",   label: "Contact",  activeOn: () => pathname === "/contact" },
@@ -63,6 +111,7 @@ export default function Navbar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={(e) => handleNavClick(e, item.href)}
               className={`nav-link ${item.activeOn() ? "active" : ""}`}
             >
               {item.label}
@@ -114,13 +163,13 @@ export default function Navbar() {
               href={item.href}
               className={`nav-link py-3 pl-4 block ${item.activeOn() ? "active" : ""}`}
               style={{ borderLeft: "3px solid rgba(16,185,129,0.12)" }}
-              onClick={() => setMenuOpen(false)}
+              onClick={(e) => handleNavClick(e, item.href)}
             >
               {item.label}
             </Link>
           ))}
           <button
-            onClick={() => { scrollToTop(); setMenuOpen(false); }}
+            onClick={(e) => { scrollToTop(e); setMenuOpen(false); }}
             className="mt-2 text-left py-3 pl-4 nav-link text-emerald-400"
             style={{ borderLeft: "3px solid rgba(16,185,129,0.25)" }}
           >

@@ -9,6 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default function TermsPage() {
+  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "admin.pantrypilot@gmail.com";
+
   return (
     <>
       <Navbar />
@@ -514,7 +516,7 @@ export default function TermsPage() {
           <p>
             You may terminate your account at any time by deleting your account
             through the App&rsquo;s settings or by contacting us at{" "}
-            <a href="mailto:support@pantrypilot.net">support@pantrypilot.net</a>
+            <a href={`mailto:${supportEmail}`}>{supportEmail}</a>
             .
           </p>
 
@@ -623,8 +625,8 @@ export default function TermsPage() {
           <ul>
             <li>
               <strong>Email:</strong>{" "}
-              <a href="mailto:support@pantrypilot.net">
-                support@pantrypilot.net
+              <a href={`mailto:${supportEmail}`}>
+                {supportEmail}
               </a>
             </li>
             <li>

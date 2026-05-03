@@ -1,6 +1,9 @@
 "use client";
 
 export default function Hero() {
+  const iosLink = process.env.NEXT_PUBLIC_IOS_DOWNLOAD_LINK || "https://apps.apple.com";
+  const androidLink = process.env.NEXT_PUBLIC_ANDROID_DOWNLOAD_LINK || "https://play.google.com";
+
   return (
     <section
       id="hero"
@@ -53,7 +56,7 @@ export default function Hero() {
           className="flex flex-col sm:flex-row items-center justify-center gap-3"
         >
           <a
-            href="https://apps.apple.com"
+            href={iosLink}
             target="_blank"
             rel="noopener noreferrer"
             className="store-button"
@@ -68,7 +71,7 @@ export default function Hero() {
           </a>
 
           <a
-            href="https://play.google.com"
+            href={androidLink}
             target="_blank"
             rel="noopener noreferrer"
             className="store-button"

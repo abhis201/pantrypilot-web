@@ -260,20 +260,18 @@ export default function ScrollSections() {
           {/* Right: Showcase */}
           <div className="w-[46%] flex flex-row items-center justify-center flex-shrink-0 pointer-events-auto gap-8">
             {/* Vertical Image Indicator */}
-            {currentSection.images.length > 1 && (
-              <div className="flex flex-col gap-2.5 items-center justify-center">
-                {currentSection.images.map((_, i) => (
-                  <div
-                    key={i}
-                    className={`w-1.5 rounded-full transition-all duration-400 ${
-                      i === activeSubImage 
-                        ? "h-8 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]" 
-                        : "h-1.5 bg-emerald-800/50"
-                    }`}
-                  />
-                ))}
-              </div>
-            )}
+            <div className="flex flex-col gap-2.5 items-center justify-center">
+              {currentSection.images.map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-1.5 rounded-full transition-all duration-400 ${
+                    i === activeSubImage 
+                      ? "h-8 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]" 
+                      : "h-1.5 bg-emerald-800/50"
+                  }`}
+                />
+              ))}
+            </div>
 
             <div ref={showcaseRef} style={{ willChange: "transform" }}>
               <ScreenShowcase
@@ -298,23 +296,21 @@ export default function ScrollSections() {
             <div className="lg:hidden flex flex-col items-center max-w-7xl mx-auto px-8 md:px-16 w-full py-24">
               <div className="flex flex-row items-center justify-center gap-6 mb-12">
                 {/* Vertical Image Indicator */}
-                {section.images.length > 1 && (
-                  <div className="flex flex-col gap-2.5 items-center justify-center">
-                    {section.images.map((_, i) => {
-                      const isActive = activeSection === index ? i === activeSubImage : i === 0;
-                      return (
-                        <div
-                          key={i}
-                          className={`w-1.5 rounded-full transition-all duration-400 ${
-                            isActive 
-                              ? "h-8 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]" 
-                              : "h-1.5 bg-emerald-800/50"
-                          }`}
-                        />
-                      );
-                    })}
-                  </div>
-                )}
+                <div className="flex flex-col gap-2.5 items-center justify-center">
+                  {section.images.map((_, i) => {
+                    const isActive = activeSection === index ? i === activeSubImage : i === 0;
+                    return (
+                      <div
+                        key={i}
+                        className={`w-1.5 rounded-full transition-all duration-400 ${
+                          isActive 
+                            ? "h-8 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]" 
+                            : "h-1.5 bg-emerald-800/50"
+                        }`}
+                      />
+                    );
+                  })}
+                </div>
 
                 <ScreenShowcase
                   images={section.images}

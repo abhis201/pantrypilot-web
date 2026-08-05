@@ -222,11 +222,12 @@ export default function ScrollSections() {
           className="hidden lg:flex fixed inset-0 items-center justify-between max-w-7xl mx-auto px-8 md:px-16 z-20 pointer-events-none"
           style={{
             opacity: showcaseVisible ? 1 : 0,
+            pointerEvents: showcaseVisible ? "auto" : "none",
             transition: "opacity 0.4s ease",
           }}
         >
           {/* Left: Text */}
-          <div className="w-[46%] pr-8 pointer-events-auto">
+          <div className="w-[46%] pr-8">
             {/* The key ensures React instantly swaps the content when the active section changes */}
             <div key={currentSection.id} className="fade-in-section">
               <span className={`feature-badge ${currentSection.badgeColor} mb-5`}>
@@ -258,7 +259,7 @@ export default function ScrollSections() {
           </div>
 
           {/* Right: Showcase */}
-          <div className="w-[46%] flex flex-row items-center justify-center flex-shrink-0 pointer-events-auto gap-8">
+          <div className="w-[46%] flex flex-row items-center justify-center flex-shrink-0 gap-8">
             {/* Vertical Image Indicator */}
             <div className="flex flex-col gap-2.5 items-center justify-center">
               {currentSection.images.map((_, i) => (

@@ -10,7 +10,7 @@ import Wordmark from "./Wordmark";
 
 /** Homepage landmarks, in document order. Drives both the active nav link and
  *  the hash the URL is kept in sync with. */
-const SECTION_IDS = ["hero", "features", "about", "pricing", "faq", "waitlist"];
+const SECTION_IDS = ["hero", "features", "about", "pricing", "faq", "newsletter"];
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -140,12 +140,20 @@ export default function Navbar() {
    * Product navigation only. Terms, Privacy and Contact live in the footer —
    * they're destinations people look for when they need them, and spending
    * top-level nav slots on them competes with the one action that matters.
+   *
+   * Newsletter is the exception, and earns its slot by being an action rather
+   * than a document: it's the one thing on the page for a visitor who isn't
+   * going to install anything today, and it sits at the very bottom where
+   * nobody scrolls to find it. Listed last so nav order still reads down the
+   * page in document order, and left as a plain link rather than a second
+   * button — Download is the one thing styled to be clicked here.
    */
   const navItems = [
-    { href: "/#features", label: "Features", active: onHome && activeId === "features" },
-    { href: "/#about",    label: "About",    active: onHome && activeId === "about"    },
-    { href: "/#pricing",  label: "Pricing",  active: onHome && activeId === "pricing"  },
-    { href: "/#faq",      label: "FAQ",      active: onHome && activeId === "faq"      },
+    { href: "/#features",   label: "Features",   active: onHome && activeId === "features"   },
+    { href: "/#about",      label: "About",      active: onHome && activeId === "about"      },
+    { href: "/#pricing",    label: "Pricing",    active: onHome && activeId === "pricing"    },
+    { href: "/#faq",        label: "FAQ",        active: onHome && activeId === "faq"        },
+    { href: "/#newsletter", label: "Newsletter", active: onHome && activeId === "newsletter" },
   ];
 
   return (
@@ -164,8 +172,12 @@ export default function Navbar() {
           <Wordmark className="text-[19px]" />
         </Link>
 
-        {/* Desktop links */}
-        <div className="hidden items-center gap-8 md:flex">
+        {/* Desktop links. gap-6 until lg, gap-8 above it: a fifth link
+            (Newsletter, the longest label of the set) pushed the row past the
+            available width at the md breakpoint itself, where the bar is
+            narrowest but still showing every link. The wider rhythm returns
+            as soon as there's room for it. */}
+        <div className="hidden items-center gap-6 md:flex lg:gap-8">
           {navItems.map((item) => (
             <Link
               key={item.href}

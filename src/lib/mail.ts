@@ -18,7 +18,7 @@ const CONFIGURED_FROM = (process.env.RESEND_FROM_EMAIL || SANDBOX_FROM).trim();
 /** True while still on the sandbox domain — used to warn once in server logs. */
 export const USING_SANDBOX_SENDER = CONFIGURED_FROM.includes(SANDBOX_FROM);
 
-/** Internal inbox that waitlist signups and contact-form messages land in. */
+/** Internal inbox that newsletter signups and contact-form messages land in. */
 export const ADMIN_INBOX =
   process.env.ADMIN_NOTIFICATION_EMAIL || "admin.pantrypilot@gmail.com";
 

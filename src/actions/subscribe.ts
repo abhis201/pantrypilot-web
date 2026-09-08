@@ -12,7 +12,7 @@ export type SubscribeState = {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export async function subscribeToWaitlist(
+export async function subscribeToNewsletter(
   _prevState: SubscribeState,
   formData: FormData
 ): Promise<SubscribeState> {
@@ -33,7 +33,7 @@ export async function subscribeToWaitlist(
 
     if (error) {
       if (/already exists|already subscribed/i.test(error.message)) {
-        return { status: "success", message: "You're already on the list!" };
+        return { status: "success", message: "You're already subscribed!" };
       }
       console.error("Resend contacts.create error:", error);
       return { status: "error", message: "Failed to subscribe. Please try again." };
@@ -43,13 +43,13 @@ export async function subscribeToWaitlist(
     // serverless functions can be frozen right after the action returns.
     try {
       await resend.emails.send({
-        from: fromAddress("KhanPaan Waitlist"),
+        from: fromAddress("KhanPaan Newsletter"),
         to: ADMIN_INBOX,
-        subject: "🎉 New Waitlist Subscriber!",
+        subject: "🎉 New Newsletter Subscriber!",
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2>New Waitlist Signup!</h2>
-            <p>A new user has joined the KhanPaan waitlist.</p>
+            <h2>New Newsletter Signup!</h2>
+            <p>A new user has subscribed to the KhanPaan newsletter.</p>
             <p><strong>Email:</strong> ${email}</p>
           </div>
         `,
@@ -58,9 +58,9 @@ export async function subscribeToWaitlist(
       console.error("Admin notification email failed:", err);
     }
 
-    return { status: "success", message: "You're on the list! Keep an eye on your inbox." };
+    return { status: "success", message: "You're subscribed! Keep an eye on your inbox." };
   } catch (error) {
-    console.error("subscribeToWaitlist error:", error);
+    console.error("subscribeToNewsletter error:", error);
     return { status: "error", message: "Something went wrong. Please try again." };
   }
 }

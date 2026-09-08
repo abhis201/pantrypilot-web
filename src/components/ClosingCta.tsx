@@ -9,16 +9,22 @@ import Spot from "./Spot";
 import { AppleMark, PlayMark } from "./Icons";
 
 /**
- * The page's close: the download one more time, and the waitlist for anyone who
- * can't take it. Both paths matter — while Android is on a testing track the
- * waitlist is the only route for half the visitors, so it gets equal billing
- * here rather than being buried under the stores.
+ * The page's close: the download one more time, and the newsletter for anyone
+ * not ready to install yet. Both paths matter, so they get equal billing here
+ * rather than the second being buried under the stores.
+ *
+ * This section used to be the Android waitlist and is now the newsletter —
+ * there is no waitlist left to join, and the sign-up it already had was the
+ * same one email field either way. It keeps its full section slot rather than
+ * being folded into the download block, because #newsletter is a navbar
+ * destination now: clicking Newsletter has to land on something that reads as
+ * the newsletter rather than on the bottom of a download CTA.
  *
  * This is the last thing on the page, so it's the loudest field on it.
  */
 export default function ClosingCta() {
   return (
-    <section id="waitlist" className="section viewport-lock">
+    <section id="newsletter" className="section viewport-lock">
       <div className="shell max-w-[1100px]">
         <div className="panel relative overflow-hidden px-6 py-10 text-center sm:px-12 md:py-12">
           {/* Decoration, and kept honest about it: pointer-events-none,
@@ -92,21 +98,24 @@ export default function ClosingCta() {
             </div>
           </Reveal>
 
-          {/* ---- Waitlist ------------------------------------------------ */}
+          {/* ---- Newsletter ---------------------------------------------- */}
           <Reveal delay={240}>
             <div
               className="mx-auto mt-8 max-w-lg pt-6"
               style={{ borderTop: "1px solid var(--line-strong)" }}
             >
-              <h3 className="display display--xs">
-                {ANDROID_AVAILABLE
-                  ? "Or hear it first."
-                  : "On Android? Get in line."}
-              </h3>
+              {/* Names the newsletter outright rather than leaning on the
+                  download above it ("Or hear it first", as the waitlist copy
+                  did): this is a nav destination, so it has to make sense to
+                  someone who arrived by clicking Newsletter and is reading
+                  this block first, not last. No ANDROID_AVAILABLE branch
+                  either — the two variants that used to live here were both
+                  about when the Play Store listing lands, which is what the
+                  waitlist was for. */}
+              <h3 className="display display--xs">Get the newsletter.</h3>
               <p className="mx-auto mt-3 max-w-md text-[14px] leading-[1.55] text-ink-muted">
-                {ANDROID_AVAILABLE
-                  ? "One email when there's a release worth reading about. Nothing else."
-                  : "We'll email you the moment the Play Store listing goes live. Nothing else."}
+                One email when there&apos;s a release worth reading about.
+                Nothing else.
               </p>
               <div className="mt-5">
                 <NewsletterForm />

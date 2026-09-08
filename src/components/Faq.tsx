@@ -12,7 +12,7 @@ const FAQS: QA[] = [
     q: "Is KhanPaan available on Android?",
     a: ANDROID_AVAILABLE
       ? "Yes — KhanPaan is available on both the App Store and Google Play."
-      : "Not yet. KhanPaan is live on the App Store for iOS 13 and later, and the Android build is in development. Join the waitlist and we'll email you the moment it's on Google Play.",
+      : "Not yet. KhanPaan is live on the App Store for iOS 13 and later, and the Android build is in development. Subscribe to the newsletter and we'll email you the moment it's on Google Play.",
   },
   {
     q: "What does it cost?",

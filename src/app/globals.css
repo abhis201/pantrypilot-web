@@ -102,6 +102,26 @@
 
   /* --- Layout -------------------------------------------------------------- */
   --nav-height: 76px;
+  /* The height of one snapped section, and the single most load-bearing
+     number in the scroll-snap system. html carries
+     `scroll-padding-top: var(--nav-height)`, which makes the SNAPPORT
+     (the region a snap target is aligned against) 100dvh MINUS the navbar,
+     not 100dvh. A section built to a full 100dvh is therefore taller than
+     the snapport it snaps into, and per CSS Scroll Snap every scroll
+     position where an oversized target merely COVERS the snapport counts
+     as a valid resting place — so each section had a --nav-height-tall band
+     of legal positions instead of one exact position. Scrolling down you
+     entered that band at the section's top edge and it looked correct;
+     scrolling up you entered it from the other end, resting with the
+     section's bottom flush to the fold and its heading pushed
+     --nav-height too high, tucked under the navbar. Sizing sections to
+     exactly the snapport collapses that band back to one position, so a
+     section lands identically whichever direction it was approached from.
+     Sections keep min-height rather than height (real content is never
+     truncated to force the fit), so a section whose content genuinely
+     outgrows one screen becomes oversized again and scrolls freely — the
+     intended escape hatch, not a regression. */
+  --section-h: calc(100dvh - var(--nav-height));
   --gutter: 1.5rem;
 
   --focus-ring: 0 0 0 2px var(--ground), 0 0 0 4px var(--brand);
@@ -164,8 +184,8 @@
        Hero specifically so the navbar's Download button always lands
        exactly at y = 0 rather than being pulled toward Features by
        mandatory snapping, and the footer so scrolling past the last
-       snapped section (#waitlist) has somewhere to land instead of
-       springing back to #waitlist's own top.
+       snapped section (#newsletter) has somewhere to land instead of
+       springing back to #newsletter's own top.
        This property sits on `html`, so it's technically present on every
        route, not just the home page — but per the CSS Scroll Snap spec a
        snap container with no snap targets on an axis simply doesn't snap
@@ -1039,7 +1059,7 @@ textarea.form-input { border-radius: var(--r-lg); }
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  min-height: 100dvh;
+  min-height: var(--section-h);
   padding: clamp(2.5rem, 9vh, 4.5rem) clamp(1.25rem, 5vw, 3rem) clamp(1.5rem, 5vh, 3rem);
   background: var(--surface-soft);
 }
@@ -1153,9 +1173,9 @@ textarea.form-input { border-radius: var(--r-lg); }
    programmatic scroll away from the very top toward Features, the next
    nearest snap point, instead of landing exactly on the hero as asked.
    #footer is included so scrolling past the last snapped section
-   (#waitlist) has a further point to commit to; without it, mandatory
-   snapping had nothing below #waitlist to snap to and sprang back to
-   #waitlist's own top the moment a scroll tried to continue past it,
+   (#newsletter) has a further point to commit to; without it, mandatory
+   snapping had nothing below #newsletter to snap to and sprang back to
+   #newsletter's own top the moment a scroll tried to continue past it,
    trapping the closing Newsletter band and hiding the footer beneath it.
 
    This whole list -- and `scroll-snap-type: y mandatory` on html below --
@@ -1180,20 +1200,67 @@ textarea.form-input { border-radius: var(--r-lg); }
 #about,
 #pricing,
 #faq,
-#waitlist,
+#newsletter,
 #footer {
   scroll-snap-align: start;
 }
 
+/* Hero is the one section that can't be --section-h tall: it starts at
+   document y = 0 with the navbar painted over its own top, so it needs a
+   full 100dvh box or the section below it peeks in under the fold at rest.
+   That leaves it --nav-height taller than the snapport and therefore
+   oversized — the exact condition that gave every other section a band of
+   legal resting positions rather than one (see --section-h). Fixed on the
+   other side of the same equation: a negative scroll-margin-top shrinks
+   hero's SNAP AREA (not its box, which is untouched) by the navbar's
+   height, down to snapport size, so scrolling back up from Features has
+   only y = 0 to land on and can't come to rest with the headline half
+   under the navbar. This also puts the snap position exactly where the
+   navbar's Download button already scrollTo(0)s to, so the two agree
+   instead of the snap correcting the click. */
+#hero {
+  scroll-margin-top: calc(-1 * var(--nav-height));
+}
+
+/* The four sections that reach their viewport height through the shared
+   .viewport-lock utility (About, Pricing, FAQ, the closing newsletter band)
+   rather than through a rule of their own. They need the same snapport-tall
+   lock as the sections above, but .viewport-lock is worn by the contact
+   page's <main> too — which sits at document top under the navbar and does
+   want a full 100dvh — so the reduction is scoped by id here instead of
+   applied to the utility. Ids outrank the class, so this wins wherever both
+   apply, and the <900px release below matches viewport-lock's own. */
+#about,
+#pricing,
+#faq,
+#newsletter {
+  min-height: var(--section-h);
+}
+
+@media (max-width: 900px) {
+  #about,
+  #pricing,
+  #faq,
+  #newsletter {
+    min-height: 0;
+  }
+}
+
 /* Utility for the four pre-existing sections (About, Pricing, FAQ, the
-   closing Newsletter/waitlist band) that were built to their own content
+   closing Newsletter band) that were built to their own content
    height, not a viewport. `min-height` rather than `height` + clip: a
    viewport-tall SECTION with more content than fits one viewport should
    grow past it and keep scrolling to the next snap point, not truncate
    real copy (the FAQ's seven answers, Pricing's two full feature lists) —
    same reasoning AddItems already used for its own min-height lock. Content
    is vertically centred so short content still reads as "one screen,
-   centred" rather than pinned to the top with empty space below. */
+   centred" rather than pinned to the top with empty space below.
+   Stays a full 100dvh here rather than the --section-h the snapped
+   sections use: this utility is also worn by the contact page's <main>,
+   which — like the hero — starts at document y = 0 with the navbar painted
+   over its own top and needs the whole viewport to fill the screen. The
+   home page's four snapped users of it are cut down to snapport height by
+   the id rule in the snap block above; see --section-h for why. */
 .viewport-lock {
   display: flex;
   min-height: 100dvh;
@@ -1229,7 +1296,7 @@ textarea.form-input { border-radius: var(--r-lg); }
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: 100dvh;
+  min-height: var(--section-h);
   padding: clamp(2rem, 8vh, 4rem) 0;
   /* Matches MealPlan's own background exactly (--ground) per the user's
      explicit swatch. */
@@ -1374,7 +1441,7 @@ textarea.form-input { border-radius: var(--r-lg); }
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  min-height: 100dvh;
+  min-height: var(--section-h);
   padding: clamp(2.5rem, 9vh, 4.5rem) clamp(1.25rem, 5vw, 3rem) clamp(1.5rem, 5vh, 3rem);
   background: var(--ground);
 }
@@ -1468,7 +1535,7 @@ textarea.form-input { border-radius: var(--r-lg); }
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  min-height: 100dvh;
+  min-height: var(--section-h);
   padding: clamp(2.5rem, 9vh, 4.5rem) clamp(1.25rem, 5vw, 3rem) clamp(1.5rem, 5vh, 3rem);
   background: var(--surface-soft);
 }

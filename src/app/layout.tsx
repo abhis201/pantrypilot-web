@@ -597,6 +597,75 @@ a dedicated --dur-fan-reveal (900ms) on fan-rise, well past the site's
 shared --dur-reveal (640ms) that every other .rise/[data-reveal]
 element still uses -- rather than slowing reveals sitewide.
 
+SNAP FIX, scrolling upward: the user reported that sections landed
+correctly scrolling down the page but wrongly scrolling back up -- a
+section's heading would come to rest partly under the navbar until they
+nudged the wheel to fit it. Not a direction-specific bug in the browser
+but a sizing mismatch that only showed from one side. html carries
+scroll-padding-top: var(--nav-height), which makes the SNAPPORT -- the
+region a snap target aligns against -- 100dvh minus the navbar, while
+every full-viewport section was built to a whole 100dvh. Per CSS Scroll
+Snap, a target LARGER than the snapport has no single snap position:
+every scroll offset where it merely covers the snapport is valid, so
+each section carried a --nav-height-tall band of legal resting places.
+Entering that band from above (scrolling down) meant arriving at the
+section's top edge, which looked right; entering it from below meant
+coming to rest with the section's bottom flush to the fold and its top,
+heading included, --nav-height too high and behind the navbar.
+Fixed by sizing sections to the snapport instead of the viewport: a new
+--section-h token (calc(100dvh - var(--nav-height))) replaces the bare
+100dvh on .features-section, .add-items, .meal-plan and
+.recipe-row-section, collapsing each band to the one exact position both
+directions now share. The four sections that get their height from the
+shared .viewport-lock utility (About, Pricing, FAQ, newsletter) take the
+same lock through an id-scoped rule rather than through the utility
+itself -- .viewport-lock is worn by the contact page's <main> too, which
+sits at document top under the navbar and does want a full 100dvh -- with
+a matching <900px release so mobile still drops to normal flow. Hero is
+the one section that keeps its 100dvh box for the same top-of-document
+reason, and is squared with the snapport from the other side instead: a
+negative scroll-margin-top shrinks its snap AREA (not its box) by the
+navbar's height, leaving y = 0 as its only landing point, which is also
+exactly where the navbar's Download button already scrollTo(0)s. Sections
+remain min-height, not height, so content that genuinely outgrows one
+screen still becomes oversized and scrolls freely -- the escape hatch the
+original min-height choice was made for, unchanged.
+
+WAITLIST BECOMES THE NEWSLETTER: there is no waitlist left to join, so the
+page's closing band is now the newsletter sign-up outright rather than an
+Android waiting list that happened to collect emails. NOTE FOR READING THE
+NOTES ABOVE: every "#waitlist" in the earlier entries is this same section
+under its old id -- the id is now #newsletter, and the scroll-snap
+reasoning those entries describe (last snap target, footer needing to sit
+below it) is unchanged and still applies, only under the new name.
+The rename runs the whole depth of the feature rather than stopping at the
+label, because a half-renamed feature is worse than either name: the
+section id (#newsletter, which is what the CSS snap rules and the navbar's
+SECTION_IDS scroll spy key off), the server action
+(subscribeToNewsletter), its admin notification subject and body, the
+form's own field id and success state (subscribed, not joined), the button
+("Subscribe", "Subscribing...", "Subscribed" -- "Join waitlist" was the
+last visible trace), and the FAQ's Android answer, which told people to
+join a waitlist that no longer exists.
+The copy lost its ANDROID_AVAILABLE branch here. Both variants of it were
+about when the Play Store listing lands -- the actual job of a waitlist --
+and neither is what a newsletter promises. One unconditional line now, and
+a heading that names the newsletter rather than hanging off the download
+above it ("Or hear it first"), since this is a nav destination and has to
+read on its own to someone who arrived by clicking Newsletter. The store
+buttons above keep their ANDROID_AVAILABLE branch untouched; that one is
+about download availability, which is still genuinely conditional.
+NAVBAR: Newsletter joins Features/About/Pricing/FAQ, listed last so nav
+order still runs down the page in document order. It's the exception to
+this navbar's "product navigation only" rule and earns the slot by being
+an action rather than a document -- the one thing on offer to a visitor
+who isn't installing anything today, sitting at the very bottom of the page
+where nobody scrolls to find it. Left a plain link, not a second button:
+Download is the one thing here styled to be clicked. A fifth link (and the
+longest label of the set) overflowed the row at the md breakpoint itself,
+where every link is showing but the bar is narrowest, so the desktop link
+row drops to gap-6 there and returns to gap-8 at lg.
+
 FINISH: unreviewed and undocumented is unfinished; this build ends with the
 finish review, the verdict, and DESIGN.md.
 -->`;

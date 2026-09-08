@@ -1,6 +1,7 @@
 "use server";
 
 import { Resend } from "resend";
+import { fromAddress, ADMIN_INBOX } from "@/lib/mail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -38,20 +39,17 @@ export async function subscribeToWaitlist(
       return { status: "error", message: "Failed to subscribe. Please try again." };
     }
 
-    // Best-effort admin notification. Sandbox domain (onboarding@resend.dev)
-    // can only deliver to the account's own verified address, so this stays
-    // internal until a custom sending domain is verified in Resend. Awaited
-    // (not fire-and-forget) since serverless functions can be frozen right
-    // after the action returns.
+    // Best-effort admin notification. Awaited (not fire-and-forget) since
+    // serverless functions can be frozen right after the action returns.
     try {
       await resend.emails.send({
-        from: "PantryPilot Waitlist <onboarding@resend.dev>",
-        to: "admin.pantrypilot@gmail.com",
+        from: fromAddress("KhanPaan Waitlist"),
+        to: ADMIN_INBOX,
         subject: "🎉 New Waitlist Subscriber!",
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
             <h2>New Waitlist Signup!</h2>
-            <p>A new user has joined the PantryPilot waitlist.</p>
+            <p>A new user has joined the KhanPaan waitlist.</p>
             <p><strong>Email:</strong> ${email}</p>
           </div>
         `,

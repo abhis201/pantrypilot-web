@@ -1,33 +1,49 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import LegalToc from "@/components/LegalToc";
+import { PRIVACY_EMAIL, SUPPORT_EMAIL } from "@/lib/site";
+
+const DESCRIPTION =
+  "Learn how PantryPilot collects, uses, stores, and protects your personal information. Read our full privacy policy covering data practices, your rights, and security measures.";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — PantryPilot",
-  description:
-    "Learn how PantryPilot collects, uses, stores, and protects your personal information. Read our full privacy policy covering data practices, your rights, and security measures.",
+  title: "Privacy Policy",
+  description: DESCRIPTION,
+  alternates: { canonical: "/privacy" },
+  openGraph: {
+    title: "Privacy Policy — PantryPilot",
+    description: DESCRIPTION,
+    url: "/privacy",
+  },
 };
 
 export default function PrivacyPolicyPage() {
-  const privacyEmail = process.env.NEXT_PUBLIC_PRIVACY_EMAIL || "admin.pantrypilot@gmail.com";
-  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "admin.pantrypilot@gmail.com";
+  const privacyEmail = PRIVACY_EMAIL;
+  const supportEmail = SUPPORT_EMAIL;
 
   return (
     <>
       <Navbar />
 
-      <main className="min-h-screen pb-20" style={{ paddingTop: "calc(var(--nav-height) + 48px)" }}>
-        <div className="max-w-4xl mx-auto px-8 md:px-14">
-          <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-emerald-400/40 mb-4">
-            Legal
-          </p>
-          <h1 className="text-[clamp(2.5rem,6vw,4rem)] font-bold leading-[0.95] tracking-[-0.04em] mb-5">
+      <main
+        id="main"
+        className="relative min-h-screen pb-20"
+        style={{ zIndex: "var(--z-content)", paddingTop: "calc(var(--nav-height) + 48px)" }}
+      >
+        <div className="shell max-w-5xl">
+                    <h1 className="display display--section mb-5">
             Privacy Policy
           </h1>
-          <p className="text-emerald-200/30 text-sm mb-12">
+          <p className="mb-12 text-[14.5px] text-ink-muted">
             <strong>Effective Date:</strong> April 2, 2026 &nbsp;&middot;&nbsp;
             <strong>Last Updated:</strong> April 2, 2026
           </p>
+
+        {/* Sticky section index beside the text on desktop. It reads the
+            headings out of `.legal-content`, so this stays plain static JSX. */}
+        <div className="legal-layout">
+        <LegalToc />
 
         <div className="legal-content">
 
@@ -239,7 +255,7 @@ export default function PrivacyPolicyPage() {
                   <td className="px-4 py-3">Account authentication</td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-3">Twilio</td>
+                  <td className="px-4 py-3">Firebase</td>
                   <td className="px-4 py-3">SMS delivery status</td>
                   <td className="px-4 py-3">OTP verification confirmation</td>
                 </tr>
@@ -358,7 +374,7 @@ export default function PrivacyPolicyPage() {
           </h3>
           <ul className="list-disc list-inside mb-6 space-y-1 leading-relaxed">
             <li>
-              Sending OTP codes via SMS for account verification (via Twilio).
+              Sending OTP codes via SMS for account verification (via Firebase).
             </li>
             <li>
               In-app notifications about expiring items (if enabled by you).
@@ -471,7 +487,7 @@ export default function PrivacyPolicyPage() {
                 Database Role Separation:
               </strong>{" "}
               The application connects to the database using a restricted role
-              (pantrypilot_app) with only the permissions necessary for
+              (khanpaan.app) with only the permissions necessary for
               operation.
             </li>
             <li>
@@ -612,7 +628,7 @@ export default function PrivacyPolicyPage() {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-3">Twilio</td>
+                  <td className="px-4 py-3">Firebase</td>
                   <td className="px-4 py-3">
                     Phone number (for OTP delivery only)
                   </td>
@@ -679,7 +695,7 @@ export default function PrivacyPolicyPage() {
               Request a copy of your data by contacting us at{" "}
               <a
                 href={`mailto:${privacyEmail}`}
-                className="text-emerald-400 hover:text-emerald-300"
+                className="text-brand"
               >
                 {privacyEmail}
               </a>
@@ -710,7 +726,7 @@ export default function PrivacyPolicyPage() {
               Contacting us at{" "}
               <a
                 href={`mailto:${privacyEmail}`}
-                className="text-emerald-400 hover:text-emerald-300"
+                className="text-brand"
               >
                 {privacyEmail}
               </a>
@@ -805,7 +821,7 @@ export default function PrivacyPolicyPage() {
             To exercise CCPA rights, contact us at{" "}
             <a
               href={`mailto:${privacyEmail}`}
-              className="text-emerald-400 hover:text-emerald-300"
+              className="text-brand"
             >
               {privacyEmail}
             </a>
@@ -859,7 +875,7 @@ export default function PrivacyPolicyPage() {
             To exercise GDPR rights, contact us at{" "}
             <a
               href={`mailto:${privacyEmail}`}
-              className="text-emerald-400 hover:text-emerald-300"
+              className="text-brand"
             >
               {privacyEmail}
             </a>
@@ -880,7 +896,7 @@ export default function PrivacyPolicyPage() {
             provided us with personal information, please contact us at{" "}
             <a
               href={`mailto:${privacyEmail}`}
-              className="text-emerald-400 hover:text-emerald-300"
+              className="text-brand"
             >
               {privacyEmail}
             </a>
@@ -954,7 +970,7 @@ export default function PrivacyPolicyPage() {
               Privacy Email:{" "}
               <a
                 href={`mailto:${privacyEmail}`}
-                className="text-emerald-400 hover:text-emerald-300"
+                className="text-brand"
               >
                 {privacyEmail}
               </a>
@@ -963,7 +979,7 @@ export default function PrivacyPolicyPage() {
               General Support:{" "}
               <a
                 href={`mailto:${supportEmail}`}
-                className="text-emerald-400 hover:text-emerald-300"
+                className="text-brand"
               >
                 {supportEmail}
               </a>
@@ -972,6 +988,7 @@ export default function PrivacyPolicyPage() {
           </ul>
         </section>
 
+        </div>
         </div>
         </div>
       </main>

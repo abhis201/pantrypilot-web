@@ -1,32 +1,48 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import LegalToc from "@/components/LegalToc";
+import { SUPPORT_EMAIL } from "@/lib/site";
+
+const DESCRIPTION =
+  "Read the Terms and Conditions for PantryPilot, the smart pantry and meal management app. Learn about our services, subscriptions, user responsibilities, and more.";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions — PantryPilot",
-  description:
-    "Read the Terms and Conditions for PantryPilot, the smart pantry and meal management app. Learn about our services, subscriptions, user responsibilities, and more.",
+  title: "Terms & Conditions",
+  description: DESCRIPTION,
+  alternates: { canonical: "/terms" },
+  openGraph: {
+    title: "Terms & Conditions — PantryPilot",
+    description: DESCRIPTION,
+    url: "/terms",
+  },
 };
 
 export default function TermsPage() {
-  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "admin.pantrypilot@gmail.com";
+  const supportEmail = SUPPORT_EMAIL;
 
   return (
     <>
       <Navbar />
 
-      <main className="min-h-screen pb-20" style={{ paddingTop: "calc(var(--nav-height) + 48px)" }}>
-        <div className="max-w-3xl mx-auto px-8 md:px-14">
-          <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-emerald-400/40 mb-4">
-            Legal
-          </p>
-          <h1 className="text-[clamp(2.5rem,6vw,4rem)] font-bold leading-[0.95] tracking-[-0.04em] mb-5">
+      <main
+        id="main"
+        className="relative min-h-screen pb-20"
+        style={{ zIndex: "var(--z-content)", paddingTop: "calc(var(--nav-height) + 48px)" }}
+      >
+        <div className="shell max-w-5xl">
+                    <h1 className="display display--section mb-5">
             Terms and Conditions
           </h1>
-          <p className="text-emerald-200/30 text-sm mb-12">
+          <p className="mb-12 text-[14.5px] text-ink-muted">
             <strong>Effective Date:</strong> April 2, 2026 &nbsp;&middot;&nbsp;
             <strong>Last Updated:</strong> April 2, 2026
           </p>
+
+        {/* Sticky section index beside the text on desktop. It reads the
+            headings out of `.legal-content`, so this stays plain static JSX. */}
+        <div className="legal-layout">
+        <LegalToc />
 
         <div className="legal-content">
 
@@ -419,7 +435,7 @@ export default function TermsPage() {
                 </td>
               </tr>
               <tr>
-                <td>Twilio</td>
+                <td>Firebase</td>
                 <td>SMS OTP delivery for phone number verification</td>
               </tr>
               <tr>
@@ -624,7 +640,7 @@ export default function TermsPage() {
           </p>
           <ul>
             <li>
-              <strong>Email:</strong>{" "}
+              <strong>Email:</strong> {" "}
               <a href={`mailto:${supportEmail}`}>
                 {supportEmail}
               </a>
@@ -634,16 +650,17 @@ export default function TermsPage() {
               Feedback
             </li>
             <li>
-              <strong>Website:</strong>{" "}
+              <strong>Website:</strong> {" "}
               <a
-                href="https://pantrypilot.net"
+                href="https://khanpaan.app"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                https://pantrypilot.net
+                https://khanpaan.app
               </a>
             </li>
           </ul>
+        </div>
         </div>
         </div>
       </main>

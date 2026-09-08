@@ -1,71 +1,126 @@
 import Link from "next/link";
 import Image from "next/image";
+import { SUPPORT_EMAIL, ANDROID_AVAILABLE } from "@/lib/site";
+import appIcon from "../../public/logoIcon2.png";
+import Wordmark from "./Wordmark";
 
-export default function Footer() {
+/**
+ * Terms, Privacy and Contact live here rather than in the top nav — they're
+ * destinations people go looking for when they need them, and spending
+ * top-level nav slots on them competes with the download.
+ *
+ * `snap`: only the home page's own <Footer snap /> call sets id="footer",
+ * which is the only thing that makes it a scroll-snap target (see the
+ * #footer rule in globals.css). Contact/Privacy/Terms render this same
+ * component plain -- snapping is a home-page-only feature; those pages
+ * scroll normally.
+ */
+const PRODUCT_LINKS = [
+  { href: "/#features", label: "Features" },
+  { href: "/#about", label: "About" },
+  { href: "/#pricing", label: "Pricing" },
+  { href: "/#faq", label: "FAQ" },
+];
+
+const LEGAL_LINKS = [
+  { href: "/terms", label: "Terms & Conditions" },
+  { href: "/privacy", label: "Privacy Policy" },
+];
+
+function Column({
+  heading,
+  children,
+}: {
+  heading: string;
+  children: React.ReactNode;
+}) {
   return (
-    <footer style={{ background: "#020c06", borderTop: "1px solid rgba(16,185,129,0.07)" }}>
-      <div className="max-w-7xl mx-auto px-8 md:px-14 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+    <div>
+      <h2 className="text-[13px] font-bold uppercase tracking-[0.1em] text-ink-muted">
+        {heading}
+      </h2>
+      <div className="mt-5 flex flex-col gap-3.5">{children}</div>
+    </div>
+  );
+}
 
-          {/* Brand — spans 2 cols on md */}
+const linkClass =
+  "text-[15px] text-ink-muted transition-colors hover:text-brand";
+
+export default function Footer({ snap = false }: { snap?: boolean }) {
+  return (
+    <footer
+      id={snap ? "footer" : undefined}
+      className="band band--flat"
+      style={{ borderTop: "1px solid var(--line)" }}
+    >
+      <div className="shell max-w-[1240px] py-16">
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-5">
+          {/* Brand */}
           <div className="col-span-2">
-            <Link href="/" className="inline-flex items-center gap-2 mb-5">
+            <Link href="/" className="group mb-5 inline-flex items-center gap-[6px]">
               <Image
-                src="/logoIcon2.png"
-                alt="PantryPilot"
-                width={26}
-                height={26}
-                className="object-contain"
-                style={{ borderRadius: 7, border: "1px solid rgba(16,185,129,0.12)" }}
+                src={appIcon}
+                alt=""
+                width={34}
+                height={34}
+                className="object-contain transition-transform duration-300 group-hover:scale-105"
+                style={{ borderRadius: 10 }}
               />
-              <span className="text-[14px] font-bold text-emerald-100/60 tracking-[-0.02em]">PantryPilot</span>
+              <Wordmark className="text-[17px]" />
             </Link>
-            <p className="text-emerald-200/30 text-sm leading-[1.8] max-w-[280px]">
-              Smart pantry &amp; meal management powered by AI. Track your food, plan meals, reduce waste, and eat smarter.
+            <p className="max-w-[300px] text-[15px] leading-[1.75] text-ink-muted">
+              Smart pantry and meal management. Track your food, plan meals,
+              reduce waste, and eat smarter.
+            </p>
+            <p className="mt-5 text-[13px] font-bold text-ink">
+              {ANDROID_AVAILABLE ? "iOS & Android" : "iOS today · Android soon"}
             </p>
           </div>
 
-          {/* Legal */}
-          <div>
-            <h4 className="text-[11px] font-bold text-emerald-400/40 mb-5 uppercase tracking-[0.12em]">
-              Legal
-            </h4>
-            <div className="flex flex-col gap-3.5">
-              <Link href="/terms"   className="text-emerald-200/40 hover:text-emerald-300 text-sm transition-colors">Terms &amp; Conditions</Link>
-              <Link href="/privacy" className="text-emerald-200/40 hover:text-emerald-300 text-sm transition-colors">Privacy Policy</Link>
-            </div>
-          </div>
+          <Column heading="Product">
+            {PRODUCT_LINKS.map((l) => (
+              <Link key={l.href} href={l.href} className={linkClass}>
+                {l.label}
+              </Link>
+            ))}
+          </Column>
 
-          {/* Support */}
-          <div>
-            <h4 className="text-[11px] font-bold text-emerald-400/40 mb-5 uppercase tracking-[0.12em]">
-              Support
-            </h4>
-            <div className="flex flex-col gap-3.5">
-              <Link href="/contact" className="text-emerald-200/40 hover:text-emerald-300 text-sm transition-colors">Contact Us</Link>
-              <a href="mailto:admin.pantrypilot@gmail.com" className="text-emerald-200/40 hover:text-emerald-300 text-sm transition-colors break-all">
-                admin.pantrypilot@gmail.com
-              </a>
-            </div>
-          </div>
+          <Column heading="Legal">
+            {LEGAL_LINKS.map((l) => (
+              <Link key={l.href} href={l.href} className={linkClass}>
+                {l.label}
+              </Link>
+            ))}
+          </Column>
+
+          <Column heading="Support">
+            <Link href="/contact" className={linkClass}>
+              Contact us
+            </Link>
+            <a href={`mailto:${SUPPORT_EMAIL}`} className={`${linkClass} break-all`}>
+              {SUPPORT_EMAIL}
+            </a>
+          </Column>
         </div>
 
-        {/* Bottom bar */}
         <div
-          className="mt-14 pt-7 flex flex-col sm:flex-row items-center justify-between gap-4"
-          style={{ borderTop: "1px solid rgba(16,185,129,0.06)" }}
+          className="mt-14 flex flex-col items-center justify-between gap-4 pt-7 sm:flex-row"
+          style={{ borderTop: "1px solid var(--line)" }}
         >
-          <span className="text-emerald-200/18 text-[11px] uppercase tracking-[0.1em] font-semibold">
-            &copy; {new Date().getFullYear()} PantryPilot. All rights reserved.
+          <span className="text-[13.5px] text-ink-muted">
+            &copy; {new Date().getFullYear()} KhanPaan. All rights reserved.
           </span>
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-6">
             {[
-              { href: "/terms",    label: "Terms"   },
-              { href: "/privacy",  label: "Privacy" },
-              { href: "/contact",  label: "Contact" },
+              { href: "/terms", label: "Terms" },
+              { href: "/privacy", label: "Privacy" },
+              { href: "/contact", label: "Contact" },
             ].map((l) => (
-              <Link key={l.href} href={l.href}
-                className="text-emerald-200/18 hover:text-emerald-200/40 text-[11px] uppercase tracking-[0.08em] transition-colors"
+              <Link
+                key={l.href}
+                href={l.href}
+                className="text-[13.5px] text-ink-muted transition-colors hover:text-brand"
               >
                 {l.label}
               </Link>

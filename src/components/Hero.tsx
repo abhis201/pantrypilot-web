@@ -1,104 +1,216 @@
-"use client";
+import {
+  ANDROID_AVAILABLE,
+  ANDROID_DOWNLOAD_LINK,
+  IOS_DOWNLOAD_LINK,
+} from "@/lib/site";
+import Spot from "./Spot";
+import { AppleMark, PlayMark, Check } from "./Icons";
+import ScreenCard from "./ScreenCard";
+import heroSplash from "../../public/screens/hero-splash.png";
+import heroDashboard from "../../public/screens/hero-dashboard.png";
+import heroStats from "../../public/screens/hero-stats.png";
 
+/** Claims that hold on the free tier, each traceable to the Privacy Policy or Terms. */
+const TRUST_POINTS = ["Track expiry dates", "Get recipe ideas", "Reduce waste"];
+
+/**
+ * The first viewport is the argument, not a header.
+ *
+ * Left column states the mechanism in five words; the right column shows the
+ * app running — three real screens fanned directly on the ground, unframed, so the very first thing a visitor sees is the product itself:
+ * the splash identity up front, the dashboard and the stats it feeds tucked
+ * either side. The real feature screens do the proving further down, where
+ * there is room to say what each of them does.
+ *
+ * The section spans the full viewport height (its own box, not just the
+ * content inside it — top padding is what clears the fixed navbar, the box
+ * itself starts at the very top of the page) rather than sizing to its
+ * content, so the fan gets the full column height to scale into instead of
+ * floating small inside a tall, empty section.
+ *
+ * The entrance plays on mount rather than on scroll (the hero is already in
+ * view), staged headline → copy → actions → trust → fan at 90ms apart, so the
+ * page assembles itself in under a second and never delays a ready visitor.
+ */
 export default function Hero() {
-  const iosLink = process.env.NEXT_PUBLIC_IOS_DOWNLOAD_LINK || "https://apps.apple.com";
-  const androidLink = process.env.NEXT_PUBLIC_ANDROID_DOWNLOAD_LINK || "https://play.google.com";
-
   return (
-    <section
-      id="hero"
-      className="relative min-h-screen flex flex-col items-center justify-center px-8 md:px-14 text-center overflow-hidden"
-      style={{ paddingTop: "var(--nav-height)", paddingBottom: "80px" }}
-    >
-      {/* Ambient glow */}
-      <div className="absolute top-[40%] left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-emerald-500/5 rounded-full blur-[160px] pointer-events-none" />
+    // band--soft on its own (not .band): the same soft half-step green FAQ
+    // uses, but with square corners rather than the rounded top .band adds —
+    // this is the page's very first section, so there is no cream above it
+    // to round away from. Differentiates the hero from Features right below,
+    // which stays cream because its own icon circles and per-block screen
+    // panels already spend the fuller green as an accent against a cream
+    // field (see the 5.4b comment in globals.css and the note in page.tsx).
+    <section id="hero" className="relative band--soft">
+      {/* Corner ornaments, pinned to the hero section itself rather than the
+          screenshot column — they read as the section's own margin doodles,
+          not as decoration hung off the screens. Below lg they're dropped
+          rather than shrunk; there isn't room to keep them out of the way of
+          the stacked, full-width columns on a narrow viewport. */}
+      <Spot
+        name="tomato"
+        size={62}
+        className="absolute hidden lg:block"
+        style={{
+          left: "clamp(20px, 4vw, 56px)",
+          top: "calc(var(--nav-height) + clamp(28px, 5vh, 56px))",
+          rotate: "-12deg",
+        }}
+      />
+      <Spot
+        name="milk"
+        size={82}
+        className="absolute hidden lg:block"
+        style={{
+          right: "clamp(24px, 4.5vw, 64px)",
+          top: "calc(var(--nav-height) + clamp(24px, 4.5vh, 48px))",
+          rotate: "12deg",
+        }}
+      />
+      <Spot
+        name="jar"
+        size={64}
+        className="absolute hidden lg:block"
+        style={{
+          right: "clamp(20px, 4vw, 56px)",
+          bottom: "clamp(28px, 5vh, 56px)",
+          rotate: "10deg",
+        }}
+      />
+      <Spot
+        name="sprig"
+        size={86}
+        className="absolute hidden lg:block"
+        style={{
+          left: "clamp(24px, 4.5vw, 64px)",
+          bottom: "clamp(24px, 4.5vh, 48px)",
+          rotate: "-8deg",
+        }}
+      />
 
-      <div className="relative z-10 max-w-3xl mx-auto w-full">
-        {/* App icon */}
-        <div className="flex justify-center mb-8">
-          <img
-            src="/logoIcon2.png"
-            alt="PantryPilot"
-            style={{
-              width: 72,
-              height: 72,
-              borderRadius: 18,
-              border: "1px solid rgba(16,185,129,0.18)",
-              objectFit: "contain",
-            }}
-          />
-        </div>
+      <div
+        className="shell flex max-w-[1240px] flex-col justify-center"
+        style={{
+          minHeight: "100dvh",
+          paddingTop: "calc(var(--nav-height) + clamp(1.5rem, 4vh, 3rem))",
+          paddingBottom: "clamp(1.5rem, 4vh, 3rem)",
+        }}
+      >
+        <div className="grid grid-cols-1 items-center gap-x-14 gap-y-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+          {/* ---- Copy column ------------------------------------------- */}
+          <div className="min-w-0 max-w-[42rem]">
+            <h1
+              className="rise display display--hero"
+              style={{ "--rise-delay": "0ms" } as React.CSSProperties}
+            >
+              Cook what you already own.
+            </h1>
 
-        {/* Micro-label */}
-        <div className="hero-badge inline-flex items-center gap-2 px-5 py-2 rounded-full mb-9">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-emerald-400/80">
-            Smart Pantry &amp; Meal Management
-          </span>
-        </div>
+            <p
+              className="rise standfirst mt-7"
+              style={{ "--rise-delay": "90ms" } as React.CSSProperties}
+            >
+              KhanPaan tracks what&apos;s in your kitchen, watches what&apos;s about
+              to spoil, and builds meal ideas from the ingredients already on
+              your shelves.
+            </p>
 
-        {/* Headline */}
-        <h1 className="text-[clamp(3rem,8vw,6.5rem)] font-bold leading-[0.93] tracking-[-0.04em] mb-7">
-          Your Kitchen,
-          <br />
-          <span className="gradient-text">Powered by AI.</span>
-        </h1>
+            {/* No separate "Download free" button — the two store badges
+                are the CTAs now, each in its own solid fill (see
+                .store-button--dark / --brand in globals.css) rather than the
+                plain white .store-button they used when a primary emerald
+                button sat beside them. */}
+            <div
+              id="download"
+              className="rise mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
+              style={{ "--rise-delay": "180ms" } as React.CSSProperties}
+            >
+              <a
+                href={IOS_DOWNLOAD_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="store-button store-button--dark w-full shrink-0 sm:w-auto"
+              >
+                <AppleMark className="h-[22px] w-[22px]" />
+                App Store
+              </a>
 
-        {/* Subheadline */}
-        <p className="text-[17px] text-emerald-200/35 max-w-md mx-auto mb-12 leading-[1.75]">
-          Track your pantry, plan meals with AI-powered suggestions,
-          reduce food waste, and hit your nutrition goals.
-        </p>
-
-        {/* Store buttons */}
-        <div
-          id="download"
-          className="flex flex-col sm:flex-row items-center justify-center gap-3"
-        >
-          <a
-            href={iosLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="store-button"
-          >
-            <svg className="w-7 h-7 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-            </svg>
-            <div className="text-left">
-              <div className="text-[10px] text-emerald-400/45 uppercase tracking-[0.1em] font-bold">Download on the</div>
-              <div className="text-[15px] font-semibold mt-0.5">App Store</div>
+              {/* Android renders as a real link whenever a download URL is
+                  configured. With the env var unset this is an inert chip:
+                  a missing button converts better than one that 404s. */}
+              {ANDROID_AVAILABLE ? (
+                <a
+                  href={ANDROID_DOWNLOAD_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="store-button store-button--brand w-full shrink-0 sm:w-auto"
+                >
+                  <PlayMark className="h-[20px] w-[20px]" />
+                  Google Play
+                </a>
+              ) : (
+                <span className="store-button store-button--pending w-full shrink-0 sm:w-auto">
+                  <PlayMark className="h-[20px] w-[20px]" />
+                  Android soon
+                </span>
+              )}
             </div>
-          </a>
 
-          <a
-            href={androidLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="store-button"
-          >
-            <svg className="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3.18 23.79c-.38-.29-.59-.75-.59-1.3V1.51c0-.55.21-1.01.59-1.3l.12-.08L14.9 11.71v.04L3.3 23.87l-.12-.08z" />
-              <path d="M19.24 16.12l-4.34-4.37v-.04l4.34-4.37.1.06 5.15 2.92c1.47.83 1.47 2.2 0 3.04l-5.15 2.92-.1-.16z" />
-              <path d="M19.34 16.28L14.9 11.75 3.18 23.79c.49.51 1.29.54 2.21.02l13.95-7.53z" />
-              <path d="M19.34 7.21L5.39.17C4.47-.35 3.67-.32 3.18.19L14.9 11.71l4.44-4.5z" />
-            </svg>
-            <div className="text-left">
-              <div className="text-[10px] text-emerald-400/45 uppercase tracking-[0.1em] font-bold">Get it on</div>
-              <div className="text-[15px] font-semibold mt-0.5">Google Play</div>
+            <ul
+              className="rise trust-row mt-9"
+              style={{ "--rise-delay": "270ms" } as React.CSSProperties}
+            >
+              {TRUST_POINTS.map((point) => (
+                <li key={point} className="trust-item">
+                  <Check className="h-[18px] w-[18px]" />
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* ---- Screen fan column ---------------------------------------
+              Three real screens fanned directly on the ground: dashboard
+              left, splash centre and forward, stats right — the identity shot
+              leads, the two surfaces it connects sit just behind it. No panel
+              or backdrop shape (see the 5.4b comment in globals.css for why),
+              and no drawn phone bezel (see ScreenCard) — the screenshots carry
+              their own chrome, and KhanPaan ships on both platforms. */}
+          <div className="relative min-w-0 px-4 py-8 sm:px-8 sm:py-10">
+            <div className="hero-fan">
+              {/* Each screen rises on its own now (fan-rise, not the shared
+                  .rise used elsewhere) rather than as one group — see the
+                  .fan-rise comment in globals.css for why this needed its
+                  own keyframes instead of reusing riseIn directly. Left and
+                  right trail the center by 90ms each, continuing this
+                  column's own 0/90/180/270/360ms stagger rather than
+                  landing all three at once. */}
+              <ScreenCard
+                images={[heroDashboard]}
+                label="The KhanPaan dashboard: today's nutrition against target, pantry and expiring-soon counts, and a suggested breakfast ready to cook"
+                width={182}
+                className="hero-fan__side hero-fan__side--left fan-rise"
+                style={{ "--fan-delay": "450ms" } as React.CSSProperties}
+              />
+
+              <ScreenCard
+                images={[heroSplash]}
+                label="The KhanPaan splash screen: the app icon over the tagline 'The AI brain for your kitchen,' with pantry staples illustrated at each corner"
+                width={250}
+                priority
+                className="hero-fan__center fan-rise"
+                style={{ "--fan-delay": "360ms" } as React.CSSProperties}
+              />
+
+              <ScreenCard
+                images={[heroStats]}
+                label="The KhanPaan stats screen: money wasted this month on spoiled or expired food, and grocery spending charted by month"
+                width={182}
+                className="hero-fan__side hero-fan__side--right fan-rise"
+                style={{ "--fan-delay": "540ms" } as React.CSSProperties}
+              />
             </div>
-          </a>
-        </div>
-      </div>
-
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 scroll-indicator">
-        <div className="flex flex-col items-center gap-2.5">
-          <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/20">
-            Scroll to explore
-          </span>
-          <svg className="w-4 h-4 text-emerald-400/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
+          </div>
         </div>
       </div>
     </section>

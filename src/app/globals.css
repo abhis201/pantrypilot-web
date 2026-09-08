@@ -1,22 +1,140 @@
 @import "tailwindcss";
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-geist-mono);
-  --color-emerald-400: #34d399;
-  --color-emerald-500: #10b981;
-  --color-emerald-600: #059669;
-  --color-teal-400: #2dd4bf;
-  --color-teal-500: #14b8a6;
-}
+/* ============================================================================
+   PANTRYPILOT — "ORCHARD" DESIGN SYSTEM
+   ----------------------------------------------------------------------------
+   A light, flat, solid-colour system. Every value below was sampled from the
+   approved comp (.impeccable/mocks/pastel-3-cozypaws.png) rather than guessed,
+   so the build and the comp share one palette.
+
+   The rules that define this world, and the ones most easily lost:
+     - Solid fills only. No gradients, no glass, no blur, no translucent panels.
+     - Colour arrives as whole fields — a section is mint or it is cream. Tints
+       scattered as accents over a neutral page is the thing this replaced.
+     - Depth comes from one soft, offset shadow. Never a coloured halo.
+     - Emphasis comes from weight, scale, and field colour. Never a gradient fill.
+
+   Layers, in order:
+     1. Tokens     — colour, radii, elevation, motion
+     2. Base       — resets, typography defaults, focus, selection
+     3. Display    — the headline scale
+     4. Motion     — reveal-on-scroll, entrance stagger, reduced-motion
+     5. Components — buttons, nav, phone, cards, forms, FAQ, bands
+     6. Long-form  — legal page prose
+   ========================================================================== */
+
+/* ============================================================================
+   1. TOKENS
+   ========================================================================== */
 
 :root {
-  --background: #050f0a;
-  --foreground: #f0fdf4;
-  --nav-height: 68px;
+  /* --- Fields -------------------------------------------------------------
+     Three grounds and nothing between them. A section picks one. */
+  --ground: #f9fbee;         /* pale cream-mint — the page's default field */
+  --surface: #cae7bb;        /* leaf green — feature panels and full-width bands */
+  --surface-soft: #e6f3dd;   /* half-step, for a band that must not shout */
+  --card: #ffffff;           /* solid white cards sitting on either green */
+
+  /* Kept so `bg-background` and any Tailwind colour utility still resolve. */
+  --background: var(--ground);
+  --foreground: #184514;
+
+  /* --- Ink ----------------------------------------------------------------
+     Both tiers clear WCAG AA against every field above:
+       ink        on ground 10.6:1 · on surface 8.2:1 · on card 11.1:1
+       ink-muted  on ground  6.0:1 · on surface 4.6:1 */
+  --ink: #184514;
+  --ink-muted: #3d6b36;
+  --ink-deep: #102d0d;       /* hover/pressed for solid-ink surfaces (store-button--dark) */
+
+  /* --- Brand --------------------------------------------------------------
+     The comp's button green (#139f76) carries white at only 3.4:1, so the
+     interactive tier is deepened to clear AA (5.8:1) while staying the same
+     hue. `--brand-bright` keeps the comp's original value for large decorative
+     fills, where the contrast rules don't bite. */
+  --brand: #0c7355;
+  --brand-deep: #095b44;     /* hover/pressed */
+  --brand-bright: #139f76;   /* icon plates, large flat shapes — never small text */
+  /* Brand-fixed exception: the wordmark's own two colours, sampled from the
+     approved lockup. Used only for the literal "Khan" / "Paan" split in the
+     nav and footer lockup text — never for anything else, which is what
+     keeps this a wordmark rule and not a second brand palette. */
+  --wordmark-khan: #000000;
+  --wordmark-paan: #099833;
+  --amber: #e39924;          /* expiry/urgency, echoing the app's own pills */
+  --amber-soft: #fbeacc;     /* its tint, for warning and placeholder fields */
+  --amber-ink: #7a4f0a;      /* 7.4:1 on --amber-soft */
+
+  /* --- Lines --------------------------------------------------------------- */
+  --line: rgba(24, 69, 20, 0.14);
+  --line-strong: rgba(24, 69, 20, 0.28);
+
+  /* --- Radii --------------------------------------------------------------
+     Generously rounded, matching the comp's panels and pills. */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --r-2xl: 44px;
+  --r-full: 9999px;
+
+  /* --- Elevation ----------------------------------------------------------
+     One ramp. Every shadow has an offset and a soft blur — a zero-offset
+     coloured halo is decoration, and this system doesn't use one. */
+  --e-1: 0 1px 2px rgba(24, 69, 20, 0.06);
+  --e-2: 0 6px 20px rgba(24, 69, 20, 0.08);
+  --e-3: 0 18px 44px rgba(24, 69, 20, 0.14);
+  --e-phone: 0 32px 64px rgba(24, 69, 20, 0.22);
+
+  /* --- Motion -------------------------------------------------------------
+     Two curves carry the site: out-expo for anything entering or settling,
+     press for the tap/click response. Neither overshoots. */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Press feedback decelerates; it does not overshoot. An elastic curve on a
+     button reads as a toy, and real objects settle rather than bounce. */
+  --ease-press: cubic-bezier(0.2, 0.8, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --dur-fast: 160ms;
+  --dur-base: 260ms;
+  --dur-slow: 420ms;
+  --dur-reveal: 640ms;
+
+  /* --- Layout -------------------------------------------------------------- */
+  --nav-height: 76px;
+  --gutter: 1.5rem;
+
+  --focus-ring: 0 0 0 2px var(--ground), 0 0 0 4px var(--brand);
+
+  /* --- z-index ------------------------------------------------------------- */
+  --z-content: 10;
+  --z-nav: 50;
+  --z-overlay: 100;
 }
+
+@theme inline {
+  --color-background: var(--ground);
+  --color-foreground: var(--ink);
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-surface-soft: var(--surface-soft);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-brand: var(--brand);
+  --color-brand-bright: var(--brand-bright);
+  --color-amber: var(--amber);
+  --font-sans: var(--font-archivo);
+  --font-display: var(--font-archivo);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (min-width: 640px)  { :root { --gutter: 2rem; } }
+@media (min-width: 1024px) { :root { --gutter: 3rem; } }
+
+/* ============================================================================
+   2. BASE
+   ========================================================================== */
 
 @layer base {
   * {
@@ -27,300 +145,1627 @@
 
   html {
     scroll-behavior: smooth;
+    /* Anchor targets clear the fixed navbar instead of hiding under it — no
+       extra gap beyond that, so a section's own background lands flush
+       against the navbar rather than leaving a sliver of whatever is
+       behind it exposed. */
+    scroll-padding-top: var(--nav-height);
+    /* Full-viewport sections (Features, AddItems, MealPlan, RecipeCookImport,
+       About, Pricing, FAQ, the closing Newsletter band) each lock to one
+       dvh and snap-align to their own top, so a scroll gesture always lands
+       a section flush under the fixed navbar rather than half-scrolled
+       between two of them. This reverses the DIRECTION_CONTRACT's original
+       "no scroll-snap" ban — see the AMENDED note in layout.tsx for why.
+       `mandatory` (not `proximity`): the whole point of building these
+       sections to a single viewport each is that a scroll gesture commits to
+       one, so a soft snap that lets you rest halfway between two would
+       undercut the reason they're sized this way. Hero and the footer are
+       BOTH snap targets too (see the #hero/#footer rule further down) —
+       Hero specifically so the navbar's Download button always lands
+       exactly at y = 0 rather than being pulled toward Features by
+       mandatory snapping, and the footer so scrolling past the last
+       snapped section (#waitlist) has somewhere to land instead of
+       springing back to #waitlist's own top.
+       This property sits on `html`, so it's technically present on every
+       route, not just the home page — but per the CSS Scroll Snap spec a
+       snap container with no snap targets on an axis simply doesn't snap
+       on that axis, and Privacy/Terms/Contact carry none of the ids this
+       rule snaps to (see the #footer comment further down for how that's
+       enforced at the component level). Snapping is a home-page-only
+       *effect*, even though this one declaration is global. */
+    scroll-snap-type: y mandatory;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    background: var(--background);
-    color: var(--foreground);
-    font-family: var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-archivo), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-synthesis-weight: none;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
+
+  h1, h2, h3 {
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  p { text-wrap: pretty; }
+
+  /* Keyboard users get a ring; mouse users never see it. */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--r-sm);
+  }
+
+  ::selection {
+    background: #bfe3a8;
+    color: var(--ink);
+  }
+
+  /* Tabular figures wherever numbers are compared (prices, counts). */
+  .nums { font-variant-numeric: tabular-nums; }
 }
 
-/* Page-level scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.15); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(16,185,129,0.3); }
+/* Browser surfaces the design still owns. */
+::-webkit-scrollbar { width: 12px; }
+::-webkit-scrollbar-track { background: var(--ground); }
+::-webkit-scrollbar-thumb {
+  background: #b9dca8;
+  border-radius: var(--r-full);
+  border: 3px solid var(--ground);
+}
+::-webkit-scrollbar-thumb:hover { background: #a2cf8d; }
 
-/* ============================================
-   SCREEN SHOWCASE — scrollable, no frame
-   ============================================ */
-.screen-showcase {
-  width: 260px;
-  max-height: 598px;
-  border-radius: 26px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  background: #030f08;
-  flex-shrink: 0;
-  position: relative;
-  /* Scrollbar for inner scroll */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(16,185,129,0.25) transparent;
+html { scrollbar-color: #b9dca8 var(--ground); }
+
+/* Skip link — first tab stop, invisible until focused. */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -140%);
+  z-index: var(--z-overlay);
+  padding: 12px 22px;
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  background: var(--brand);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform var(--dur-base) var(--ease-out-expo);
+}
+.skip-link:focus-visible { transform: translate(-50%, 0); }
+
+/* ============================================================================
+   3. DISPLAY TYPE
+   ----------------------------------------------------------------------------
+   Archivo 900 carries every headline; Inter carries everything else. The face
+   was chosen by rendering one headline word against the comp alongside Inter,
+   Figtree and Manrope — Archivo sets widest with the highest x-height and the
+   tightest apertures, which is what gives the comp's headlines their density.
+
+   There is deliberately no eyebrow/kicker class. A heading carries its own
+   weight; a small tracked label above one is a rank this page doesn't need.
+   ========================================================================== */
+
+.display {
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 900;
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  text-wrap: balance;
 }
 
-.screen-showcase::-webkit-scrollbar { width: 3px; }
-.screen-showcase::-webkit-scrollbar-track { background: transparent; }
-.screen-showcase::-webkit-scrollbar-thumb {
-  background: rgba(16,185,129,0.25);
-  border-radius: 2px;
+.display--hero    { font-size: clamp(2.6rem, 5vw, 4.5rem); }
+.display--section { font-size: clamp(2.1rem, 4.2vw, 3.4rem); }
+.display--sub     { font-size: clamp(1.55rem, 2.5vw, 2.1rem); letter-spacing: -0.035em; }
+.display--xs       { font-size: clamp(1.05rem, 1.7vw, 1.35rem); letter-spacing: -0.025em; line-height: 1.15; }
+
+/* Emphasis inside a headline is a colour change at the same weight — never a
+   gradient fill, never a lighter weight that breaks the silhouette. */
+.display em {
+  font-style: normal;
+  color: var(--brand);
 }
 
-.screen-showcase-img {
-  width: 100%;
-  height: auto;
-  display: block;
+/* The line of body copy under a headline. A standfirst, not a label. */
+.standfirst {
+  color: var(--ink-muted);
+  font-size: clamp(1.0625rem, 1.15vw, 1.25rem);
+  line-height: 1.6;
+  max-width: 46ch;
 }
 
-/* ============================================
-   SECTION TEXT — opacity fade only, no slide
-   ============================================ */
-.section-text {
+/* ============================================================================
+   4. MOTION
+   ----------------------------------------------------------------------------
+   Reveal-on-scroll: elements start at [data-reveal] and get `.is-in` added by
+   the Reveal component's IntersectionObserver. Transform and opacity only —
+   never width/height/top — so nothing triggers layout.
+   ========================================================================== */
+
+[data-reveal] {
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transform: translate3d(0, var(--reveal-y, 20px), 0) scale(var(--reveal-s, 1));
+  transition:
+    opacity var(--dur-reveal) var(--ease-out-expo),
+    transform var(--dur-reveal) var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: transform, opacity;
 }
 
-.section-text.visible {
+[data-reveal].is-in {
   opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
-/* ============================================
-   GRADIENT TEXT
-   ============================================ */
-.gradient-text {
-  background: linear-gradient(135deg, #10b981 0%, #34d399 45%, #5eead4 75%, #10b981 100%);
-  background-size: 300% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 6s ease-in-out infinite;
+/* Once settled, drop the compositor hint so long pages don't hold layers. */
+[data-reveal].is-settled { will-change: auto; }
+
+/* Hero entrance — plays on mount rather than on scroll, staggered by index. */
+@keyframes riseIn {
+  from { opacity: 0; transform: translate3d(0, 22px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
-@keyframes shimmer {
-  0%, 100% { background-position: 0% center; }
-  50% { background-position: 300% center; }
+.rise {
+  opacity: 0;
+  animation: riseIn var(--dur-reveal) var(--ease-out-expo) forwards;
+  animation-delay: var(--rise-delay, 0ms);
 }
 
-/* ============================================
-   HERO BADGE
-   ============================================ */
-.hero-badge {
-  background: rgba(16,185,129,0.08);
-  border: 1px solid rgba(16,185,129,0.2);
-  backdrop-filter: blur(12px);
+/* ---------------------------------------------------------------------------
+   Reduced motion — one authoritative override. Content still reveals (it just
+   arrives instantly and fully opaque) so nothing is left invisible.
+   ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-reveal],
+  .rise {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
 }
 
-/* ============================================
-   STORE BUTTONS
-   ============================================ */
-.store-button {
+/* ============================================================================
+   5. COMPONENTS
+   ========================================================================== */
+
+/* --- 5.1 Buttons ---------------------------------------------------------- */
+
+.btn {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 28px;
-  border-radius: 14px;
-  background: rgba(16,185,129,0.08);
-  border: none;
-  color: white;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;          /* comfortably over the 44px touch minimum */
+  padding: 0 30px;
+  border: 1.5px solid transparent;
+  border-radius: var(--r-full);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   text-decoration: none;
-  transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
-  font-size: 14px;
+  cursor: pointer;
   white-space: nowrap;
+  transition:
+    background var(--dur-base) var(--ease-out-expo),
+    border-color var(--dur-base) var(--ease-out-expo),
+    color var(--dur-base) var(--ease-out-expo),
+    transform var(--dur-fast) var(--ease-press),
+    box-shadow var(--dur-base) var(--ease-out-expo);
+}
+.btn:active { transform: scale(0.975); }
+
+.btn--lg {
+  min-height: 60px;
+  padding: 0 36px;
+  font-size: 16.5px;
+}
+
+/* Solid emerald. Flat fill — a vertical wash would sand the edge off the one
+   element on the page that has to read as a single block of colour. */
+.btn--primary {
+  background: var(--brand);
+  color: #ffffff;
+  box-shadow: var(--e-2);
+}
+.btn--primary:hover {
+  background: var(--brand-deep);
+  transform: translateY(-2px);
+  box-shadow: var(--e-3);
+}
+.btn--primary:disabled {
+  /* Hold the brand fill and fade it, rather than washing the label out: the
+     previous pairing put the text at 1.66:1 and it vanished while submitting. */
+  background: #7fae9b;
+  color: #ffffff;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Solid white, for the secondary action beside it. */
+.btn--white {
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--e-1);
+}
+.btn--white:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--e-2);
+}
+
+/* Outline, for tertiary actions on a coloured field. */
+.btn--outline {
+  background: transparent;
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+.btn--outline:hover {
+  border-color: var(--ink);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* --- 5.2 Store buttons ---------------------------------------------------- */
+
+.store-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  min-height: 60px;
+  padding: 0 28px;
+  border: 1.5px solid transparent;
+  border-radius: var(--r-full);
+  background: var(--card);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 16.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  box-shadow: var(--e-1);
+  transition:
+    transform var(--dur-base) var(--ease-out-expo),
+    box-shadow var(--dur-base) var(--ease-out-expo),
+    background var(--dur-base) var(--ease-out-expo);
 }
 
 .store-button:hover {
-  background: rgba(16,185,129,0.15);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(16,185,129,0.12);
+  transform: translateY(-2px);
+  box-shadow: var(--e-2);
+}
+.store-button:active { transform: translateY(-1px) scale(0.985); }
+
+/* Not-yet-launched platform: reads as a store button, but is visibly inert so
+   nobody clicks through to a 404. */
+.store-button--pending {
+  background: transparent;
+  border: 1.5px dashed var(--line-strong);
+  color: var(--ink-muted);
+  box-shadow: none;
+  cursor: default;
+}
+.store-button--pending:hover { transform: none; box-shadow: none; }
+
+/* Solid variants for the hero, where the two store buttons are the only
+   download CTAs (no separate "Download free" button sits beside them). A
+   different flat fill per platform — App Store in the site's ink, Google
+   Play in its brand emerald — keeps the pair reading as two distinct
+   targets rather than one wide bar, without leaning on the white card style
+   that reads as secondary everywhere else it's used. AppleMark/PlayMark
+   both paint with currentColor, so white text carries the icon along. */
+.store-button--dark {
+  background: var(--ink);
+  color: #ffffff;
+}
+.store-button--dark:hover { background: var(--ink-deep); }
+
+.store-button--brand {
+  background: var(--brand);
+  color: #ffffff;
+}
+.store-button--brand:hover { background: var(--brand-deep); }
+
+/* --- 5.3 Navbar ----------------------------------------------------------- */
+
+.nav-shell {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-nav);
+  /* Matches the hero's own ground (see .band--soft on #hero in Hero.tsx) so
+     the navbar reads as sitting flush on the page at rest, rather than a
+     cream bar floating over a differently-coloured hero. Once scrolled past
+     the hero it keeps this colour and instead separates itself with the
+     hairline + shadow below, the same way it always has. */
+  background: var(--surface-soft);
+  border-bottom: 1px solid transparent;
+  transition:
+    box-shadow var(--dur-slow) var(--ease-out-expo),
+    border-color var(--dur-slow) var(--ease-out-expo);
 }
 
-/* ============================================
-   FEATURE BADGE
-   ============================================ */
-.feature-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  border-radius: 9999px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-/* ============================================
-   SCROLL INDICATOR
-   ============================================ */
-.scroll-indicator {
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0) translateX(-50%); }
-  50%       { transform: translateY(-8px) translateX(-50%); }
-}
-
-/* ============================================
-   PAGE SECTIONS
-   ============================================ */
-.page-section {
-  min-height: 100vh;
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-/* ============================================
-   NAVBAR
-   ============================================ */
-.nav-glass {
-  background: rgba(5,15,10,0.88);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
+/* Solid at rest, and once you start reading it earns a hairline and a shadow.
+   No frosted glass: this system doesn't have translucent surfaces. */
+.nav-shell[data-scrolled="true"] {
+  border-bottom-color: var(--line);
+  box-shadow: var(--e-1);
 }
 
 .nav-link {
-  color: rgba(240,253,244,0.35);
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: color 0.2s;
+  position: relative;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   text-decoration: none;
+  padding: 7px 0;
+  transition: color var(--dur-base) var(--ease-out-expo);
 }
 
-.nav-link:hover,
-.nav-link.active {
-  color: rgba(240,253,244,0.85);
+/* Underline grows from the centre. */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: 50% 50%;
+  transition: transform var(--dur-base) var(--ease-out-expo);
 }
 
-.nav-link.active {
-  color: #34d399;
+.nav-link:hover { color: var(--brand); }
+.nav-link:hover::after { transform: scaleX(1); }
+
+.nav-link.active { color: var(--brand); }
+.nav-link.active::after { transform: scaleX(1); }
+
+/* Mobile drawer — height animates via grid-template-rows, so it opens smoothly
+   without a hard-coded max-height. */
+.nav-drawer {
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 0fr;
+  background: var(--ground);
+  transition: grid-template-rows var(--dur-slow) var(--ease-out-expo);
+}
+.nav-drawer[data-open="true"] { grid-template-rows: 1fr; }
+.nav-drawer > div { min-height: 0; }
+
+.nav-drawer-link {
+  display: block;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 17px;
+}
+.nav-drawer-link::after { display: none; }
+
+/* --- 5.4 Screen card ----------------------------------------------------
+   A plain rounded card holding a real app screenshot: corner radius, clip, one
+   soft offset shadow, nothing else.
+
+   Deliberately NOT a phone bezel. The screenshots carry their own status bar
+   and app chrome, so a drawn bezel and camera cutout sat on top of what they
+   already show — the frame and the content fought each other. It is also the
+   honest choice: KhanPaan ships on both platforms, and one vendor's hardware
+   silhouette around every screenshot quietly tells half the audience the app
+   isn't for them.
+   ------------------------------------------------------------------------- */
+
+.screen-card {
+  position: relative;
+  width: 100%;
+  max-width: var(--screen-w, 300px);
+  aspect-ratio: var(--screen-ar, 9 / 19.5);
+  /* Modest radius on purpose: these are raw app captures with UI right up to
+     the edge, so a large corner radius clips real content. */
+  border-radius: var(--screen-r, 14px);
+  overflow: hidden;
+  background: var(--card);
+  box-shadow: var(--e-phone);
+  flex-shrink: 0;
 }
 
-/* ============================================
-   FORM INPUTS — more visible
-   ============================================ */
+.screen-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+/* Crossfading stack for sections that show more than one screen. */
+.screen-card__layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-in-out);
+  pointer-events: none;
+}
+.screen-card__layer.is-active { opacity: 1; }
+
+/* Screen-select rail beside a multi-screen card. */
+.rail-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--r-full);
+  border: 0;
+  padding: 0;
+  background: rgba(24, 69, 20, 0.22);
+  cursor: pointer;
+  transition:
+    width var(--dur-slow) var(--ease-out-expo),
+    background var(--dur-slow) var(--ease-out-expo);
+}
+.rail-dot:hover { background: rgba(24, 69, 20, 0.42); }
+.rail-dot.is-active {
+  width: 26px;
+  background: var(--brand);
+}
+
+/* --- 5.4b Hero screen fan -------------------------------------------------
+   Three real ScreenCards fanned directly on the section's own ground — no panel, no
+   backdrop shape behind them (a flat rounded-rectangle panel and, briefly, an
+   animated Higgsfield blob were both tried here and both dropped; each read
+   as decoration competing with the screenshots rather than a frame for them).
+   Each card's own --e-phone shadow is what lifts it off the page. Overlap is
+   done with negative margins rather than absolute positioning, so the row
+   still reflows and shrinks as one unit on narrow screens. Sized larger than
+   a typical hero graphic on purpose — the hero fills the viewport height
+   below the navbar (see Hero.tsx), so the fan scales up to use that height
+   rather than floating small in a tall column. */
+
+.hero-fan {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate; /* keeps the fan's own z-index stack off the Spot stickers */
+}
+
+.hero-fan__center {
+  position: relative;
+  z-index: 3;
+  width: clamp(180px, 34vw, 250px) !important;
+  max-width: clamp(180px, 34vw, 250px) !important;
+}
+
+.hero-fan__side {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: clamp(126px, 25vw, 182px) !important;
+  max-width: clamp(126px, 25vw, 182px) !important;
+  margin: 0 clamp(-36px, -6.5vw, -22px);
+  filter: saturate(0.92);
+}
+
+.hero-fan__side--left { transform: rotate(-7deg) translateY(18px); }
+.hero-fan__side--right { transform: rotate(7deg) translateY(18px); }
+
+/* Hero fan entrance — each of the three screenshots rises on its own timer
+   now (fan-rise), not as one shared .rise group. A new class rather than
+   reusing .rise, on purpose: the no-JS safety net further down this file
+   forces opacity/transform/animation to none for [data-reveal] and .rise,
+   which would strip the side cards back to a flat, unrotated resting state
+   with no fallback. fan-rise is untouched by that rule, so the side cards
+   still land on their fanned rotate() the moment JS is unavailable, since
+   the base .hero-fan__side--left/--right transform above is the CSS
+   default state a browser paints before any animation runs. Runs slower
+   than the page's other reveals (a dedicated --dur-fan-reveal well past
+   --dur-reveal) after the first pass read as too quick to actually notice
+   the stagger between the three cards. */
+.fan-rise {
+  --dur-fan-reveal: 900ms;
+}
+
+.hero-fan__center.fan-rise {
+  opacity: 0;
+  animation: riseIn var(--dur-fan-reveal) var(--ease-out-expo) forwards;
+  animation-delay: var(--fan-delay, 0ms);
+}
+
+.hero-fan__side--left.fan-rise {
+  opacity: 0;
+  animation: riseInFanLeft var(--dur-fan-reveal) var(--ease-out-expo) forwards;
+  animation-delay: var(--fan-delay, 0ms);
+}
+
+.hero-fan__side--right.fan-rise {
+  opacity: 0;
+  animation: riseInFanRight var(--dur-fan-reveal) var(--ease-out-expo) forwards;
+  animation-delay: var(--fan-delay, 0ms);
+}
+
+@keyframes riseInFanLeft {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: rotate(-7deg) translateY(18px); }
+}
+
+@keyframes riseInFanRight {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: rotate(7deg) translateY(18px); }
+}
+
+/* A screen slot with no capture yet: same shape and shadow as .screen-card,
+   flat-filled in the amber placeholder tone rather than a fake screenshot. */
+.placeholder-screen {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 19.5;
+  border-radius: 14px;
+  background: var(--amber-soft);
+  box-shadow: var(--e-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  text-align: center;
+}
+
+.placeholder-screen span {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--amber-ink);
+}
+
+/* --- 5.5 Panels, cards, plates -------------------------------------------- */
+
+/* The solid leaf-green panel behind the closing CTA. */
+.panel {
+  border-radius: var(--r-2xl);
+  background: var(--surface);
+}
+
+.panel--soft { background: var(--surface-soft); }
+
+/* Solid white card. Flat fill, one soft shadow, no border. */
+.card {
+  border-radius: var(--r-lg);
+  background: var(--card);
+  box-shadow: var(--e-2);
+}
+
+/* Round icon plate — the comp uses these to carry an icon on a coloured field. */
+.icon-plate {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--plate, 44px);
+  height: var(--plate, 44px);
+  border-radius: var(--r-full);
+  background: var(--surface);
+  color: var(--brand);
+}
+
+.icon-plate--amber { background: var(--amber-soft); color: var(--amber-ink); }
+.icon-plate--white { background: var(--card); }
+
+/* --- 5.6 Feature rows and trust row --------------------------------------- */
+
+.feature-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: var(--ink-muted);
+  font-size: clamp(12.5px, 1vw, 14px);
+  line-height: 1.4;
+}
+.feature-row svg { flex-shrink: 0; margin-top: 2px; color: var(--brand); }
+
+.trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  align-items: center;
+}
+
+.trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+/* Filled disc, not a hairline tick: in the comp these are a signature of the
+   first viewport, and an outline glyph reads as form validation instead. */
+.trust-item svg {
+  flex-shrink: 0;
+  color: #ffffff;
+  background: var(--brand);
+  border-radius: var(--r-full);
+  padding: 3px;
+}
+
+/* --- 5.7 Forms ------------------------------------------------------------ */
+
 .form-input {
   width: 100%;
-  padding: 14px 18px;
-  background: rgba(16,185,129,0.06);
-  border: 1px solid rgba(16,185,129,0.12);
-  border-left: 3px solid rgba(16,185,129,0.25);
-  border-radius: 0 10px 10px 0;
-  color: #f0fdf4;
-  font-size: 15px;
-  transition: all 0.25s;
-  outline: none;
+  min-height: 54px;
+  padding: 15px 20px;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-full);
+  color: var(--ink);
+  font-size: 15.5px;
   font-family: inherit;
+  outline: none;
+  transition:
+    border-color var(--dur-base) var(--ease-out-expo),
+    box-shadow var(--dur-base) var(--ease-out-expo);
 }
+
+.form-input:hover { border-color: var(--line-strong); }
 
 .form-input:focus {
-  border-left-color: #10b981;
-  background: rgba(16,185,129,0.1);
-  border-color: rgba(16,185,129,0.2);
-  border-left-color: #10b981;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(12, 115, 85, 0.15);
 }
 
-.form-input::placeholder {
-  color: rgba(134,239,172,0.25);
+/* AA on white: #6d8f66 measured only 3.64:1. */
+.form-input::placeholder { color: #4b7344; }
+.form-input:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* A textarea can't be a pill. */
+textarea.form-input { border-radius: var(--r-lg); }
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--ink);
 }
 
-/* ============================================
-   DOT INDICATORS
-   ============================================ */
-.dot-indicator {
-  width: 6px;
-  height: 6px;
+/* --- 5.8 FAQ -------------------------------------------------------------- */
+
+.faq-item {
+  border-radius: var(--r-lg);
+  background: var(--card);
+  box-shadow: var(--e-1);
+  transition: box-shadow var(--dur-base) var(--ease-out-expo);
+}
+.faq-item:hover,
+.faq-item[open] { box-shadow: var(--e-2); }
+
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  /* The summary is the whole hit target, so it must span the card edge to edge
+     — its own padding provides the inset, not the parent's. Matching the card's
+     radius keeps the focus ring on the card's shape. */
+  border-radius: inherit;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+
+.faq-chevron { transition: transform var(--dur-base) var(--ease-out-expo); }
+.faq-item[open] .faq-chevron { transform: rotate(180deg); }
+
+/* Animate the answer open. `details` can't transition auto-height, but a grid
+   row from 0fr to 1fr can — and unlike max-height it needs no magic number. */
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-slow) var(--ease-out-expo);
+}
+.faq-item[open] .faq-answer { grid-template-rows: 1fr; }
+.faq-answer > div { overflow: hidden; min-height: 0; }
+
+/* --- 5.9 Layout and rhythm ------------------------------------------------
+   The page scrolls plainly: no snap points, no pinned showcase. One spacing
+   rhythm throughout; density is what varies, so a dense feature block earns
+   the quiet band that follows it.
+   ------------------------------------------------------------------------- */
+
+/* Centred content column. Deliberately does NOT set max-width: this class is
+   defined after Tailwind's utilities and would win the cascade at equal
+   specificity, silently flattening every `max-w-*` on the page to one width.
+   Each usage sets its own. */
+.shell {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section { position: relative; padding-block: clamp(3.75rem, 7.5vh, 5.75rem); }
+
+/* Pricing has to be comparable at a glance, which means fitting one screen. */
+.section--tight { padding-block: clamp(3.5rem, 7vh, 5.5rem); }
+
+/* A section that owns a whole colour field, with the rounded top the comp
+   gives its bands. */
+.band {
+  background: var(--surface);
+  border-radius: var(--r-2xl) var(--r-2xl) 0 0;
+}
+.band--soft { background: var(--surface-soft); }
+.band--flat { border-radius: 0; }
+
+/* --- 5.10 Feature block ---------------------------------------------------
+   The reference's core repeat: copy on one side, device on the other, sides
+   swapping each time.
+   ------------------------------------------------------------------------- */
+
+.block {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 5rem);
+  align-items: center;
+  /* minmax(0,…) rather than 1fr: a grid track's automatic minimum is its item's
+     min-content, so one nowrap child can widen the whole page on a phone. */
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 900px) {
+  .block { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  /* Flipped blocks put the device first visually without touching DOM order,
+     so a screen reader still gets copy-then-proof while the eye gets a zig-zag. */
+  .block[data-flip="true"] .block__media { order: -1; }
+}
+
+.block__media {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  /* Layout wrapper only now — no fill, no radius, no clip. The dark, glowing
+     backdrop used to live here as a flat rounded rectangle with a blob
+     blurred inside it; clipped to that rectangle, the blur's own edge landed
+     right on the rectangle's edge, so the whole thing still read as a solid
+     coloured rectangle behind the screenshot. It now lives entirely in
+     .block__glow below, whose silhouette is round rather than rectangular. */
+}
+
+/* A dark, glowing blob behind the screenshot — coded, not a generated image.
+   Deliberately NOT sized to the card: it's a near-circle pinned to a
+   fraction of the block's width regardless of the block's own (tall,
+   portrait-screenshot-driven) aspect ratio, so the screenshot's own corners
+   run past the blob's curve at top and bottom rather than the blob
+   enclosing the screenshot on every side. Un-clipped, so its blurred rim
+   feathers out to nothing against the section's own ground instead of
+   stopping dead at a container edge — an explicit, scoped exception to
+   Orchard's flat-fills/no-glow rule, kept to this one card type (see the
+   comment above .hero-fan in Hero.tsx for the earlier, dropped attempt at
+   something similar behind the hero). Three layers share one silhouette: a
+   solid ink base, then two radial gradients on ::before/::after that
+   crossfade opposite each other so the colour mix itself drifts through the
+   brand's green range rather than the glow just pulsing brighter and
+   dimmer — all three built from the same tokens as everywhere else, not a
+   one-off colour invented for this element. The whole stack morphs between
+   a plain circle and a gently lopsided oval together. */
+.block__glow {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 78%;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
-  background: rgba(16,185,129,0.2);
-  transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+  background: var(--ink-deep);
+  filter: blur(34px);
+  pointer-events: none;
+  animation: blockGlowShape 18s var(--ease-in-out) infinite;
 }
 
-.dot-indicator.active {
-  background: #10b981;
-  width: 22px;
-  border-radius: 3px;
+.block__media--soft .block__glow {
+  background: var(--ink);
+  animation-direction: reverse;
 }
 
-/* ============================================
-   LEGAL PAGES
-   ============================================ */
-.legal-content h2 {
-  font-size: 1.4rem;
+.block__glow::before,
+.block__glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.block__glow::before {
+  background: radial-gradient(
+    ellipse 60% 46% at 44% 42%,
+    var(--brand-bright) 0%,
+    var(--brand) 55%,
+    transparent 78%
+  );
+  animation: blockGlowFade 11s ease-in-out infinite;
+}
+
+.block__glow::after {
+  background: radial-gradient(
+    ellipse 52% 62% at 58% 58%,
+    var(--brand) 0%,
+    var(--brand-deep) 55%,
+    transparent 78%
+  );
+  animation: blockGlowFade 11s ease-in-out infinite reverse;
+}
+
+@keyframes blockGlowFade {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.15; }
+}
+
+@keyframes blockGlowShape {
+  0%, 100% {
+    border-radius: 50%;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
+  50% {
+    border-radius: 46% 54% 55% 45% / 54% 47% 53% 46%;
+    transform: translate(-50%, -50%) rotate(4deg) scale(1.08);
+  }
+}
+
+/* --- 5.10b Add-items row ---------------------------------------------
+   One full-viewport section, all three ways an item gets into the pantry
+   side by side in a single row under one header — not three stacked full
+   screens, and not staggered (an earlier pass alternated the columns'
+   vertical position; the user asked for that removed — plain, even
+   alignment reads cleaner with a header already doing the framing). Each
+   column is small on purpose so header, media and copy for all three sit
+   inside one viewport with no scrolling. */
+
+.add-items {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 100dvh;
+  padding: clamp(2.5rem, 9vh, 4.5rem) clamp(1.25rem, 5vw, 3rem) clamp(1.5rem, 5vh, 3rem);
+  background: var(--surface-soft);
+}
+
+.add-items__head {
+  margin-bottom: clamp(4.5rem, 12vh, 7.5rem);
+  text-align: center;
+}
+
+/* Sized and kept to one line on its own — the shared .display--sub scale
+   this used to borrow wraps this particular sentence at normal desktop
+   widths, and the user asked for a single line specifically. */
+.add-items__head h2 {
+  font-size: clamp(1.05rem, 2vw, 1.8rem);
+  white-space: nowrap;
+}
+
+.add-items__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(1.25rem, 3.5vw, 3rem);
+  width: 100%;
+  max-width: 1160px;
+}
+
+.add-column {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.add-column__media { display: flex; justify-content: center; width: 100%; }
+
+/* Real screen recordings (converted to muted, looping video — see
+   public/videos/add-items/), kept small since three sit in one viewport at
+   once rather than one owning the whole screen. The status bar/dynamic
+   island is cropped out of every recording (top 6% -- see the crop note
+   above meal-plan's .plan-column__screen), so the aspect ratio here is
+   the capture's own (1206x2622) minus that same 6%, not the raw capture. */
+.add-column__video {
+  width: auto;
+  height: min(40vh, 355px);
+  aspect-ratio: 1206 / 2465;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--e-2);
+}
+
+.add-column__video-el {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.add-column__copy {
+  margin-top: 1rem;
+  max-width: 100%;
+}
+
+/* Kept to one line like the section's main heading — a column narrow
+   enough to wrap this is also narrow enough to have already stacked
+   (see the 900px breakpoint below), so nowrap never fights the layout. */
+.add-column__title {
+  font-size: clamp(0.95rem, 1.35vw, 1.2rem);
+  white-space: nowrap;
+}
+
+.add-column__desc {
+  margin-top: 0.6rem;
+  color: var(--ink-muted);
+  font-size: clamp(0.85rem, 0.95vw, 0.95rem);
+  line-height: 1.55;
+  max-width: 30ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Three columns of video + copy don't fit a narrow width — stack them and
+   drop the viewport lock, same fallback the rest of the site uses. Raised
+   to 900px (wider than the site's usual 760px stack point) specifically so
+   the three-column layout never runs at a width too narrow for the
+   one-line column titles below — it stacks to full-width single-column
+   before that happens, where a title has all the room it needs. */
+@media (max-width: 900px) {
+  .add-items { min-height: 0; }
+
+  .add-items__row { flex-direction: column; align-items: center; }
+
+  .add-column + .add-column { margin-top: 2.5rem; }
+
+  /* The one-line lock is a wide-layout call — once stacked, full column
+     width is available, so there's no need to force it. */
+  .add-items__head h2,
+  .add-column__title {
+    white-space: normal;
+  }
+}
+
+/* Shared snap targets. One rule for every full-viewport section rather than
+   scattering `scroll-snap-align` across each component's own class — every
+   id here already exists for nav/anchor purposes, so this piggybacks on
+   ids instead of adding a class to nine different files. Hero (#hero) is
+   included specifically so the navbar's Download button — which
+   scrollTo(0)s on click — always has y = 0 recognised as a real mandatory
+   snap point; without it, `scroll-snap-type: y mandatory` could pull that
+   programmatic scroll away from the very top toward Features, the next
+   nearest snap point, instead of landing exactly on the hero as asked.
+   #footer is included so scrolling past the last snapped section
+   (#waitlist) has a further point to commit to; without it, mandatory
+   snapping had nothing below #waitlist to snap to and sprang back to
+   #waitlist's own top the moment a scroll tried to continue past it,
+   trapping the closing Newsletter band and hiding the footer beneath it.
+
+   This whole list -- and `scroll-snap-type: y mandatory` on html below --
+   is meant for the home page only. Snapping used to leak onto
+   Privacy/Terms/Contact because Footer is shared across every page and
+   the old selector here was a bare `footer` tag, matching all of them;
+   with only one snap target on those pages (nothing else on them carries
+   any of the ids above), mandatory snapping had nowhere else to go but
+   the footer, so scrolling near the bottom of those pages kept forcing
+   itself back to the footer's top edge instead of scrolling normally.
+   Fixed at the source: Footer only gets id="footer" when rendered with
+   <Footer snap /> (the home page's own call); every other page's
+   <Footer /> renders with no id, so #footer -- and every other id in
+   this list -- simply doesn't exist there, and scroll-snap-type has
+   nothing to snap to (per spec, a snap container with zero snap targets
+   on an axis does not snap on that axis at all). */
+#hero,
+#features,
+#add-items,
+#meal-plan,
+#recipe-cook,
+#about,
+#pricing,
+#faq,
+#waitlist,
+#footer {
+  scroll-snap-align: start;
+}
+
+/* Utility for the four pre-existing sections (About, Pricing, FAQ, the
+   closing Newsletter/waitlist band) that were built to their own content
+   height, not a viewport. `min-height` rather than `height` + clip: a
+   viewport-tall SECTION with more content than fits one viewport should
+   grow past it and keep scrolling to the next snap point, not truncate
+   real copy (the FAQ's seven answers, Pricing's two full feature lists) —
+   same reasoning AddItems already used for its own min-height lock. Content
+   is vertically centred so short content still reads as "one screen,
+   centred" rather than pinned to the top with empty space below. */
+.viewport-lock {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width: 900px) {
+  .viewport-lock {
+    min-height: 0;
+    display: block;
+  }
+}
+
+/* --- 5.10c Features marquee --------------------------------------------
+   Full-viewport "everything the app does" section — the Features nav
+   link's destination. Replaced three alternating screenshot blocks first
+   (see AMENDED, layout.tsx), then replaced again: a static 4x3 card grid
+   became two independently-looping horizontal marquee rows per the user's
+   own annotated screenshot — cards keep sliding left forever ("a slow
+   train in a loop"), never pausing on scroll or hover. Both rows carry
+   the SAME 12 cards (each row's own track is the array twice over, back
+   to back, so the loop seams invisibly at the halfway point); row two
+   gets a negative animation-delay of exactly half the shared duration,
+   which is mathematically identical to starting it already half a cycle
+   ahead — so at any instant the two rows are showing two different
+   halves of the 12 cards rather than the same four in lockstep, and
+   between them nearly the whole set reads at a glance. */
+
+.features-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100dvh;
+  padding: clamp(2rem, 8vh, 4rem) 0;
+  /* Matches MealPlan's own background exactly (--ground) per the user's
+     explicit swatch. */
+  background: var(--ground);
+}
+
+.features-section__head {
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
+  padding-inline: clamp(1.25rem, 5vw, 3rem);
+  text-align: center;
+}
+
+.features-marquee {
+  --marquee-duration: 42s;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  /* Full-bleed breakout: cards need to scroll edge-to-edge regardless of
+     the section's own inline padding or the shell's max-width elsewhere
+     on the page. */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+/* This wrapper is also a Reveal target, which normally drops will-change
+   once its one-shot slide-in transition settles ([data-reveal].is-settled
+   in MOTION above) -- correct for a reveal that then sits still, wrong
+   here: the marquee keeps animating forever underneath it. Demoting the
+   wrapper off its own compositor layer mid-page forces the browser to
+   recomposite the whole subtree in that frame, which is what produced the
+   brief doubled/ghosted card the user caught on video, timed almost
+   exactly to --dur-reveal (640ms) after the section scrolled into view.
+   Keep it promoted permanently instead of letting it settle to auto. */
+.features-marquee.is-settled {
+  will-change: transform;
+}
+
+.features-marquee-row {
+  overflow: hidden;
+  width: 100%;
+  padding-block: 0.4rem;
+  /* Cards fade out rather than hard-cut at the row's own edges — no
+     visible border/frame around the row itself. */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+}
+
+.features-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: clamp(0.9rem, 2vw, 1.5rem);
+  padding-inline: clamp(1.25rem, 5vw, 3rem);
+  animation: featuresMarquee var(--marquee-duration) linear infinite;
+  /* Force its own compositor layer so the transform tween never falls
+     back to main-thread paint. Without this, a busy main thread (the
+     page's several other IntersectionObservers, autoplaying videos) can
+     drop a frame on one row and not the other, which reads as the two
+     rows suddenly swapping which one is "ahead". */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Half a cycle ahead of row one — see the section comment above. */
+.features-marquee-row--offset .features-marquee-track {
+  animation-delay: calc(var(--marquee-duration) * -0.5);
+}
+
+@keyframes featuresMarquee {
+  from { transform: translateX(0); }
+  /* The track is the 12 cards duplicated once, so -50% is exactly one full
+     set's width — the loop seam lands invisibly on identical content. */
+  to   { transform: translateX(-50%); }
+}
+
+.feature-card {
+  display: flex;
+  flex: 0 0 auto;
+  width: clamp(210px, 22vw, 260px);
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: clamp(1rem, 1.6vw, 1.4rem);
+  border-radius: var(--r-lg);
+  /* Green (--surface) against the section's own cream (--ground) — the
+     same surface-on-ground pairing Pricing's featured card already uses.
+     The navbar-Download dark green (--brand) was tried and reverted: too
+     dark for a whole card field, needed white text to stay readable, and
+     read as odd rather than a clean card. */
+  background: var(--surface);
+  box-shadow: var(--e-2);
+}
+
+.feature-card__icon {
+  --plate: 38px;
+  margin-bottom: 0.85rem;
+  /* .icon-plate's default background is --surface — now identical to this
+     card's own new background, which would make the plate invisible.
+     White keeps the icon legible against the green card. */
+  background: var(--card);
+}
+
+.feature-card__title {
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.feature-card__body {
+  margin-top: 0.4rem;
+  font-size: clamp(0.75rem, 0.85vw, 0.82rem);
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+@media (max-width: 900px) {
+  .features-section { min-height: 0; }
+}
+
+/* --- 5.10d Meal-plan row -----------------------------------------------
+   Same pattern as add-items (5.10b), four columns instead of three. Each
+   column currently renders the amber placeholder-screen rather than a
+   video — see the pending-asset note in MealPlan.tsx and layout.tsx. */
+
+.meal-plan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 100dvh;
+  padding: clamp(2.5rem, 9vh, 4.5rem) clamp(1.25rem, 5vw, 3rem) clamp(1.5rem, 5vh, 3rem);
+  background: var(--ground);
+}
+
+.meal-plan__head {
+  margin-bottom: clamp(4rem, 11vh, 7rem);
+  text-align: center;
+}
+
+.meal-plan__head h2 {
+  font-size: clamp(1.05rem, 2vw, 1.8rem);
+  white-space: nowrap;
+}
+
+.meal-plan__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  width: 100%;
+  max-width: 1240px;
+}
+
+.plan-column {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.plan-column__media { display: flex; justify-content: center; width: 100%; }
+
+/* Every screen recording site-wide (add-items, meal-plan, recipe-cook)
+   has its top 6% cropped off before it reaches public/videos/ -- that
+   band is just the OS status bar and dynamic island, never app content,
+   ffprobe-confirmed identical across every capture regardless of the
+   source resolution (1206x2622 vs the add-items captures' 600x1304).
+   1206 / 2465 is that same capture ratio with the cropped band removed,
+   so nothing is stretched. */
+.plan-column__screen {
+  width: auto;
+  height: min(36vh, 310px);
+  aspect-ratio: 1206 / 2465;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--e-2);
+}
+
+.plan-column__video-el {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.plan-column__copy { margin-top: 1rem; max-width: 100%; }
+
+.plan-column__title {
+  font-size: clamp(0.88rem, 1.2vw, 1.1rem);
+  white-space: nowrap;
+}
+
+.plan-column__desc {
+  margin-top: 0.6rem;
+  color: var(--ink-muted);
+  font-size: clamp(0.8rem, 0.9vw, 0.9rem);
+  line-height: 1.55;
+  max-width: 26ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 900px) {
+  .meal-plan { min-height: 0; }
+  .meal-plan__row { flex-direction: column; align-items: center; }
+  .plan-column + .plan-column { margin-top: 2.5rem; }
+  .meal-plan__head h2,
+  .plan-column__title { white-space: normal; }
+}
+
+/* --- 5.10e Recipe cook/import row ---------------------------------------
+   Two columns, so each gets more room than add-items/meal-plan's three or
+   four. Recipe detail ships with a real screenshot already; Import from a
+   social link renders the placeholder-screen until a capture lands. */
+
+.recipe-row-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 100dvh;
+  padding: clamp(2.5rem, 9vh, 4.5rem) clamp(1.25rem, 5vw, 3rem) clamp(1.5rem, 5vh, 3rem);
+  background: var(--surface-soft);
+}
+
+.recipe-row-section__head {
+  margin-bottom: clamp(4rem, 11vh, 7rem);
+  text-align: center;
+}
+
+.recipe-row-section__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  width: 100%;
+  max-width: 900px;
+}
+
+.recipe-column {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.recipe-column__media { display: flex; justify-content: center; width: 100%; }
+
+.recipe-column__screen {
+  width: auto;
+  height: min(46vh, 415px);
+  aspect-ratio: 1206 / 2465;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--e-2);
+}
+
+.recipe-column__video-el {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.recipe-column__copy { margin-top: 1.15rem; max-width: 100%; }
+
+.recipe-column__title {
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+}
+
+.recipe-column__desc {
+  margin-top: 0.65rem;
+  color: var(--ink-muted);
+  font-size: clamp(0.88rem, 1vw, 0.98rem);
+  line-height: 1.6;
+  max-width: 32ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 900px) {
+  .recipe-row-section { min-height: 0; }
+  .recipe-row-section__row { flex-direction: column; align-items: center; }
+  .recipe-column + .recipe-column { margin-top: 2.5rem; }
+}
+
+/* --- 5.11 Founder block --------------------------------------------------- */
+
+.founder {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (min-width: 820px) {
+  .founder { grid-template-columns: 220px minmax(0, 1fr); }
+}
+
+.founder__content {
+  max-width: 820px;
+}
+
+.founder__portrait {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 220px;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface);
+  display: grid;
+  place-items: center;
+  justify-self: start;
+}
+
+/* Placeholder state — visibly unfinished on purpose, so it can't ship by
+   accident mistaken for a real portrait. */
+.founder__portrait[data-placeholder="true"] {
+  border: 2px dashed var(--line-strong);
+  background: var(--surface-soft);
+}
+.founder__portrait[data-placeholder="true"]::after {
+  content: "PORTRAIT";
+  font-size: 10px;
   font-weight: 700;
-  margin-top: 2.5rem;
+  letter-spacing: 0.18em;
+  color: var(--ink-muted);
+}
+
+.placeholder-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: var(--r-full);
+  background: var(--amber-soft);
+  color: var(--amber-ink);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* --- 5.12 Pricing --------------------------------------------------------- */
+
+.price-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: clamp(1.35rem, 2vw, 1.75rem) clamp(1.5rem, 2.6vw, 2.1rem);
+  border-radius: var(--r-xl);
+  background: var(--card);
+  box-shadow: var(--e-2);
+}
+
+.price-card .btn {
+  margin-top: auto;
+}
+
+/* The paid tier takes the colour field rather than a border or a glow. */
+.price-card--featured {
+  background: var(--surface);
+  box-shadow: var(--e-3);
+}
+
+.tier-tag {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 6px 14px;
+  border-radius: var(--r-full);
+  background: var(--brand);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================================
+   6. LONG-FORM (legal pages)
+   ========================================================================== */
+
+.legal-content h2 {
+  font-family: var(--font-archivo), sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-top: 2.75rem;
   margin-bottom: 0.875rem;
-  color: #f0fdf4;
-  letter-spacing: -0.02em;
+  color: var(--ink);
+  scroll-margin-top: calc(var(--nav-height) + 24px);
 }
 
 .legal-content h3 {
-  font-size: 1.05rem;
-  font-weight: 600;
-  margin-top: 1.5rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  margin-top: 1.75rem;
   margin-bottom: 0.625rem;
-  color: #bbf7d0;
+  color: var(--ink);
 }
 
 .legal-content p {
   margin-bottom: 1rem;
   line-height: 1.8;
-  color: rgba(134,239,172,0.5);
+  color: var(--ink-muted);
+  max-width: 70ch;
 }
+
+.legal-content ul { list-style: disc; }
+.legal-content ol { list-style: decimal; }
 
 .legal-content ul,
 .legal-content ol {
   margin-bottom: 1rem;
   padding-left: 1.5rem;
-  color: rgba(134,239,172,0.5);
+  color: var(--ink-muted);
+  max-width: 70ch;
 }
 
-.legal-content li {
-  margin-bottom: 0.4rem;
-  line-height: 1.8;
-}
+.legal-content li { margin-bottom: 0.4rem; line-height: 1.8; }
 
+/* Wide tables scroll inside their own box instead of forcing the page wider
+   than the reading column. `display: block` is what makes overflow apply to a
+   table element; the internal table box still aligns the columns. */
 .legal-content table {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   margin: 1.25rem 0;
-  font-size: 13px;
+  font-size: 13.5px;
+  -webkit-overflow-scrolling: touch;
 }
+
+.legal-content td { min-width: 140px; }
 
 .legal-content th,
 .legal-content td {
   padding: 12px 16px;
   text-align: left;
-  border-bottom: 1px solid rgba(16,185,129,0.08);
-  color: rgba(134,239,172,0.5);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-muted);
 }
 
 .legal-content th {
-  color: #bbf7d0;
-  font-weight: 600;
-  font-size: 11px;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  background: rgba(16,185,129,0.04);
+  letter-spacing: 0.06em;
+  background: var(--surface-soft);
 }
 
-.legal-content strong {
-  color: #d1fae5;
-  font-weight: 600;
-}
+.legal-content strong { color: var(--ink); font-weight: 650; }
 
 .legal-content a {
-  color: #34d399;
+  color: var(--brand);
   text-decoration: none;
-  border-bottom: 1px solid rgba(52,211,153,0.25);
-  transition: border-color 0.2s;
+  border-bottom: 1.5px solid rgba(12, 115, 85, 0.3);
+  transition: border-color var(--dur-base) var(--ease-out-expo);
+}
+.legal-content a:hover { border-color: var(--brand); }
+
+/* --- Legal page contents index -------------------------------------------
+   A sticky, auto-highlighting section index. Long legal documents are far
+   easier to navigate — and to cite — with one.
+   ------------------------------------------------------------------------- */
+
+.legal-layout { display: block; }
+
+@media (min-width: 1024px) {
+  .legal-layout {
+    display: grid;
+    grid-template-columns: 232px minmax(0, 1fr);
+    gap: 3.5rem;
+    align-items: start;
+  }
 }
 
-.legal-content a:hover {
-  border-color: #34d399;
+.legal-toc {
+  position: sticky;
+  top: calc(var(--nav-height) + 28px);
+  max-height: calc(100dvh - var(--nav-height) - 72px);
+  overflow-y: auto;
+  padding-right: 8px;
+  scrollbar-width: thin;
+}
+
+.legal-toc__link {
+  display: block;
+  padding: 8px 0 8px 14px;
+  /* A hairline, not a coloured rail: a 2px accent border down a list is the
+     side-tab tell, and it read as a stripe running the whole index. */
+  border-left: 1px solid var(--line);
+  color: var(--ink-muted);
+  font-size: 13px;
+  line-height: 1.5;
+  text-decoration: none;
+  transition:
+    color var(--dur-base) var(--ease-out-expo),
+    border-color var(--dur-base) var(--ease-out-expo),
+    padding-left var(--dur-base) var(--ease-out-expo);
+}
+
+.legal-toc__link:hover {
+  color: var(--ink);
+  border-left-color: var(--line-strong);
+  padding-left: 17px;
+}
+
+/* The current section is marked by weight and colour, not by a thicker rule. */
+.legal-toc__link[aria-current="true"] {
+  color: var(--brand);
+  border-left-color: var(--ink-muted);
+  font-weight: 700;
 }

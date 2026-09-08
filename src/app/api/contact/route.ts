@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { fromAddress, ADMIN_INBOX } from "@/lib/mail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -24,10 +25,10 @@ export async function POST(request: NextRequest) {
     }
 
     const { error } = await resend.emails.send({
-      from: "PantryPilot Contact <onboarding@resend.dev>",
-      to: "admin.pantrypilot@gmail.com",
+      from: fromAddress("KhanPaan Contact"),
+      to: ADMIN_INBOX,
       replyTo: email,
-      subject: `[PantryPilot Contact] ${subject}`,
+      subject: `[KhanPaan Contact] ${subject}`,
       text: [
         `From: ${name} (${email})`,
         `Subject: ${subject}`,
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest) {
         message,
         "",
         "---",
-        "Sent via PantryPilot website contact form",
+        "Sent via KhanPaan website contact form",
       ].join("\n"),
     });
 

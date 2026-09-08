@@ -44,3 +44,9 @@ next-env.d.ts
 CLAUDE.md
 AGENTS.md
 .claude/
+# AI agent instructions (local dev only)
+CLAUDE.md
+AGENTS.md
+.claude/
+.serena/
+.impeccable/

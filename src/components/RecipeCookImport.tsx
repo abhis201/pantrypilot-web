@@ -24,79 +24,81 @@ import Reveal from "./Reveal";
 export default function RecipeCookImport() {
   return (
     <section id="recipe-cook" className="recipe-row-section">
-      <div className="recipe-row-section__head">
-        <Reveal>
-          <h2 className="display display--sub">
-            From an idea or a link to <em>a cooked meal.</em>
-          </h2>
-        </Reveal>
-      </div>
-
-      <div className="recipe-row-section__row">
-        <div className="recipe-column">
-          <Reveal className="recipe-column__media" y={24}>
-            <div className="recipe-column__screen">
-              <video
-                className="recipe-column__video-el"
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-                aria-label="Pasting a YouTube link into Import Recipe, extracting ingredients, steps and macros, then the recipe landing in Imported Recipes"
-              >
-                <source
-                  src="/videos/recipe-cook/import.webm"
-                  type="video/webm"
-                />
-                <source src="/videos/recipe-cook/import.mp4" type="video/mp4" />
-              </video>
-            </div>
-          </Reveal>
-          <Reveal className="recipe-column__copy" delay={100} y={16}>
-            <h3 className="display display--xs recipe-column__title">
-              Import <em>from a link.</em>
-            </h3>
-            <p className="recipe-column__desc">
-              Paste an Instagram Reel, TikTok, YouTube link or plain URL and
-              it&apos;s parsed into ingredients, macros and steps — ready to
-              cook or plan.
-            </p>
+      <div className="shell max-w-[1240px] recipe-row-section__layout">
+        <div className="recipe-row-section__head">
+          <Reveal>
+            <h2 className="display display--sub">
+              Find your next meal. <em>Make it yours.</em>
+            </h2>
           </Reveal>
         </div>
 
-        <div className="recipe-column">
-          <Reveal className="recipe-column__media" delay={80} y={24}>
-            <div className="recipe-column__screen">
-              <video
-                className="recipe-column__video-el"
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-                aria-label="A recipe's detail page with ingredients checked against the pantry and step-by-step instructions, then Cook This logging the calories and updating the pantry"
-              >
-                <source
-                  src="/videos/recipe-cook/discover-cook.webm"
-                  type="video/webm"
-                />
-                <source
-                  src="/videos/recipe-cook/discover-cook.mp4"
-                  type="video/mp4"
-                />
-              </video>
-            </div>
-          </Reveal>
-          <Reveal className="recipe-column__copy" delay={180} y={16}>
-            <h3 className="display display--xs recipe-column__title">
-              Discover our curated selection for <em>your taste</em>
-            </h3>
-            <p className="recipe-column__desc">
-              Discover recipes that match your pantry, dietary preferences and
-              expiring items, then cook and log them with a single tap.
-            </p>
-          </Reveal>
+        <div className="recipe-row-section__row">
+          <div className="recipe-column">
+            <Reveal className="recipe-column__media" y={24}>
+              <div className="recipe-column__screen">
+                <video
+                  className="recipe-column__video-el"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  aria-label="Pasting a YouTube link into Import Recipe, extracting ingredients, steps and macros, then the recipe landing in Imported Recipes"
+                >
+                  <source
+                    src="/videos/recipe-cook/import.webm"
+                    type="video/webm"
+                  />
+                  <source src="/videos/recipe-cook/import.mp4" type="video/mp4" />
+                </video>
+              </div>
+            </Reveal>
+            <Reveal className="recipe-column__copy" delay={100} y={16}>
+              <h3 className="display display--xs recipe-column__title">
+                Import <em>from a link.</em>
+              </h3>
+              <p className="recipe-column__desc">
+                Paste an Instagram Reel, TikTok, YouTube link or plain URL and
+                it&apos;s parsed into ingredients, macros and steps — ready to
+                cook or plan.
+              </p>
+            </Reveal>
+          </div>
+
+          <div className="recipe-column">
+            <Reveal className="recipe-column__media" delay={80} y={24}>
+              <div className="recipe-column__screen">
+                <video
+                  className="recipe-column__video-el"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  aria-label="A recipe's detail page with ingredients checked against the pantry and step-by-step instructions, then Cook This logging the calories and updating the pantry"
+                >
+                  <source
+                    src="/videos/recipe-cook/discover-cook.webm"
+                    type="video/webm"
+                  />
+                  <source
+                    src="/videos/recipe-cook/discover-cook.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+            </Reveal>
+            <Reveal className="recipe-column__copy" delay={180} y={16}>
+              <h3 className="display display--xs recipe-column__title">
+                Discover our curated selection for <em>your taste</em>
+              </h3>
+              <p className="recipe-column__desc">
+                Discover recipes that match your pantry, dietary preferences and
+                expiring items, then cook and log them with a single tap.
+              </p>
+            </Reveal>
+          </div>
         </div>
       </div>
     </section>

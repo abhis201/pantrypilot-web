@@ -473,6 +473,82 @@ unlike a normal reveal target it doesn't go still afterward -- the
 marquee keeps animating underneath it for as long as the section is on
 screen.
 
+FEATURES, third pass — an illustrated bento grid instead of the marquee,
+and why: the user asked for the whole section redesigned, "modern," with
+modern animation and transitions. The marquee's weakness was that it was
+the only thing it could be: cards moved past at a fixed rate, so a feature
+you wanted to read was already leaving, and half the set was off-screen at
+any moment. The grid puts all twelve on one screen, reading order intact.
+Five columns hold twelve tiles because three of them are double-width
+(featured: true on FEATURE_CARDS 0, 6 and 9) — 15 cells, three rows of
+four, the wide one in a different position each row, which is what makes
+it a bento rather than a table. Those three flags are positional: one per
+row, or the last row ends with a hole. Below 1181px the wide tiles
+collapse to one cell each (four columns can't absorb a double-width tile
+without the same hole) and the grid is an even 4x3; below 900px the
+viewport lock drops as it always has, to three columns, then two, then one.
+
+COLOUR, and the exception it takes. Each tile carries its own tone: a soft
+shine thrown from its top-left corner, falling away to a pale green field
+that is itself nudged a few degrees toward that tone's hue, so both ends of
+the gradient belong to each other. Twelve tones, one per tile, all declared
+in one palette block in globals.css. This is the section's scoped exception
+to the no-gradient rule (the FeatureBlock screenshot glow is the other, also
+on record here): the user asked for separate colours that "individually
+shine in the bg colour with some cool gradient, not overpowering the bg,"
+then for the cards' white to become "some shade of green that matches best
+with their gradient." The rest of the system still holds — the shine is the
+only gradient, there is no glow behind a card, no translucent panel, and
+depth is still the one offset shadow. Type colour never varies with the
+tone: every title is --ink and every body --ink-muted on every card, which
+is what keeps twelve differently-coloured tiles reading as one family.
+
+ILLUSTRATIONS: twelve of them, one per tile, in FeatureArt.tsx. Vector, not
+icons and not the Spot set — Spot is six raster PNGs of pantry objects on
+fixed colours, and these had to cover things no photograph of a jar can say
+(OCR, analytics, "no trackers") and wear their own tile's colour, which only
+vector art can do. Each is a small scene on a 96x48 canvas: the object the
+copy names plus the context that makes it a picture of the feature rather
+than a glyph for it — the receipt under a scanner's corner marks, the camera
+pointed at an actual plate, the milk carton with a swap arrow to an apple.
+Two of them were redrawn after review: crossed cutlery behind a plate is a
+sliver at each end at 40px and read as a ring (now a laid place setting),
+and a symmetrical bar-and-two-dots on a disc resolved into a face rather
+than food (now off-centre).
+
+LAYOUT, and the one piece of it that is load-bearing: a tile is a two-row
+grid — copy, then the picture taking everything the copy didn't use, bottom
+right (beside the copy instead, on the double-width tiles, where the blank
+space is horizontal). The user asked for the art to "utilize the empty space
+in the same card layout where the card is blank without text." For the
+picture to fill a leftover, that leftover has to be a definite height, so
+wherever the grid is three rows it is given a definite height of its own
+(clamp around 86vh - 195px) rather than being sized by its tallest card.
+Two things follow, and both are the point: the section's height stops
+depending on how long any card's copy is, and each tile's second row becomes
+a real box the drawing can fill with height: 100%. The first attempt used
+auto rows, where that percentage has nothing to resolve against — an SVG
+then falls back to the replaced-element default of 300x150, which is what
+pushed the section 40px past its snap. The formula was set by measuring the
+rendered section at nine viewport sizes (1920x1080 down to 1200x700, plus
+tablet and phone), not derived on paper: every locked width now lands
+exactly on --section-h with 27-93px to spare, with no tile clipping its own
+content, which is what the user asked for twice ("content inside it fully
+visible inside its viewport", "fix everything in the viewport").
+
+MOTION: two layers, both CSS, the only script being the Reveal observer that
+adds .is-in. (1) ENTRANCE — tiles stagger in 55ms apart off --i, split into
+tileFade (fill forwards, because the tile's own rule says opacity 0) and
+tileLift (fill BACKWARDS, so transform returns to cascade control when it
+ends — one combined animation with fill: both would pin transform forever
+and kill every hover on the section). (2) POINTER — hover lifts the tile,
+deepens its shine (a second gradient faded in over the first, since a
+gradient can't be transitioned between two values) and pops its
+illustration. An earlier pass had a third layer, a spotlight travelling the
+grid on its own forever, twelve tiles sharing one timeline through negative
+animation-delays; the user asked for it out, so colour is now constant and
+only the pointer moves it.
+
 RECIPE-COOK-IMPORT, real recordings: both columns shipped placeholder or
 a single static screenshot until now. Two recordings arrived
 (import.webm/mp4, discover-cook.webm/mp4 in public/videos/recipe-cook/,

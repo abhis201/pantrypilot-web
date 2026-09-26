@@ -1,33 +1,46 @@
 import Reveal from "./Reveal";
 import {
-  Fridge,
-  Clock,
-  Receipt,
-  Barcode,
-  ChefHat,
-  Sparkles,
-  Calendar,
-  Camera,
-  Leaf,
-  Cart,
-  ChartBar,
-  Shield,
-} from "./Icons";
+  ArtFridge,
+  ArtClock,
+  ArtReceipt,
+  ArtBarcode,
+  ArtChefHat,
+  ArtPlay,
+  ArtCalendar,
+  ArtCamera,
+  ArtLeaf,
+  ArtCart,
+  ArtChart,
+  ArtShield,
+} from "./FeatureArt";
 
 interface FeatureCard {
-  Icon: (props: { className?: string }) => React.ReactElement;
+  Art: () => React.ReactElement;
   title: string;
   body: string;
+  /**
+   * The tile's own colour, as the suffix of a .feature-tile--<tone> class in
+   * globals.css. Every tone is declared there and nowhere else — this names
+   * one, it doesn't define it. Each is used exactly once; two tiles wearing
+   * the same tone is the one thing that breaks the set.
+   */
+  tone: string;
+  /**
+   * Renders double-width, which is what turns an even grid into a bento.
+   * Exactly three are flagged, and their positions in the array are load-
+   * bearing: one has to land in each row of five columns or the last row
+   * ends with a hole. See .features-grid in globals.css.
+   */
+  featured?: boolean;
 }
 
 /**
- * Full-viewport "everything the app does" section — the Features nav
- * link's destination. This replaced the earlier three alternating
- * screenshot blocks (see AMENDED in layout.tsx), then was replaced again:
- * a static 4x3 grid became two horizontal marquee rows that scroll left
- * forever, per the user's own annotated screenshot ("a slow train in a
- * loop"). See the .features-marquee comment in globals.css for how the
- * two rows are kept out of lockstep with each other.
+ * Full-viewport "everything the app does" section — the Features nav link's
+ * destination. Third shape this section has taken: three alternating
+ * screenshot blocks, then two infinite horizontal marquee rows, now a bento
+ * grid of twelve illustrated tiles, each one lit by its own colour (see
+ * AMENDED/FEATURES in layout.tsx for the full history, and 5.10c in
+ * globals.css for the palette and the motion).
  *
  * Every line traces to a real capability already documented elsewhere on
  * the site (Pricing.tsx's FREE_FEATURES/PRO_FEATURES, Faq.tsx, Founder.tsx's
@@ -35,119 +48,128 @@ interface FeatureCard {
  */
 const FEATURE_CARDS: FeatureCard[] = [
   {
-    Icon: Fridge,
+    Art: ArtFridge,
+    tone: "mint",
     title: "Full pantry tracking",
     body: "Quantity, storage location, and expiry date on every item.",
+    featured: true,
   },
   {
-    Icon: Clock,
+    Art: ArtClock,
+    tone: "amber",
     title: "Freshness alerts",
     body: "Colour-coded urgency, flagged from four days out.",
   },
   {
-    Icon: Receipt,
+    Art: ArtReceipt,
+    tone: "sky",
     title: "Receipt OCR",
     body: "Scan a receipt and the whole shop drops in at once.",
   },
   {
-    Icon: Barcode,
+    Art: ArtBarcode,
+    tone: "violet",
     title: "Barcode scanning",
     body: "Enriched from OpenFoodFacts and USDA FoodData Central.",
   },
   {
-    Icon: ChefHat,
+    Art: ArtChefHat,
+    tone: "coral",
     title: "Recipe matching",
     body: "Suggestions ranked against what's actually in your pantry.",
   },
   {
-    Icon: Sparkles,
+    Art: ArtPlay,
+    tone: "pink",
     title: "Social recipe import",
     body: "Paste a Reels, TikTok or YouTube link and it's parsed for you.",
   },
   {
-    Icon: Calendar,
+    Art: ArtCalendar,
+    tone: "teal",
     title: "Weekly meal planner",
     body: "Four slots a day, or let auto-plan build the week for you.",
+    featured: true,
   },
   {
-    Icon: Camera,
+    Art: ArtCamera,
+    tone: "indigo",
     title: "Log meals out",
     body: "Photograph a restaurant plate and it folds into today's totals.",
   },
   {
-    Icon: Leaf,
+    Art: ArtLeaf,
+    tone: "lime",
     title: "Smart substitutions",
     body: "A swap suggested from what's genuinely on your shelves.",
   },
   {
-    Icon: Cart,
+    Art: ArtCart,
+    tone: "orange",
     title: "Shopping list export",
     body: "Missing items go straight to Instacart, Walmart, Kroger, or Amazon Fresh.",
+    featured: true,
   },
   {
-    Icon: ChartBar,
+    Art: ArtChart,
+    tone: "plum",
     title: "Nutrition & analytics",
     body: "Macro targets, plus dollars saved vs. wasted over time.",
   },
   {
-    Icon: Shield,
+    Art: ArtShield,
+    tone: "slate",
     title: "No ads, no trackers",
     body: "No advertising or third-party analytics SDKs, documented in full.",
   },
 ];
 
-function FeatureCardItem({ card, hidden }: { card: FeatureCard; hidden?: boolean }) {
-  const { Icon } = card;
-  return (
-    <div className="feature-card" aria-hidden={hidden ? "true" : undefined}>
-      <div className="icon-plate feature-card__icon">
-        <Icon className="h-[20px] w-[20px]" />
-      </div>
-      <h3 className="feature-card__title">{card.title}</h3>
-      <p className="feature-card__body">{card.body}</p>
-    </div>
-  );
-}
-
 /**
- * One looping row. The track holds the 12 cards twice back to back — CSS
- * animates it from translateX(0) to translateX(-50%), which is exactly one
- * set's width, so the moment it snaps back to 0% the on-screen content is
- * pixel-identical and the loop reads as continuous rather than restarting.
- * Every card that isn't needed for a screen reader to hear the 12 features
- * exactly once — the loop's duplicate half, and all of row two, which is
- * the same 12 cards again just out of phase — is aria-hidden.
+ * One tile. --i is its position in the grid and the only thing JavaScript
+ * hands the CSS here: it staggers the entrance, so the grid assembles tile by
+ * tile instead of arriving as a slab. Everything else — the colour, the
+ * shine, the hover — is CSS from here.
  */
-function MarqueeRow({ offset }: { offset?: boolean }) {
+function FeatureTile({ card, index }: { card: FeatureCard; index: number }) {
+  const { Art } = card;
   return (
-    <div className={`features-marquee-row ${offset ? "features-marquee-row--offset" : ""}`}>
-      <div className="features-marquee-track">
-        {FEATURE_CARDS.map((card) => (
-          <FeatureCardItem card={card} hidden={offset} key={`a-${card.title}`} />
-        ))}
-        {FEATURE_CARDS.map((card) => (
-          <FeatureCardItem card={card} hidden key={`b-${card.title}`} />
-        ))}
+    <article
+      className={`feature-tile feature-tile--${card.tone}${
+        card.featured ? " feature-tile--wide" : ""
+      }`}
+      style={{ "--i": index } as React.CSSProperties}
+    >
+      <div className="feature-tile__text">
+        <h3 className="feature-tile__title">{card.title}</h3>
+        <p className="feature-tile__body">{card.body}</p>
       </div>
-    </div>
+      <Art />
+    </article>
   );
 }
 
 export default function Features() {
   return (
     <section id="features" className="features-section">
-      <div className="features-section__head">
-        <Reveal>
-          <h2 className="display display--sub">
+      <div className="shell max-w-[1240px]">
+        <div className="features-head">
+          <Reveal as="h2" className="display display--sub" y={16}>
             Everything the app <em>does.</em>
-          </h2>
+          </Reveal>
+          <Reveal as="p" className="features-head__note" delay={80} y={16}>
+            Thoughtfully considered, meticulously built, and designed for real life.
+          </Reveal>
+        </div>
+
+        {/* A Reveal purely for its observer: .is-in is what releases the
+            tiles' staggered entrance. The wrapper's own reveal styling is
+            neutralised in CSS — see .features-grid[data-reveal]. */}
+        <Reveal className="features-grid">
+          {FEATURE_CARDS.map((card, index) => (
+            <FeatureTile card={card} index={index} key={card.title} />
+          ))}
         </Reveal>
       </div>
-
-      <Reveal className="features-marquee" y={20}>
-        <MarqueeRow />
-        <MarqueeRow offset />
-      </Reveal>
     </section>
   );
 }

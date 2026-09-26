@@ -1069,6 +1069,11 @@ textarea.form-input { border-radius: var(--r-lg); }
   text-align: center;
 }
 
+.add-items__head,
+.meal-plan__head {
+  max-width: 100%;
+}
+
 /* Sized and kept to one line on its own — the shared .display--sub scale
    this used to borrow wraps this particular sentence at normal desktop
    widths, and the user asked for a single line specifically. */
@@ -1275,159 +1280,394 @@ textarea.form-input { border-radius: var(--r-lg); }
   }
 }
 
-/* --- 5.10c Features marquee --------------------------------------------
+/* --- 5.10c Features bento grid ------------------------------------------
    Full-viewport "everything the app does" section — the Features nav
-   link's destination. Replaced three alternating screenshot blocks first
-   (see AMENDED, layout.tsx), then replaced again: a static 4x3 card grid
-   became two independently-looping horizontal marquee rows per the user's
-   own annotated screenshot — cards keep sliding left forever ("a slow
-   train in a loop"), never pausing on scroll or hover. Both rows carry
-   the SAME 12 cards (each row's own track is the array twice over, back
-   to back, so the loop seams invisibly at the halfway point); row two
-   gets a negative animation-delay of exactly half the shared duration,
-   which is mathematically identical to starting it already half a cycle
-   ahead — so at any instant the two rows are showing two different
-   halves of the 12 cards rather than the same four in lockstep, and
-   between them nearly the whole set reads at a glance. */
+   link's destination, and the third shape it has taken. Three alternating
+   screenshot blocks first (see AMENDED, layout.tsx), then two infinite
+   horizontal marquee rows, now a bento grid: twelve illustrated tiles,
+   three of them double-width, each one carrying its own colour.
+
+   COLOUR, and the one rule it bends. Twelve tones live in the palette
+   block below, one per tile, and each tile wears its tone as a soft shine
+   thrown from its top-left corner — a radial gradient that is the tone at
+   the corner and plain white by just past halfway, so the card is mostly
+   white, the colour reads as light falling on it, and the cream ground is
+   never competed with. This is the section's own scoped exception to the
+   system's no-gradient rule (the feature-screenshot glow in FeatureBlock is
+   the other, recorded in the same contract): the user asked for separate
+   colours that "individually shine in the bg colour with some cool
+   gradient, not overpowering the bg". Everything else the system asks for
+   still holds — the shine is the ONLY gradient, there is no glow behind the
+   card, no translucent panel, and depth is still the one offset shadow.
+
+   Text colour never varies with the tone. Every title stays --ink and every
+   body --ink-muted, both measured against white rather than the tint,
+   because the gradient is white where the copy sits; that keeps twelve
+   differently-coloured cards reading as one family, and keeps the contrast
+   figures in TOKENS true for all of them.
+
+   MOTION. Two layers, both CSS, the only script being the Reveal observer
+   that adds .is-in:
+     1. ENTRANCE — .is-in releases tileFade/tileLift, delayed by --i, so the
+        grid assembles tile by tile rather than arriving as a slab.
+     2. POINTER — hover lifts the tile, deepens its shine, and pops its
+        illustration. An earlier pass had a spotlight travelling the grid on
+        its own forever; the user asked for it out, so the colour is now
+        constant and only the pointer moves it.
+
+   HEIGHT. The section is locked to one snapport (--section-h) and all
+   twelve tiles have to be readable inside it, so every vertical
+   measurement below — padding, art, leading, type — clamps against vh:
+   it gives way on a short viewport and returns to full size on a tall one.
+   Rows are content-sized, so what the tiles save the section keeps as
+   breathing room rather than spending on a fourth row. */
 
 .features-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   width: 100%;
   min-height: var(--section-h);
-  padding: clamp(2rem, 8vh, 4rem) 0;
+  padding-block: clamp(1.75rem, 6vh, 3.25rem);
   /* Matches MealPlan's own background exactly (--ground) per the user's
      explicit swatch. */
   background: var(--ground);
 }
 
-.features-section__head {
-  margin-bottom: clamp(2rem, 5vh, 3.5rem);
-  padding-inline: clamp(1.25rem, 5vw, 3rem);
-  text-align: center;
-}
-
-.features-marquee {
-  --marquee-duration: 42s;
+/* Headline left, its one supporting line right, sharing a baseline. A
+   masthead rather than a centred title — it reads as composed, and it
+   costs less vertical room than the centred stack did, which is what
+   buys the grid its third row inside one viewport. */
+.features-head {
   display: flex;
-  flex-direction: column;
-  gap: clamp(1rem, 2.5vw, 1.75rem);
-  /* Full-bleed breakout: cards need to scroll edge-to-edge regardless of
-     the section's own inline padding or the shell's max-width elsewhere
-     on the page. */
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35rem clamp(1.5rem, 4vw, 3rem);
+  margin-bottom: clamp(1.25rem, 3.5vh, 2.25rem);
 }
 
-/* This wrapper is also a Reveal target, which normally drops will-change
-   once its one-shot slide-in transition settles ([data-reveal].is-settled
-   in MOTION above) -- correct for a reveal that then sits still, wrong
-   here: the marquee keeps animating forever underneath it. Demoting the
-   wrapper off its own compositor layer mid-page forces the browser to
-   recomposite the whole subtree in that frame, which is what produced the
-   brief doubled/ghosted card the user caught on video, timed almost
-   exactly to --dur-reveal (640ms) after the section scrolled into view.
-   Keep it promoted permanently instead of letting it settle to auto. */
-.features-marquee.is-settled {
-  will-change: transform;
-}
-
-.features-marquee-row {
-  overflow: hidden;
-  width: 100%;
-  padding-block: 0.4rem;
-  /* Cards fade out rather than hard-cut at the row's own edges — no
-     visible border/frame around the row itself. */
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 8%,
-    black 92%,
-    transparent
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 8%,
-    black 92%,
-    transparent
-  );
-}
-
-.features-marquee-track {
-  display: flex;
-  width: max-content;
-  gap: clamp(0.9rem, 2vw, 1.5rem);
-  padding-inline: clamp(1.25rem, 5vw, 3rem);
-  animation: featuresMarquee var(--marquee-duration) linear infinite;
-  /* Force its own compositor layer so the transform tween never falls
-     back to main-thread paint. Without this, a busy main thread (the
-     page's several other IntersectionObservers, autoplaying videos) can
-     drop a frame on one row and not the other, which reads as the two
-     rows suddenly swapping which one is "ahead". */
-  will-change: transform;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Half a cycle ahead of row one — see the section comment above. */
-.features-marquee-row--offset .features-marquee-track {
-  animation-delay: calc(var(--marquee-duration) * -0.5);
-}
-
-@keyframes featuresMarquee {
-  from { transform: translateX(0); }
-  /* The track is the 12 cards duplicated once, so -50% is exactly one full
-     set's width — the loop seam lands invisibly on identical content. */
-  to   { transform: translateX(-50%); }
-}
-
-.feature-card {
-  display: flex;
-  flex: 0 0 auto;
-  width: clamp(210px, 22vw, 260px);
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  padding: clamp(1rem, 1.6vw, 1.4rem);
-  border-radius: var(--r-lg);
-  /* Green (--surface) against the section's own cream (--ground) — the
-     same surface-on-ground pairing Pricing's featured card already uses.
-     The navbar-Download dark green (--brand) was tried and reverted: too
-     dark for a whole card field, needed white text to stay readable, and
-     read as odd rather than a clean card. */
-  background: var(--surface);
-  box-shadow: var(--e-2);
-}
-
-.feature-card__icon {
-  --plate: 38px;
-  margin-bottom: 0.85rem;
-  /* .icon-plate's default background is --surface — now identical to this
-     card's own new background, which would make the plate invisible.
-     White keeps the icon legible against the green card. */
-  background: var(--card);
-}
-
-.feature-card__title {
-  font-size: clamp(0.85rem, 1vw, 0.95rem);
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-  line-height: 1.3;
-}
-
-.feature-card__body {
-  margin-top: 0.4rem;
-  font-size: clamp(0.75rem, 0.85vw, 0.82rem);
+.features-head__note {
+  max-width: 34ch;
+  color: var(--ink-muted);
+  font-size: clamp(0.85rem, 0.95vw, 0.98rem);
   line-height: 1.5;
+}
+
+/* Only while it's actually sitting beside the headline: its rag then lands
+   on the grid's own right edge, which is what stops it reading as a line
+   left floating in the corner. Once it wraps underneath (below), it goes
+   back to ranging left with everything else. */
+@media (min-width: 901px) {
+  .features-head__note { text-align: right; }
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.45rem, 1vh, 0.9rem);
+}
+
+/* Wherever the grid is three rows (every width that keeps the viewport
+   lock), it is given a DEFINITE height rather than being sized by its
+   tallest card. Two things follow from that, and both are the point:
+
+   1. The section's height stops depending on how long the copy is. Head,
+      padding and grid are now a known sum, and the formula below is set so
+      that sum always lands inside one --section-h with room to spare — which
+      is what keeps the whole feature list inside one screen no matter what
+      a card says.
+   2. Each row becomes a definite height, so a tile's second row is a real
+      leftover the illustration can fill with height: 100%. Against an auto
+      row that percentage has nothing to resolve against and the drawing
+      falls back to an SVG's default 300x150 box, which is exactly what
+      pushed the section past its snap on the first attempt.
+
+   86vh minus 195px is the space left after the navbar, the section's own
+   padding and the head — measured at nine viewport sizes, not derived on
+   paper, and deliberately a little short of what's available so a long
+   heading can never tip it over. */
+@media (min-width: 901px) {
+  .features-grid {
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    height: clamp(330px, calc(86vh - 195px), 620px);
+  }
+
+  /* With a definite row to fill, the picture no longer needs a floor of its
+     own — and must not have one, or an unusually long body could add its
+     height to the copy's and overflow the row. */
+  .feature-tile__art { min-height: 0; }
+}
+
+/* Neutralised deliberately. This element is a Reveal target ONLY so its
+   IntersectionObserver adds .is-in, which is what starts the staggered
+   entrance below; letting the wrapper also run its own reveal would fade
+   all twelve tiles up together and there'd be no stagger left to see. */
+.features-grid[data-reveal] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+  will-change: auto;
+}
+
+/* --- The tile ----------------------------------------------------------- */
+
+.feature-tile {
+  position: relative;
+  /* Own stacking context, so the hover overlay's z-index stays a private
+     matter between the tile and its own children. */
+  isolation: isolate;
+  /* Copy in the first row, illustration in the second, and the second takes
+     everything the copy didn't use. That is the whole layout idea: a card is
+     never part text and part dead space — whatever the words leave is the
+     picture's, and the picture grows and shrinks to take exactly that. */
+  display: grid;
+  /* minmax(0, 1fr) rather than 1fr on the picture's row: an fr track's
+     automatic minimum is its item's min-content, which would let the
+     illustration push the tile taller instead of taking what's left. With a
+     0 minimum the copy is served first and the picture takes the remainder,
+     however much that is. */
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  /* The floor that guarantees there IS something left for the picture to
+     claim, derived from the space the section actually has rather than
+     guessed. Three rows share (--section-h - the section's own padding - the
+     head), which works out near 27vh a row; the 62px subtracted is the head
+     and the gaps, and it is deliberately generous — the floor has to sit
+     UNDER the true row height so that a tile whose copy runs long can grow
+     past it and still be absorbed by what's left, instead of pushing the
+     section past its snap. Verified by measurement at nine viewport sizes,
+     not by arithmetic alone. */
+  min-height: clamp(112px, calc(27vh - 62px), 190px);
+  padding: clamp(0.65rem, 1.5vh, 1.1rem) clamp(0.85rem, 1.1vw, 1.2rem);
+  /* The tone's own edge, at a fraction of its strength — enough to separate
+     the card from cream without drawing a coloured outline around it. */
+  border: 1px solid var(--line);
+  border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+  border-radius: var(--r-lg);
+  /* The shine. Tone at the corner, the card's own green by 56%, so two
+     thirds of the card is a green field and the colour reads as light
+     falling across it rather than as fill. That far end is per-tone
+     (--paper below), not one shared green: each is nudged toward its own
+     hue, which is what stops the blend between the two going muddy in the
+     middle. */
+  background: radial-gradient(118% 108% at 8% 0%, var(--tint) 0%, var(--paper) 56%);
+  box-shadow: var(--e-1);
+  /* Hidden until .is-in; tileFade supplies the 1. Deliberately NO transform
+     here: tileLift runs with fill `backwards`, so when it finishes the
+     transform falls back to whatever this rule says, and a starting offset
+     written here would drop every tile back down the instant it landed. */
+  opacity: 0;
+  transition:
+    transform var(--dur-slow) var(--ease-out-expo),
+    box-shadow var(--dur-slow) var(--ease-out-expo),
+    border-color var(--dur-base) var(--ease-out-expo);
+}
+
+/* Above the hover overlay, which sits at z-index 0 over the tile's own
+   background. */
+.feature-tile > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hover's deeper shine. A second gradient fading in over the first, because
+   a gradient can't be transitioned between two values — only an element
+   carrying one can be faded. Same geometry as the resting shine, one step
+   stronger and reaching a little further in. */
+.feature-tile::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    124% 112% at 8% 0%,
+    var(--tint-strong) 0%,
+    var(--paper) 62%
+  );
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out-expo);
+}
+
+.feature-tile:hover::before,
+.feature-tile:focus-within::before {
+  opacity: 1;
+}
+
+.feature-tile:hover,
+.feature-tile:focus-within {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--accent) 34%, transparent);
+  box-shadow: var(--e-3);
+}
+
+/* The illustration, sized by height rather than width so it gives way with
+   everything else on a short viewport. Its two tones are handed to the SVG
+   here (FeatureArt.tsx reads --art-base/--art-soft), which is what lets one
+   drawing serve any tone. */
+.feature-tile__art {
+  --art-base: var(--accent);
+  --art-soft: var(--accent-soft);
+  display: block;
+  grid-row: 2;
+  /* Bottom-right of whatever the copy left over. It fills that row rather
+     than sitting at a size of its own, so a tile with two lines of body gets
+     a bigger picture than one with four and both still come out level. The
+     drawing is 96x48 and keeps its ratio inside whatever box this makes
+     (SVG's own preserveAspectRatio), so it letterboxes rather than
+     distorting when the leftover is the wrong shape. */
+  align-self: end;
+  justify-self: end;
+  width: auto;
+  height: 100%;
+  /* The floor: on a narrow viewport where tiles are content-sized, this is
+     what the row is sized to instead of collapsing the picture to nothing.
+     It is also part of the tile's own minimum height, so it stays modest —
+     every pixel here is one the copy above can't have. */
+  min-height: clamp(28px, 4vh, 40px);
+  max-width: 100%;
+  margin-top: clamp(0.3rem, 0.9vh, 0.6rem);
+  transition: transform var(--dur-base) var(--ease-press);
+}
+
+.feature-tile:hover .feature-tile__art,
+.feature-tile:focus-within .feature-tile__art {
+  transform: scale(1.08) rotate(-4deg);
+}
+
+.feature-tile__title {
+  font-size: clamp(0.82rem, 1.7vh, 0.98rem);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.feature-tile__body {
+  margin-top: clamp(0.25rem, 0.6vh, 0.4rem);
+  font-size: clamp(0.72rem, 1.45vh, 0.83rem);
+  line-height: 1.45;
   color: var(--ink-muted);
 }
 
+/* --- The twelve tones ---------------------------------------------------
+   One per tile, named in FEATURE_CARDS and defined only here. Each is four
+   values: --tint (the shine at the corner), --tint-strong (the same one
+   step up, for hover), --accent (the illustration and the border), and
+   --paper (the green the shine falls away to — the card's own field, each
+   one leaning a few degrees toward its tone's hue so the two ends of the
+   gradient belong to each other).
+   Every tint sits around 92% lightness so --ink and --ink-muted keep the
+   contrast they were measured at, and every accent is deep enough to read
+   as a drawing rather than a wash. Hues are spaced around the wheel and
+   desaturated toward the site's own cream world — a fully saturated set
+   would read as a toy next to the rest of the page. */
+
+.feature-tile--mint   { --tint: #dcefd4; --tint-strong: #cbe8bf; --accent: #2f8f63; --accent-soft: #9fd3b4; --paper: #e3f1d7; }
+.feature-tile--amber  { --tint: #fbecd0; --tint-strong: #f8e0b4; --accent: #cf8c1e; --accent-soft: #f0cd8d; --paper: #ecf3d5; }
+.feature-tile--sky    { --tint: #dbeafa; --tint-strong: #c6ddf7; --accent: #2f78bd; --accent-soft: #a5c8e9; --paper: #dff1e4; }
+.feature-tile--violet { --tint: #e4e0f8; --tint-strong: #d5cff4; --accent: #6553c7; --accent-soft: #b9b0e6; --paper: #e3f0e1; }
+.feature-tile--coral  { --tint: #fbe1da; --tint-strong: #f7cec3; --accent: #cb5a41; --accent-soft: #eeb2a2; --paper: #eaf2d8; }
+.feature-tile--pink   { --tint: #fadfec; --tint-strong: #f6cbe1; --accent: #bc5089; --accent-soft: #e9aac9; --paper: #e7f2dd; }
+.feature-tile--teal   { --tint: #d5eeec; --tint-strong: #c0e6e2; --accent: #23867f; --accent-soft: #93cfc9; --paper: #dcf1e2; }
+.feature-tile--indigo { --tint: #dee3f7; --tint-strong: #ccd4f2; --accent: #47559f; --accent-soft: #adb6e2; --paper: #e1f0e0; }
+.feature-tile--lime   { --tint: #eaf2cf; --tint-strong: #dfebb7; --accent: #6b8c26; --accent-soft: #bdd189; --paper: #e8f3d5; }
+.feature-tile--orange { --tint: #fce4d2; --tint-strong: #f9d4ba; --accent: #cb6f28; --accent-soft: #f0bb90; --paper: #ebf3d6; }
+.feature-tile--plum   { --tint: #f0dff3; --tint-strong: #e8cdec; --accent: #96529f; --accent-soft: #d3abda; --paper: #e5f1df; }
+.feature-tile--slate  { --tint: #e0e8e5; --tint-strong: #d1ddd9; --accent: #4d6b62; --accent-soft: #a8bdb6; --paper: #e1efdf; }
+
+/* --- Entrance -----------------------------------------------------------
+   Transform and opacity only, so nothing here triggers layout, and the
+   global prefers-reduced-motion override (section 4) already collapses both
+   to ~0ms.
+
+   Split in two on purpose. tileFade fills forwards because the tile's own
+   rule says opacity 0 and it has to stay up afterwards; tileLift fills
+   BACKWARDS only, so once it ends the transform goes back under normal
+   cascade control and the hover lift works. One combined animation with
+   fill: both would pin transform forever and kill every hover. */
+
+@keyframes tileFade {
+  to { opacity: 1; }
+}
+
+@keyframes tileLift {
+  from { transform: translate3d(0, 24px, 0) scale(0.96); }
+}
+
+.features-grid.is-in .feature-tile {
+  animation:
+    tileFade var(--dur-slow) var(--ease-out-expo) forwards calc(var(--i) * 55ms),
+    tileLift var(--dur-slow) var(--ease-out-expo) backwards calc(var(--i) * 55ms);
+}
+
+/* --- Bento --------------------------------------------------------------
+   Five columns, three of the twelve tiles double-width: 12 tiles fill
+   exactly 15 cells, three even rows of four with the wide one in a
+   different position each row. The featured flags in FEATURE_CARDS are
+   placed to land one per row — move one and the last row opens a hole.
+   Only at this width: four columns can't absorb a double-width tile
+   without the same hole, so below it every tile is one cell and the grid
+   is an even 4x3. */
+@media (min-width: 1181px) {
+  .features-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+  /* A double-width tile's blank space is beside its copy rather than under
+     it, so the scene moves into the column instead of the row and takes the
+     tile's full height — which is what lets the three biggest features carry
+     the three biggest pictures. */
+  .feature-tile--wide {
+    grid-column: span 2;
+    grid-template-rows: 1fr;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: clamp(0.6rem, 1vw, 1.1rem);
+  }
+  .feature-tile--wide .feature-tile__text { grid-row: 1; grid-column: 1; }
+  .feature-tile--wide .feature-tile__art {
+    grid-row: 1;
+    grid-column: 2;
+    align-self: center;
+    max-width: clamp(118px, 13vw, 196px);
+    margin-top: 0;
+  }
+  .feature-tile--wide .feature-tile__title {
+    font-size: clamp(0.95rem, 2vh, 1.15rem);
+  }
+  /* Wide enough to hold the longest body in the set on two lines — the
+     line length is what's being set here, not a decorative cap, so it's
+     measured against that copy rather than rounded to a nice number. */
+  .feature-tile--wide .feature-tile__body {
+    max-width: 46ch;
+    font-size: clamp(0.76rem, 1.55vh, 0.88rem);
+  }
+}
+
 @media (max-width: 900px) {
-  .features-section { min-height: 0; }
+  /* Height lock off, same as every other full-viewport section; three
+     columns of four rows now that the grid has room to breathe downward. */
+  .features-section {
+    min-height: 0;
+    padding-block: clamp(3rem, 8vh, 4.5rem);
+  }
+  .features-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 680px) {
+  .features-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .features-head__note { max-width: 46ch; }
+}
+
+@media (max-width: 380px) {
+  .features-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Safety net rather than a second override: the tiles start at opacity 0
+   and are raised by an animation, so if that animation is collapsed to
+   ~0ms before .is-in ever lands, they must still be visible. */
+@media (prefers-reduced-motion: reduce) {
+  .feature-tile { opacity: 1; }
 }
 
 /* --- 5.10d Meal-plan row -----------------------------------------------
@@ -1525,49 +1765,62 @@ textarea.form-input { border-radius: var(--r-lg); }
 }
 
 /* --- 5.10e Recipe cook/import row ---------------------------------------
-   Two columns, so each gets more room than add-items/meal-plan's three or
-   four. Recipe detail ships with a real screenshot already; Import from a
-   social link renders the placeholder-screen until a capture lands. */
+   Each recording is paired with its copy to use the viewport horizontally. */
 
 .recipe-row-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
   min-height: var(--section-h);
-  padding: clamp(2.5rem, 9vh, 4.5rem) clamp(1.25rem, 5vw, 3rem) clamp(1.5rem, 5vh, 3rem);
+  padding-block: clamp(2.5rem, 7vh, 4.5rem);
   background: var(--surface-soft);
 }
 
+.recipe-row-section__layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 2.2fr);
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
 .recipe-row-section__head {
-  margin-bottom: clamp(4rem, 11vh, 7rem);
-  text-align: center;
+  width: 100%;
+  margin-bottom: 0;
+  text-align: left;
+}
+
+.recipe-row-section__head .display {
+  font-size: clamp(1.05rem, 2vw, 1.8rem);
+  line-height: 1.08;
+  text-wrap: balance;
 }
 
 .recipe-row-section__row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  gap: clamp(2.5rem, 6vw, 5.5rem);
+  gap: clamp(1.5rem, 2.5vw, 2.5rem);
   width: 100%;
-  max-width: 900px;
+  max-width: 1144px;
 }
 
 .recipe-column {
-  display: flex;
+  display: grid;
   flex: 1 1 0;
   min-width: 0;
-  flex-direction: column;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(1rem, 1.8vw, 1.5rem);
   align-items: center;
-  text-align: center;
+  text-align: left;
 }
 
 .recipe-column__media { display: flex; justify-content: center; width: 100%; }
 
 .recipe-column__screen {
-  width: auto;
-  height: min(46vh, 415px);
+  width: min(100%, 29.5vh, 240px);
+  height: auto;
   aspect-ratio: 1206 / 2465;
   border-radius: 14px;
   overflow: hidden;
@@ -1581,10 +1834,11 @@ textarea.form-input { border-radius: var(--r-lg); }
   object-fit: cover;
 }
 
-.recipe-column__copy { margin-top: 1.15rem; max-width: 100%; }
+.recipe-column__copy { min-width: 0; max-width: 100%; }
 
 .recipe-column__title {
-  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  font-size: clamp(1.15rem, 1.65vw, 1.5rem);
+  text-wrap: balance;
 }
 
 .recipe-column__desc {
@@ -1593,59 +1847,109 @@ textarea.form-input { border-radius: var(--r-lg); }
   font-size: clamp(0.88rem, 1vw, 0.98rem);
   line-height: 1.6;
   max-width: 32ch;
-  margin-left: auto;
-  margin-right: auto;
+  text-wrap: pretty;
 }
 
 @media (max-width: 900px) {
   .recipe-row-section { min-height: 0; }
+  .recipe-row-section__layout { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
   .recipe-row-section__row { flex-direction: column; align-items: center; }
+  .recipe-column { width: 100%; max-width: 620px; }
   .recipe-column + .recipe-column { margin-top: 2.5rem; }
 }
 
+@media (max-width: 520px) {
+  .recipe-column { grid-template-columns: minmax(0, 1fr); text-align: center; }
+  .recipe-column__screen { width: min(100%, 29.5vh, 210px); }
+  .recipe-column__desc { margin-inline: auto; }
+}
+
 /* --- 5.11 Founder block --------------------------------------------------- */
+
+.founder__content .display--sub { font-size: clamp(2rem, 3vw, 2.65rem); }
 
 .founder {
   display: grid;
   gap: clamp(2rem, 4vw, 3.5rem);
   grid-template-columns: minmax(0, 1fr);
-  align-items: start;
+  align-items: center;
 }
 
-@media (min-width: 820px) {
-  .founder { grid-template-columns: 220px minmax(0, 1fr); }
+.founder__figure { margin: 0; width: 100%; max-width: 360px; }
+.founder__content { min-width: 0; }
+.founder__eyebrow {
+  margin-bottom: 12px;
+  color: var(--ink-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
 }
-
-.founder__content {
-  max-width: 820px;
+.founder__intro {
+  margin-top: 18px;
+  font-size: clamp(17px, 1.3vw, 19px);
+  line-height: 1.65;
+  color: var(--ink-muted);
+  text-wrap: pretty;
 }
-
+.founder__detail {
+  margin-top: 12px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
 .founder__portrait {
   position: relative;
-  isolation: isolate;
   width: 100%;
-  max-width: 220px;
-  aspect-ratio: 4 / 5;
-  border-radius: var(--r-lg);
+  aspect-ratio: 1 / 1;
+  border-radius: 24px;
   overflow: hidden;
-  background: var(--surface);
-  display: grid;
-  place-items: center;
-  justify-self: start;
-}
-
-/* Placeholder state — visibly unfinished on purpose, so it can't ship by
-   accident mistaken for a real portrait. */
-.founder__portrait[data-placeholder="true"] {
-  border: 2px dashed var(--line-strong);
   background: var(--surface-soft);
 }
-.founder__portrait[data-placeholder="true"]::after {
-  content: "PORTRAIT";
-  font-size: 10px;
+.founder__caption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 16px;
+}
+.founder__caption strong { font-size: 20px; }
+.founder__caption span { font-size: 15px; color: var(--ink-muted); }
+.founder__note {
+  margin: 20px 0 0;
+  padding: 22px 26px;
+  border-left: 3px solid var(--ink-muted);
+  border-radius: 0 18px 18px 0;
+  background: var(--surface-soft);
+}
+.founder__note-label {
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  color: var(--ink);
+}
+.founder__quote {
+  margin-top: 8px;
+  font-size: 16px;
+  font-style: italic;
+  line-height: 1.65;
   color: var(--ink-muted);
+  text-wrap: pretty;
+}
+@media (min-width: 820px) {
+  .founder { grid-template-columns: minmax(0, 1fr) minmax(280px, 32%); }
+  .founder__figure { grid-column: 2; grid-row: 1; }
+  .founder__content { grid-column: 1; grid-row: 1; }
+}
+@media (min-width: 901px) and (max-height: 780px) {
+  #about { padding-block: 24px; }
+  .founder__intro { margin-top: 12px; font-size: 17px; line-height: 1.5; }
+  .founder__detail { font-size: 15px; }
+  .founder__note { margin-top: 14px; padding: 18px 22px; }
+  .founder__quote { font-size: 15px; line-height: 1.5; }
+}
+@media (max-width: 819px) {
+  .founder__figure { max-width: 300px; justify-self: center; }
+  .founder__content { grid-row: 1; }
 }
 
 .placeholder-note {

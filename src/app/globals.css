@@ -121,6 +121,8 @@
      truncated to force the fit), so a section whose content genuinely
      outgrows one screen becomes oversized again and scrolls freely — the
      intended escape hatch, not a regression. */
+  /* HARD RULE (web/CLAUDE.md §1): every snapped section is exactly this tall
+     and shows ALL of its content inside it. No section may grow past it. */
   --section-h: calc(100dvh - var(--nav-height));
   --gutter: 1.5rem;
 
@@ -1280,394 +1282,467 @@ textarea.form-input { border-radius: var(--r-lg); }
   }
 }
 
-/* --- 5.10c Features bento grid ------------------------------------------
-   Full-viewport "everything the app does" section — the Features nav
-   link's destination, and the third shape it has taken. Three alternating
-   screenshot blocks first (see AMENDED, layout.tsx), then two infinite
-   horizontal marquee rows, now a bento grid: twelve illustrated tiles,
-   three of them double-width, each one carrying its own colour.
+/* --- 5.10c Features: "The Loop" ------------------------------------------
+   Full-viewport "everything the app does" section, the Features nav link's
+   destination, and the fourth shape it has taken (alternating screenshots,
+   then a marquee, then a twelve-tile bento, now this). The twelve features
+   are grouped into the three chapters of how the app gets used: Stock it,
+   Cook it, Track & shop. Each chapter is one column card with its own
+   colour; a numbered track above joins them, and a coda below closes the
+   loop back to the pantry.
 
-   COLOUR, and the one rule it bends. Twelve tones live in the palette
-   block below, one per tile, and each tile wears its tone as a soft shine
-   thrown from its top-left corner — a radial gradient that is the tone at
-   the corner and plain white by just past halfway, so the card is mostly
-   white, the colour reads as light falling on it, and the cream ground is
-   never competed with. This is the section's own scoped exception to the
-   system's no-gradient rule (the feature-screenshot glow in FeatureBlock is
-   the other, recorded in the same contract): the user asked for separate
-   colours that "individually shine in the bg colour with some cool
-   gradient, not overpowering the bg". Everything else the system asks for
-   still holds — the shine is the ONLY gradient, there is no glow behind the
-   card, no translucent panel, and depth is still the one offset shadow.
+   HEIGHT. A hard rule (web/CLAUDE.md §1): the section is exactly one
+   --section-h tall and everything in it is visible at once. The shell is a
+   flex column; head, track and coda are their natural height and the
+   columns take the rest (flex: 1; min-height: 0). Every vertical measure
+   clamps against vh, and below 720px of viewport height the chapter ledes
+   and the coda step aside so the twelve features always fit. Below 900px
+   wide the three columns become a horizontal, snap-scrolling carousel
+   inside the same one-screen box, so the section never grows taller.
 
-   Text colour never varies with the tone. Every title stays --ink and every
-   body --ink-muted, both measured against white rather than the tint,
-   because the gradient is white where the copy sits; that keeps twelve
-   differently-coloured cards reading as one family, and keeps the contrast
-   figures in TOKENS true for all of them.
-
-   MOTION. Two layers, both CSS, the only script being the Reveal observer
-   that adds .is-in:
-     1. ENTRANCE — .is-in releases tileFade/tileLift, delayed by --i, so the
-        grid assembles tile by tile rather than arriving as a slab.
-     2. POINTER — hover lifts the tile, deepens its shine, and pops its
-        illustration. An earlier pass had a spotlight travelling the grid on
-        its own forever; the user asked for it out, so the colour is now
-        constant and only the pointer moves it.
-
-   HEIGHT. The section is locked to one snapport (--section-h) and all
-   twelve tiles have to be readable inside it, so every vertical
-   measurement below — padding, art, leading, type — clamps against vh:
-   it gives way on a short viewport and returns to full size on a tall one.
-   Rows are content-sized, so what the tiles save the section keeps as
-   breathing room rather than spending on a fourth row. */
+   MOTION. Triggered once by the Reveal observer adding .is-in to
+   .features-loop. The track's badges pop and its dashed lines draw
+   across, the columns rise one after another, each column's icon cluster
+   pops in and then bobs gently, the feature rows rise in sequence, and the
+   coda's arrow draws last. Opacity and transform only. Anything that also
+   has a hover transform is split into a fade that fills forwards and a lift
+   that fills backwards, so the hover still works once the entrance ends.
+   The global reduced-motion override (section 4) collapses all of it, and
+   the safety net at the end of this block keeps everything visible. */
 
 .features-section {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   width: 100%;
-  min-height: var(--section-h);
-  padding-block: clamp(1.75rem, 6vh, 3.25rem);
-  /* Matches MealPlan's own background exactly (--ground) per the user's
-     explicit swatch. */
+  height: var(--section-h);
+  overflow: hidden; /* safety net only; the layout below is what fits */
+  padding-block: clamp(1.25rem, 5vh, 3.5rem);
   background: var(--ground);
 }
 
-/* Headline left, its one supporting line right, sharing a baseline. A
-   masthead rather than a centred title — it reads as composed, and it
-   costs less vertical room than the centred stack did, which is what
-   buys the grid its third row inside one viewport. */
+.features-shell {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 2.6vh, 1.75rem);
+  height: 100%;
+  min-height: 0;
+}
+
+/* --- Head --------------------------------------------------------------- */
+
 .features-head {
+  flex: none;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 0.35rem clamp(1.5rem, 4vw, 3rem);
-  margin-bottom: clamp(1.25rem, 3.5vh, 2.25rem);
+  gap: 0.75rem clamp(1.5rem, 4vw, 3rem);
+}
+
+.features-head__titles {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.35rem, 1.2vh, 0.75rem);
+}
+
+.features-eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+.features-title {
+  /* vh keeps it inside the one-screen budget; vw stops it breaking onto a
+     third line on a phone. */
+  font-size: min(clamp(2rem, 6.2vh, 3.5rem), 9vw);
 }
 
 .features-head__note {
-  max-width: 34ch;
+  max-width: 38ch;
   color: var(--ink-muted);
-  font-size: clamp(0.85rem, 0.95vw, 0.98rem);
-  line-height: 1.5;
+  font-size: clamp(0.9rem, 1.9vh, 1rem);
+  line-height: 1.45;
 }
 
-/* Only while it's actually sitting beside the headline: its rag then lands
-   on the grid's own right edge, which is what stops it reading as a line
-   left floating in the corner. Once it wraps underneath (below), it goes
-   back to ranging left with everything else. */
 @media (min-width: 901px) {
   .features-head__note { text-align: right; }
 }
 
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(0.45rem, 1vh, 0.9rem);
+/* --- The loop wrapper (observer only) ----------------------------------- */
+
+.features-loop {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 2vh, 1.25rem);
 }
 
-/* Wherever the grid is three rows (every width that keeps the viewport
-   lock), it is given a DEFINITE height rather than being sized by its
-   tallest card. Two things follow from that, and both are the point:
-
-   1. The section's height stops depending on how long the copy is. Head,
-      padding and grid are now a known sum, and the formula below is set so
-      that sum always lands inside one --section-h with room to spare — which
-      is what keeps the whole feature list inside one screen no matter what
-      a card says.
-   2. Each row becomes a definite height, so a tile's second row is a real
-      leftover the illustration can fill with height: 100%. Against an auto
-      row that percentage has nothing to resolve against and the drawing
-      falls back to an SVG's default 300x150 box, which is exactly what
-      pushed the section past its snap on the first attempt.
-
-   86vh minus 195px is the space left after the navbar, the section's own
-   padding and the head — measured at nine viewport sizes, not derived on
-   paper, and deliberately a little short of what's available so a long
-   heading can never tip it over. */
-@media (min-width: 901px) {
-  .features-grid {
-    grid-template-rows: repeat(3, minmax(0, 1fr));
-    height: clamp(330px, calc(86vh - 195px), 620px);
-  }
-
-  /* With a definite row to fill, the picture no longer needs a floor of its
-     own — and must not have one, or an unusually long body could add its
-     height to the copy's and overflow the row. */
-  .feature-tile__art { min-height: 0; }
-}
-
-/* Neutralised deliberately. This element is a Reveal target ONLY so its
-   IntersectionObserver adds .is-in, which is what starts the staggered
-   entrance below; letting the wrapper also run its own reveal would fade
-   all twelve tiles up together and there'd be no stagger left to see. */
-.features-grid[data-reveal] {
+/* This element is a Reveal target only so its observer adds .is-in. Letting
+   it run its own fade would raise everything at once and hide the stagger. */
+.features-loop[data-reveal] {
   opacity: 1;
   transform: none;
   transition: none;
   will-change: auto;
 }
 
-/* --- The tile ----------------------------------------------------------- */
+/* --- Chapter tones -------------------------------------------------------
+   --tint is the card field (around 92% lightness, so --ink and --ink-muted
+   keep their measured contrast); --tone is the chapter's ink for badges,
+   icons and the hero plate. Every --tone clears 4.5:1 against white. */
+.loop-chapter--stock { --tint: #e3f1dc; --tone: var(--brand); }
+.loop-chapter--cook  { --tint: #fbeadf; --tone: #a8461f; }
+.loop-chapter--shop  { --tint: #e1eef1; --tone: #2a5f7c; }
 
-.feature-tile {
-  position: relative;
-  /* Own stacking context, so the hover overlay's z-index stays a private
-     matter between the tile and its own children. */
-  isolation: isolate;
-  /* Copy in the first row, illustration in the second, and the second takes
-     everything the copy didn't use. That is the whole layout idea: a card is
-     never part text and part dead space — whatever the words leave is the
-     picture's, and the picture grows and shrinks to take exactly that. */
+/* --- Track: 01 —— 02 —— 03 ---------------------------------------------- */
+
+.loop-track {
+  flex: none;
   display: grid;
-  /* minmax(0, 1fr) rather than 1fr on the picture's row: an fr track's
-     automatic minimum is its item's min-content, which would let the
-     illustration push the tile taller instead of taking what's left. With a
-     0 minimum the copy is served first and the picture takes the remainder,
-     however much that is. */
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.loop-track__step {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.loop-track__badge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: clamp(2rem, 4.8vh, 2.5rem);
+  aspect-ratio: 1;
+  border-radius: var(--r-full);
+  background: var(--tone);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 900;
+  opacity: 0;
+}
+
+.loop-track__line {
+  flex: 1;
+  height: 3px;
+  border-radius: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--line-strong) 0 10px,
+    transparent 10px 18px
+  );
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* --- Columns ------------------------------------------------------------ */
+
+.loop-cols {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: minmax(0, 1fr);
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+}
+
+.loop-chapter {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1.8vh, 1.25rem);
   min-width: 0;
-  /* The floor that guarantees there IS something left for the picture to
-     claim, derived from the space the section actually has rather than
-     guessed. Three rows share (--section-h - the section's own padding - the
-     head), which works out near 27vh a row; the 62px subtracted is the head
-     and the gaps, and it is deliberately generous — the floor has to sit
-     UNDER the true row height so that a tile whose copy runs long can grow
-     past it and still be absorbed by what's left, instead of pushing the
-     section past its snap. Verified by measurement at nine viewport sizes,
-     not by arithmetic alone. */
-  min-height: clamp(112px, calc(27vh - 62px), 190px);
-  padding: clamp(0.65rem, 1.5vh, 1.1rem) clamp(0.85rem, 1.1vw, 1.2rem);
-  /* The tone's own edge, at a fraction of its strength — enough to separate
-     the card from cream without drawing a coloured outline around it. */
+  min-height: 0;
+  overflow: hidden;
+  container: loop-chapter / inline-size;
+  padding: clamp(0.9rem, 2.8vh, 1.75rem) clamp(1rem, 1.7vw, 1.5rem);
   border: 1px solid var(--line);
-  border-color: color-mix(in srgb, var(--accent) 20%, transparent);
-  border-radius: var(--r-lg);
-  /* The shine. Tone at the corner, the card's own green by 56%, so two
-     thirds of the card is a green field and the colour reads as light
-     falling across it rather than as fill. That far end is per-tone
-     (--paper below), not one shared green: each is nudged toward its own
-     hue, which is what stops the blend between the two going muddy in the
-     middle. */
-  background: radial-gradient(118% 108% at 8% 0%, var(--tint) 0%, var(--paper) 56%);
-  box-shadow: var(--e-1);
-  /* Hidden until .is-in; tileFade supplies the 1. Deliberately NO transform
-     here: tileLift runs with fill `backwards`, so when it finishes the
-     transform falls back to whatever this rule says, and a starting offset
-     written here would drop every tile back down the instant it landed. */
+  border-radius: var(--r-xl);
+  background: var(--tint);
   opacity: 0;
   transition:
     transform var(--dur-slow) var(--ease-out-expo),
-    box-shadow var(--dur-slow) var(--ease-out-expo),
-    border-color var(--dur-base) var(--ease-out-expo);
+    box-shadow var(--dur-slow) var(--ease-out-expo);
 }
 
-/* Above the hover overlay, which sits at z-index 0 over the tile's own
-   background. */
-.feature-tile > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* Hover's deeper shine. A second gradient fading in over the first, because
-   a gradient can't be transitioned between two values — only an element
-   carrying one can be faded. Same geometry as the resting shine, one step
-   stronger and reaching a little further in. */
-.feature-tile::before {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    124% 112% at 8% 0%,
-    var(--tint-strong) 0%,
-    var(--paper) 62%
-  );
-  opacity: 0;
-  transition: opacity var(--dur-base) var(--ease-out-expo);
-}
-
-.feature-tile:hover::before,
-.feature-tile:focus-within::before {
-  opacity: 1;
-}
-
-.feature-tile:hover,
-.feature-tile:focus-within {
-  transform: translateY(-6px);
-  border-color: color-mix(in srgb, var(--accent) 34%, transparent);
+.loop-chapter:hover,
+.loop-chapter:focus-within {
+  transform: translateY(-4px);
   box-shadow: var(--e-3);
 }
 
-/* The illustration, sized by height rather than width so it gives way with
-   everything else on a short viewport. Its two tones are handed to the SVG
-   here (FeatureArt.tsx reads --art-base/--art-soft), which is what lets one
-   drawing serve any tone. */
-.feature-tile__art {
-  --art-base: var(--accent);
-  --art-soft: var(--accent-soft);
-  display: block;
-  grid-row: 2;
-  /* Bottom-right of whatever the copy left over. It fills that row rather
-     than sitting at a size of its own, so a tile with two lines of body gets
-     a bigger picture than one with four and both still come out level. The
-     drawing is 96x48 and keeps its ratio inside whatever box this makes
-     (SVG's own preserveAspectRatio), so it letterboxes rather than
-     distorting when the leftover is the wrong shape. */
-  align-self: end;
-  justify-self: end;
-  width: auto;
-  height: 100%;
-  /* The floor: on a narrow viewport where tiles are content-sized, this is
-     what the row is sized to instead of collapsing the picture to nothing.
-     It is also part of the tile's own minimum height, so it stays modest —
-     every pixel here is one the copy above can't have. */
-  min-height: clamp(28px, 4vh, 40px);
-  max-width: 100%;
-  margin-top: clamp(0.3rem, 0.9vh, 0.6rem);
-  transition: transform var(--dur-base) var(--ease-press);
+/* Title and cluster share the first row; the lede runs the full card width
+   underneath. A grid rather than a flex row so the cluster never squeezes
+   the title onto two lines and every card's feature list starts at the
+   same height. */
+.loop-chapter__head {
+  flex: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
 }
 
-.feature-tile:hover .feature-tile__art,
-.feature-tile:focus-within .feature-tile__art {
-  transform: scale(1.08) rotate(-4deg);
+.loop-chapter__titles { display: contents; }
+
+.loop-chapter__title {
+  grid-column: 1;
+  white-space: nowrap;
+  /* vw as well as vh: the title shares its row with the cluster and must
+     never be pushed onto two lines (which would misalign the three lists). */
+  font-size: clamp(1.35rem, min(3.6vh, 1.9vw), 1.9rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  color: var(--ink);
 }
 
-.feature-tile__title {
-  font-size: clamp(0.82rem, 1.7vh, 0.98rem);
-  font-weight: 800;
-  letter-spacing: -0.015em;
+.loop-chapter__lede {
+  grid-column: 1 / -1;
+  font-size: 0.94rem;
+  line-height: 1.4;
+  min-height: 2.8em; /* two lines in every card, so the three lists start level */
+  color: var(--ink-muted);
+}
+
+/* The floating cluster: three plates, the middle one solid in the tone. */
+.loop-cluster {
+  grid-column: 2;
+  grid-row: 1;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.loop-cluster__pop { display: block; opacity: 0; }
+
+.loop-cluster__plate {
+  display: grid;
+  place-items: center;
+  width: clamp(1.75rem, 4vh, 2rem);
+  aspect-ratio: 1;
+  border-radius: var(--r-md);
+  background: #fff;
+  color: var(--tone);
+  box-shadow: var(--e-2);
+}
+
+.loop-cluster__plate--hero {
+  width: clamp(2.2rem, 5.2vh, 2.6rem);
+  background: var(--tone);
+  color: #fff;
+}
+
+.loop-cluster__icon { width: 52%; height: 52%; }
+
+/* A card too narrow for title and full cluster keeps only the hero plate. */
+@container loop-chapter (max-width: 300px) {
+  .loop-cluster__pop:not(:nth-child(2)) { display: none; }
+}
+
+/* --- Feature rows ------------------------------------------------------- */
+
+.loop-list {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.loop-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-inline: -0.6rem;
+  padding: clamp(0.25rem, 0.8vh, 0.45rem) 0.6rem;
+  border-radius: var(--r-md);
+  opacity: 0;
+  transition:
+    background-color var(--dur-base) var(--ease-out-expo),
+    transform var(--dur-base) var(--ease-out-expo);
+}
+
+.loop-item:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateX(4px);
+}
+
+.loop-item__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: clamp(2.1rem, 4.8vh, 2.5rem);
+  aspect-ratio: 1;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--tone);
+}
+
+.loop-item__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.loop-item__title {
+  font-size: clamp(0.92rem, 1.95vh, 1rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
   line-height: 1.25;
   color: var(--ink);
 }
 
-.feature-tile__body {
-  margin-top: clamp(0.25rem, 0.6vh, 0.4rem);
-  font-size: clamp(0.72rem, 1.45vh, 0.83rem);
-  line-height: 1.45;
+.loop-item__body {
+  font-size: clamp(0.8rem, 1.7vh, 0.875rem);
+  line-height: 1.4;
   color: var(--ink-muted);
 }
 
-/* --- The twelve tones ---------------------------------------------------
-   One per tile, named in FEATURE_CARDS and defined only here. Each is four
-   values: --tint (the shine at the corner), --tint-strong (the same one
-   step up, for hover), --accent (the illustration and the border), and
-   --paper (the green the shine falls away to — the card's own field, each
-   one leaning a few degrees toward its tone's hue so the two ends of the
-   gradient belong to each other).
-   Every tint sits around 92% lightness so --ink and --ink-muted keep the
-   contrast they were measured at, and every accent is deep enough to read
-   as a drawing rather than a wash. Hues are spaced around the wheel and
-   desaturated toward the site's own cream world — a fully saturated set
-   would read as a toy next to the rest of the page. */
+/* --- Coda --------------------------------------------------------------- */
 
-.feature-tile--mint   { --tint: #dcefd4; --tint-strong: #cbe8bf; --accent: #2f8f63; --accent-soft: #9fd3b4; --paper: #e3f1d7; }
-.feature-tile--amber  { --tint: #fbecd0; --tint-strong: #f8e0b4; --accent: #cf8c1e; --accent-soft: #f0cd8d; --paper: #ecf3d5; }
-.feature-tile--sky    { --tint: #dbeafa; --tint-strong: #c6ddf7; --accent: #2f78bd; --accent-soft: #a5c8e9; --paper: #dff1e4; }
-.feature-tile--violet { --tint: #e4e0f8; --tint-strong: #d5cff4; --accent: #6553c7; --accent-soft: #b9b0e6; --paper: #e3f0e1; }
-.feature-tile--coral  { --tint: #fbe1da; --tint-strong: #f7cec3; --accent: #cb5a41; --accent-soft: #eeb2a2; --paper: #eaf2d8; }
-.feature-tile--pink   { --tint: #fadfec; --tint-strong: #f6cbe1; --accent: #bc5089; --accent-soft: #e9aac9; --paper: #e7f2dd; }
-.feature-tile--teal   { --tint: #d5eeec; --tint-strong: #c0e6e2; --accent: #23867f; --accent-soft: #93cfc9; --paper: #dcf1e2; }
-.feature-tile--indigo { --tint: #dee3f7; --tint-strong: #ccd4f2; --accent: #47559f; --accent-soft: #adb6e2; --paper: #e1f0e0; }
-.feature-tile--lime   { --tint: #eaf2cf; --tint-strong: #dfebb7; --accent: #6b8c26; --accent-soft: #bdd189; --paper: #e8f3d5; }
-.feature-tile--orange { --tint: #fce4d2; --tint-strong: #f9d4ba; --accent: #cb6f28; --accent-soft: #f0bb90; --paper: #ebf3d6; }
-.feature-tile--plum   { --tint: #f0dff3; --tint-strong: #e8cdec; --accent: #96529f; --accent-soft: #d3abda; --paper: #e5f1df; }
-.feature-tile--slate  { --tint: #e0e8e5; --tint-strong: #d1ddd9; --accent: #4d6b62; --accent-soft: #a8bdb6; --paper: #e1efdf; }
-
-/* --- Entrance -----------------------------------------------------------
-   Transform and opacity only, so nothing here triggers layout, and the
-   global prefers-reduced-motion override (section 4) already collapses both
-   to ~0ms.
-
-   Split in two on purpose. tileFade fills forwards because the tile's own
-   rule says opacity 0 and it has to stay up afterwards; tileLift fills
-   BACKWARDS only, so once it ends the transform goes back under normal
-   cascade control and the hover lift works. One combined animation with
-   fill: both would pin transform forever and kill every hover. */
-
-@keyframes tileFade {
-  to { opacity: 1; }
+.loop-coda {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-size: 0.94rem;
+  color: var(--ink-muted);
+  opacity: 0;
 }
 
-@keyframes tileLift {
-  from { transform: translate3d(0, 24px, 0) scale(0.96); }
+.loop-coda__arrow {
+  flex: none;
+  width: 96px;
+  height: 30px;
+  stroke: var(--brand);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.features-grid.is-in .feature-tile {
+.loop-coda__arrow path {
+  stroke-dasharray: 420;
+  stroke-dashoffset: 420;
+}
+
+/* --- Entrance ----------------------------------------------------------- */
+
+@keyframes loopFade { to { opacity: 1; } }
+@keyframes loopLift { from { transform: translate3d(0, 48px, 0) scale(0.97); } }
+@keyframes loopRowLift { from { transform: translate3d(0, 20px, 0); } }
+@keyframes loopPop {
+  from { opacity: 0; transform: scale(0.4) rotate(-12deg); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes loopDraw { to { transform: scaleX(1); } }
+@keyframes loopDash { to { stroke-dashoffset: 0; } }
+@keyframes loopBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+
+.features-loop.is-in .loop-track__badge {
+  animation: loopPop 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both calc(300ms + var(--c) * 300ms);
+}
+
+.features-loop.is-in .loop-track__line {
+  animation: loopDraw 900ms var(--ease-in-out) both calc(420ms + var(--c) * 300ms);
+}
+
+.features-loop.is-in .loop-chapter {
   animation:
-    tileFade var(--dur-slow) var(--ease-out-expo) forwards calc(var(--i) * 55ms),
-    tileLift var(--dur-slow) var(--ease-out-expo) backwards calc(var(--i) * 55ms);
+    loopFade 900ms var(--ease-out-expo) forwards calc(450ms + var(--c) * 250ms),
+    loopLift 900ms var(--ease-out-expo) backwards calc(450ms + var(--c) * 250ms);
 }
 
-/* --- Bento --------------------------------------------------------------
-   Five columns, three of the twelve tiles double-width: 12 tiles fill
-   exactly 15 cells, three even rows of four with the wide one in a
-   different position each row. The featured flags in FEATURE_CARDS are
-   placed to land one per row — move one and the last row opens a hole.
-   Only at this width: four columns can't absorb a double-width tile
-   without the same hole, so below it every tile is one cell and the grid
-   is an even 4x3. */
-@media (min-width: 1181px) {
-  .features-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-
-  /* A double-width tile's blank space is beside its copy rather than under
-     it, so the scene moves into the column instead of the row and takes the
-     tile's full height — which is what lets the three biggest features carry
-     the three biggest pictures. */
-  .feature-tile--wide {
-    grid-column: span 2;
-    grid-template-rows: 1fr;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    column-gap: clamp(0.6rem, 1vw, 1.1rem);
-  }
-  .feature-tile--wide .feature-tile__text { grid-row: 1; grid-column: 1; }
-  .feature-tile--wide .feature-tile__art {
-    grid-row: 1;
-    grid-column: 2;
-    align-self: center;
-    max-width: clamp(118px, 13vw, 196px);
-    margin-top: 0;
-  }
-  .feature-tile--wide .feature-tile__title {
-    font-size: clamp(0.95rem, 2vh, 1.15rem);
-  }
-  /* Wide enough to hold the longest body in the set on two lines — the
-     line length is what's being set here, not a decorative cap, so it's
-     measured against that copy rather than rounded to a nice number. */
-  .feature-tile--wide .feature-tile__body {
-    max-width: 46ch;
-    font-size: clamp(0.76rem, 1.55vh, 0.88rem);
-  }
+.features-loop.is-in .loop-cluster__pop {
+  animation: loopPop 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both
+    calc(700ms + var(--c) * 300ms + var(--j) * 110ms);
 }
 
+.features-loop.is-in .loop-cluster__plate {
+  animation: loopBob 4s ease-in-out infinite calc(var(--j) * 0.6s);
+}
+
+.features-loop.is-in .loop-item {
+  animation:
+    loopFade 700ms var(--ease-out-expo) forwards calc(900ms + var(--c) * 300ms + var(--r) * 90ms),
+    loopRowLift 700ms var(--ease-out-expo) backwards calc(900ms + var(--c) * 300ms + var(--r) * 90ms);
+}
+
+.features-loop.is-in .loop-coda {
+  animation: loopFade 700ms var(--ease-out-expo) forwards 2000ms;
+}
+
+.features-loop.is-in .loop-coda__arrow path {
+  animation: loopDash 1.4s var(--ease-in-out) forwards 2100ms;
+}
+
+/* --- Fitting short and narrow screens -----------------------------------
+   Same content everywhere; on short viewports the two supporting lines that
+   aren't features step aside so the twelve features keep fitting. */
+@media (max-height: 720px) {
+  .loop-chapter__lede,
+  .loop-coda { display: none; }
+}
+
+/* Three columns between 901 and 1180px wide make every body run to three
+   lines; the ledes and the coda give that room back. */
+@media (max-width: 1180px) {
+  .loop-chapter__lede,
+  .loop-coda { display: none; }
+}
+
+@media (max-height: 600px) {
+  .loop-track { display: none; }
+}
+
+/* Narrow: the three columns become a horizontal snap carousel inside the
+   same one-screen box (horizontal scrolling inside a section is allowed by
+   the rule; vertical overflow is not). The track hides because the cards
+   no longer sit under it. */
 @media (max-width: 900px) {
-  /* Height lock off, same as every other full-viewport section; three
-     columns of four rows now that the grid has room to breathe downward. */
-  .features-section {
-    min-height: 0;
-    padding-block: clamp(3rem, 8vh, 4.5rem);
+  .loop-track { display: none; }
+  .features-head__note { display: none; }
+  .loop-cols {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: min(86%, 26rem);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
   }
-  .features-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .loop-cols::-webkit-scrollbar { display: none; }
+  .loop-chapter { scroll-snap-align: start; }
 }
 
-@media (max-width: 680px) {
-  .features-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .features-head__note { max-width: 46ch; }
-}
-
-@media (max-width: 380px) {
-  .features-grid { grid-template-columns: minmax(0, 1fr); }
-}
-
-/* Safety net rather than a second override: the tiles start at opacity 0
-   and are raised by an animation, so if that animation is collapsed to
-   ~0ms before .is-in ever lands, they must still be visible. */
+/* Safety net: everything above starts at opacity 0 and is raised by an
+   animation, so with motion reduced it must still be visible. */
 @media (prefers-reduced-motion: reduce) {
-  .feature-tile { opacity: 1; }
+  .loop-track__badge,
+  .loop-chapter,
+  .loop-cluster__pop,
+  .loop-item,
+  .loop-coda { opacity: 1; }
+  .loop-track__line { transform: none; }
+  .loop-coda__arrow path { stroke-dashoffset: 0; }
 }
 
 /* --- 5.10d Meal-plan row -----------------------------------------------
@@ -1862,6 +1937,129 @@ textarea.form-input { border-radius: var(--r-lg); }
   .recipe-column { grid-template-columns: minmax(0, 1fr); text-align: center; }
   .recipe-column__screen { width: min(100%, 29.5vh, 210px); }
   .recipe-column__desc { margin-inline: auto; }
+}
+
+/* --- 5.10f Phone recordings: sized to the space they have ----------------
+   The three recording sections (AddItems, MealPlan, RecipeCookImport) used
+   to size each phone with a fixed vh cap (36-40vh, 240-355px), which left
+   the recordings small and their UI text unreadable while a third of the
+   screen sat empty. On desktop widths each section is now a locked
+   --section-h flex column (web/CLAUDE.md §1): head and copy take their
+   natural height, and the phone's media box takes everything left over
+   (flex: 1; min-height: 0). The media box is a size container, so the
+   phone is as tall as the box allows AND never wider than its column:
+     height = min(100cqh, 100cqw x 2465/1206)
+   with the capture's own aspect ratio supplying the width. Nothing is
+   cropped or stretched.
+
+   Resolution: the meal-plan and recipe recordings are 1206x2464 and stay
+   sharp at any size here. The add-items recordings are only 600x1226, so
+   those phones are capped at 640px tall (about 313 CSS px wide, which is
+   the source's full detail on a 2x screen) rather than being upscaled.
+
+   Below 901px the sections keep their existing stacked layout (a size
+   container needs a definite height, which a stacked column doesn't have),
+   so none of this applies there. */
+@media (min-width: 901px) {
+  .add-items,
+  .meal-plan,
+  .recipe-row-section {
+    height: var(--section-h);
+    min-height: 0;
+    overflow: hidden; /* safety net; the flex layout below is what fits */
+    padding-block: clamp(1.25rem, 4.5vh, 3rem);
+  }
+
+  .add-items__head,
+  .meal-plan__head {
+    flex: none;
+    margin-bottom: clamp(1rem, 3.5vh, 2.25rem);
+  }
+
+  .add-items__row,
+  .meal-plan__row {
+    flex: 1;
+    min-height: 0;
+    align-items: stretch;
+  }
+
+  /* Use the side space: rows run up to 1400px (was 1160/1240) with
+     wider gutters between columns, so each phone and its copy reads as its
+     own unit instead of crowding its neighbour. */
+  .add-items__row,
+  .meal-plan__row {
+    max-width: 1400px;
+    gap: clamp(2rem, 4.5vw, 4.5rem);
+  }
+
+  .add-column,
+  .plan-column {
+    min-height: 0;
+  }
+
+  .add-column__media,
+  .plan-column__media,
+  .recipe-column__media {
+    flex: 1;
+    min-height: 0;
+    align-items: center;
+    container-type: size;
+  }
+
+  .add-column__copy,
+  .plan-column__copy {
+    flex: none;
+    margin-top: clamp(0.6rem, 1.8vh, 1.1rem);
+  }
+
+  /* Every column reserves the same copy height (title + the longest
+     description in the row), so all phones in a row get the same leftover
+     and come out the same size, tops and bottoms level. */
+  .add-column__copy { min-height: 6.9em; }
+  .plan-column__copy { min-height: 7.6em; }
+
+  .add-column__video,
+  .plan-column__screen,
+  .recipe-column__screen {
+    width: auto;
+    height: min(100cqh, 100cqw * 2465 / 1206);
+    max-width: 100%;
+    aspect-ratio: 1206 / 2465;
+    border-radius: clamp(14px, 2.4cqh, 22px);
+    box-shadow: var(--e-3);
+  }
+
+  .add-column__video { max-height: 640px; }
+
+  /* Recipe: the head moves from beside the two columns to above them, so
+     the columns get the section's full width and each phone gets far more
+     room (it was width-limited at ~215px beside a side heading). */
+  .recipe-row-section__layout {
+    max-width: 1400px;
+    height: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: clamp(1rem, 3.5vh, 2.25rem);
+  }
+
+  /* Centred, one line, matching the AddItems and MealPlan headings. */
+  .recipe-row-section__head { text-align: center; }
+  .recipe-row-section__head .display { text-wrap: nowrap; }
+
+  .recipe-row-section__row {
+    height: 100%;
+    min-height: 0;
+    max-width: none;
+    gap: clamp(2.5rem, 6vw, 6rem);
+    align-items: stretch;
+  }
+
+  .recipe-column {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .recipe-column__media { height: 100%; }
 }
 
 /* --- 5.11 Founder block --------------------------------------------------- */

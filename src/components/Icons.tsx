@@ -180,6 +180,25 @@ export function Shield({ className = "w-[22px] h-[22px]" }: IconProps) {
   );
 }
 
+/** A video frame with a play triangle — a social clip, not the Google Play mark. */
+export function VideoPlay({ className = "w-[22px] h-[22px]" }: IconProps) {
+  return (
+    <svg {...stroke(className)} aria-hidden="true">
+      <rect x="4.5" y="3" width="15" height="18" rx="2.5" />
+      <path d="M10 9v6l5-3-5-3Z" />
+    </svg>
+  );
+}
+
+/** Two opposing arrows: one thing swapped for another. */
+export function Swap({ className = "w-[22px] h-[22px]" }: IconProps) {
+  return (
+    <svg {...stroke(className)} aria-hidden="true">
+      <path d="M4 8h14.5l-3.25-3.25M20 16H5.5l3.25 3.25" />
+    </svg>
+  );
+}
+
 /** Apple's mark. Solid by definition — it is a logo, not a line icon. */
 export function AppleMark({ className = "w-6 h-6" }: IconProps) {
   return (

@@ -47,7 +47,9 @@ AGENTS.md
 # AI agent instructions (local dev only)
 CLAUDE.md
 AGENTS.md
-.claude/
+.claude-flow/
 .serena/
 .impeccable/
 .codex/
+public/videos/.swarm
+public/videos/ruvector.db

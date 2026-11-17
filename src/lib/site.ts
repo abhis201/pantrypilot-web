@@ -17,10 +17,10 @@ export const SITE_DESCRIPTION =
   "Track your pantry, plan meals with AI-powered suggestions, reduce food waste, and hit your nutrition goals.";
 
 export const SUPPORT_EMAIL =
-  process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "admin.pantrypilot@gmail.com";
+  process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "support@khanpaan.app";
 
 export const PRIVACY_EMAIL =
-  process.env.NEXT_PUBLIC_PRIVACY_EMAIL || "admin.pantrypilot@gmail.com";
+  process.env.NEXT_PUBLIC_PRIVACY_EMAIL || "privacy@khanpaan.app";
 
 export const IOS_DOWNLOAD_LINK =
   process.env.NEXT_PUBLIC_IOS_DOWNLOAD_LINK ||

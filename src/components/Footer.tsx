@@ -9,7 +9,6 @@ import {
   IOS_AVAILABLE,
   IOS_DOWNLOAD_LINK,
   LEGAL_ENTITY_NAME,
-  REGISTERED_POSTAL_ADDRESS,
   SUPPORT_EMAIL,
 } from "@/lib/site";
 import ConsentLinks from "./ConsentLinks";
@@ -143,15 +142,13 @@ export default function Footer({ snap = false }: { snap?: boolean }) {
           </Column>
         </div>
 
-        {/* Legal imprint: who operates the service and who to complain to.
-            Required in India (IT Rules 2021, E-Commerce Rules 2020) and the
-            EU (Impressum). Every value comes from src/lib/site.ts. */}
+        {/* Who operates the service and who to complain to. The postal
+            address is deliberately not printed here; it stays in the
+            Grievance Officer block on /privacy and /terms and in the
+            newsletter footer. Values come from src/lib/site.ts. */}
         <address className="footer-imprint">
           <span>
             <strong>Operated by</strong> {LEGAL_ENTITY_NAME}
-          </span>
-          <span>
-            <strong>Registered address</strong> {REGISTERED_POSTAL_ADDRESS}
           </span>
           <span>
             <strong>{GRIEVANCE_OFFICER_DESIGNATION}</strong>{" "}

@@ -956,6 +956,23 @@ html { scrollbar-color: #b9dca8 var(--ground); }
 
 /* AA on white: #6d8f66 measured only 3.64:1. */
 .form-input::placeholder { color: #4b7344; }
+
+/* A native <select> draws its own arrow, pushed against the right edge and
+   sitting a few px off the text's centre line inside a pill. Drop it and draw
+   one: 14px, centred on the field's own midline, the same 20px in from the
+   edge as the text is from the left, with room reserved so a long option never
+   runs underneath it. Decoration only; the control is still the native one. */
+select.form-input {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 48px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none' stroke='%23184514' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 5l4.5 4.5L11.5 5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+  background-size: 14px 14px;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
 .form-input:disabled { opacity: 0.55; cursor: not-allowed; }
 
 /* A textarea can't be a pill. */
@@ -1488,6 +1505,7 @@ textarea.form-input { border-radius: var(--r-lg); }
    --tint is the card field (around 92% lightness, so --ink and --ink-muted
    keep their measured contrast); --tone is the chapter's ink for badges,
    icons and the hero plate. Every --tone clears 4.5:1 against white. */
+/* Hover and press deepen --tint toward --tone with color-mix (see below). */
 .loop-chapter--stock { --tint: #e3f1dc; --tone: var(--brand); }
 .loop-chapter--cook  { --tint: #fbeadf; --tone: #a8461f; }
 .loop-chapter--shop  { --tint: #e1eef1; --tone: #2a5f7c; }
@@ -1557,19 +1575,33 @@ textarea.form-input { border-radius: var(--r-lg); }
   overflow: hidden;
   container: loop-chapter / inline-size;
   padding: clamp(0.9rem, 2.8vh, 1.75rem) clamp(1rem, 1.7vw, 1.5rem);
-  border: 1px solid var(--line);
+  /* A hairline in the chapter's own colour, so each card reads as its
+     colour from the edge in, not as a grey outline round a tint. */
+  border: 1px solid color-mix(in srgb, var(--tone) 16%, transparent);
   border-radius: var(--r-xl);
   background: var(--tint);
   opacity: 0;
+  /* Colour only. The card never moves or lifts; hover and focus deepen the
+     field and firm up the edge, which reads the same on a mouse, a keyboard
+     and a thumb, and cannot shift the one-screen layout. */
   transition:
-    transform var(--dur-slow) var(--ease-out-expo),
-    box-shadow var(--dur-slow) var(--ease-out-expo);
+    background-color var(--dur-slow) var(--ease-out-expo),
+    border-color var(--dur-slow) var(--ease-out-expo);
 }
 
-.loop-chapter:hover,
-.loop-chapter:focus-within {
-  transform: translateY(-4px);
-  box-shadow: var(--e-3);
+.loop-chapter:focus-within,
+.loop-chapter:active {
+  background: color-mix(in srgb, var(--tint) 86%, var(--tone));
+  border-color: color-mix(in srgb, var(--tone) 34%, transparent);
+}
+
+/* Hover only where there is a real pointer: a tap on a phone would leave the
+   card stuck in its hover colour. Touch gets the :active press above. */
+@media (hover: hover) and (pointer: fine) {
+  .loop-chapter:hover {
+    background: color-mix(in srgb, var(--tint) 86%, var(--tone));
+    border-color: color-mix(in srgb, var(--tone) 34%, transparent);
+  }
 }
 
 /* Title and cluster share the first row; the lede runs the full card width
@@ -1664,14 +1696,18 @@ textarea.form-input { border-radius: var(--r-lg); }
   padding: clamp(0.25rem, 0.8vh, 0.45rem) 0.6rem;
   border-radius: var(--r-md);
   opacity: 0;
-  transition:
-    background-color var(--dur-base) var(--ease-out-expo),
-    transform var(--dur-base) var(--ease-out-expo);
+  transition: background-color var(--dur-base) var(--ease-out-expo);
 }
 
-.loop-item:hover {
-  background: rgba(255, 255, 255, 0.7);
-  transform: translateX(4px);
+@media (hover: hover) and (pointer: fine) {
+  .loop-item:hover { background: rgba(255, 255, 255, 0.72); }
+
+  /* The icon plate takes the chapter's colour while its row is under the
+     pointer: the one place the eye is sent, with no movement. */
+  .loop-item:hover .loop-item__icon {
+    background: var(--tone);
+    color: #fff;
+  }
 }
 
 .loop-item__icon {
@@ -1683,6 +1719,9 @@ textarea.form-input { border-radius: var(--r-lg); }
   border-radius: 12px;
   background: #fff;
   color: var(--tone);
+  transition:
+    background-color var(--dur-base) var(--ease-out-expo),
+    color var(--dur-base) var(--ease-out-expo);
 }
 
 .loop-item__text {
@@ -1827,6 +1866,27 @@ textarea.form-input { border-radius: var(--r-lg); }
   }
   .loop-cols::-webkit-scrollbar { display: none; }
   .loop-chapter { scroll-snap-align: start; }
+
+  /* On a phone the page is the whole screen, so four loose rows would be
+     spread down a tall card with big empty gaps between them. Each feature
+     becomes its own tile instead, and the four share the card's height
+     equally: the gaps become deliberate, and every row is a clear tap or
+     press target. min-height keeps a tile from shrinking below its text on a
+     short phone. The icon fills with the chapter's colour while pressed. */
+  .loop-list { gap: 8px; justify-content: stretch; }
+
+  .loop-item {
+    flex: 1 1 0;
+    align-items: center;
+    min-height: min-content;
+    margin-inline: 0;
+    padding: 0.55rem 0.8rem;
+    border-radius: var(--r-lg);
+    background: rgba(255, 255, 255, 0.6);
+  }
+
+  .loop-item:active { background: #fff; }
+  .loop-item:active .loop-item__icon { background: var(--tone); color: #fff; }
 }
 
 /* Safety net: everything above starts at opacity 0 and is raised by an

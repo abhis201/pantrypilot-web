@@ -4,7 +4,7 @@
   "changelog": [
     {
       "date": "2026-11-17",
-      "summary": "Rewritten in plain language. Added the full data and sub-processor tables, the account deletion and retention rules, the India DPDP Act, EU/UK GDPR, US state and other-country sections, the Grievance Officer contact, and the website cookie and Global Privacy Control section. Set the age rules: 18 and over in India; elsewhere 13 (16 in the EEA) with parent or guardian consent under 18."
+      "summary": "Rewritten in plain language. Added the full data and sub-processor tables, the account deletion and retention rules, the India DPDP Act, EU/UK GDPR, US state and other-country sections, the Grievance Officer contact, and the website cookie and Global Privacy Control section. Set the minimum age at 18 (or the local age of majority, if higher) in every country."
     },
     {
       "date": "2026-04-02",
@@ -27,7 +27,7 @@
             "**We do not sell your personal information, and we do not use it for targeted advertising.** There are no ads in {{SITE_NAME}}.",
             "**Where it lives:** on servers in the United States (Google Cloud and Supabase).",
             "**Deleting it:** delete your account in the app (Settings, then Account, then Delete Account) or at [{{SITE_URL}}/delete-account](/delete-account). Your data is permanently deleted; the one thing kept is a one-way hash that stops a free trial being claimed twice.",
-            "**Age:** in India you must be 18 or older. Elsewhere you must be at least 13 (16 in the European Economic Area), and if you are under 18 you need your parent or guardian's consent and supervision.",
+            "**You must be 18 or older** (or the age of majority where you live, if that is higher) to use {{SITE_NAME}}.",
             "**Questions or complaints:** [{{GRIEVANCE_EMAIL}}](mailto:{{GRIEVANCE_EMAIL}}). We acknowledge within 24 to 48 hours."
           ]
         },
@@ -395,7 +395,7 @@
         },
         {
           "type": "p",
-          "text": "**Age:** in India, {{SITE_NAME}} is for people aged **18 and over only**. The Act treats anyone under 18 as a child (s. 2(f) and s. 9), and we do not offer the service to children in India or knowingly process their personal data. If we learn that an account in India belongs to someone under 18, we delete the account and its data."
+          "text": "**Age:** {{SITE_NAME}} is for people aged **18 and over only**. The Act treats anyone under 18 as a child (s. 2(f) and s. 9), and we do not offer the service to children or knowingly process their personal data. If we learn that an account belongs to someone under 18, we delete the account and its data."
         },
         {
           "type": "p",
@@ -561,7 +561,7 @@
         },
         {
           "type": "p",
-          "text": "**Children:** {{SITE_NAME}} is not directed to children under 13 and we do not knowingly collect personal information from them (COPPA). If you are 13 to 17, you need a parent or guardian's consent to use the app."
+          "text": "**Children:** {{SITE_NAME}} is for adults aged 18 and over. It is not directed to children, and we do not knowingly collect personal information from anyone under 18, which includes everyone under 13 (COPPA) and under 16 (CCPA)."
         }
       ]
     },
@@ -646,49 +646,18 @@
     },
     {
       "id": "children",
-      "title": "Age requirement and children",
+      "title": "Age requirement",
       "blocks": [
         {
           "type": "p",
-          "text": "The minimum age depends on where you live, because the law does."
-        },
-        {
-          "type": "table",
-          "head": [
-            "Where you live",
-            "Minimum age",
-            "Under 18"
-          ],
-          "rows": [
-            [
-              "**India**",
-              "**18**",
-              "Not permitted. {{SITE_NAME}} is for adults only in India."
-            ],
-            [
-              "**European Economic Area**",
-              "**16**",
-              "Ages 16 and 17 need a parent or legal guardian's consent and supervision."
-            ],
-            [
-              "**Everywhere else**",
-              "**13**",
-              "Ages 13 to 17 need a parent or legal guardian's consent and supervision."
-            ]
-          ]
-        },
-        {
-          "type": "p",
-          "text": "Where a parent or guardian's consent is needed, they agree to our [Terms of Service](/terms) on the young person's behalf."
+          "text": "{{SITE_NAME}} is intended solely for people who are **18 years of age or older**, or the age of majority where they live if that is higher, in every country."
         },
         {
           "type": "ul",
           "items": [
-            "**India: adults only.** If we learn that an account in India belongs to someone under 18, we delete the account and its data.",
-            "**We do not knowingly collect personal data from children under 13** anywhere. If we learn that we have, we delete the account and its data.",
-            "**Outside India, if we learn that someone under 18 is using {{SITE_NAME}} without a parent or guardian's consent**, we will ask for that consent and, if we do not receive it, delete the account and its data.",
-            "**Parents and guardians** can see, correct or delete their child's data, or withdraw consent, at any time: use the form at [/delete-account](/delete-account) or email [{{GRIEVANCE_EMAIL}}](mailto:{{GRIEVANCE_EMAIL}}).",
-            "**Calorie and body-measurement features** are designed for adults. Anyone under 18 should use them only with a parent or guardian, and with a doctor's advice before trying to lose weight."
+            "We do not knowingly collect personal data from anyone under 18.",
+            "If we learn that an account was created by someone under 18, we delete the account and the personal data in it.",
+            "If you believe a child has given us personal data, email [{{GRIEVANCE_EMAIL}}](mailto:{{GRIEVANCE_EMAIL}}) or use the form at [/delete-account](/delete-account), and we will delete it."
           ]
         }
       ]

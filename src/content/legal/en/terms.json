@@ -4,7 +4,7 @@
   "changelog": [
     {
       "date": "2026-11-17",
-      "summary": "Rewritten in plain language. Added the regional free-trial and auto-renewal rules, the medical, nutrition and allergen disclaimer, AI output and recipe import terms, prohibited conduct under India's IT Rules, the copyright takedown procedure, country-specific consumer terms, and the Grievance Officer contact. Set the age rules: 18 and over in India; elsewhere 13 (16 in the EEA) with parent or guardian consent under 18; subscriptions limited to adults."
+      "summary": "Rewritten in plain language. Added the regional free-trial and auto-renewal rules, the medical, nutrition and allergen disclaimer, AI output and recipe import terms, prohibited conduct under India's IT Rules, the copyright takedown procedure, country-specific consumer terms, and the Grievance Officer contact. Set the minimum age at 18 (or the local age of majority, if higher) in every country."
     },
     {
       "date": "2026-04-02",
@@ -24,7 +24,7 @@
             "**The core app is free.** {{SITE_NAME}} Pro is a subscription billed by Apple or Google.",
             "**Store free trials renew automatically into a paid subscription** unless you cancel at least 24 hours before the trial ends. The no-card trial in India does not: it simply ends.",
             "**Cancel any time** in your App Store or Google Play subscription settings. Deleting the app does not cancel a subscription.",
-            "**Age:** 18 or older in India. Elsewhere, at least 13 (16 in the European Economic Area); under 18, you need your parent or guardian's consent, and they agree to these terms for you.",
+            "**You must be 18 or older**, or the age of majority where you live if that is higher.",
             "**Your content stays yours.** Recipes you publish to the public catalogue stay there, without your name, if you leave.",
             "**Nothing here removes rights your country's consumer law gives you.**"
           ]
@@ -54,37 +54,11 @@
       "title": "Who can use {{SITE_NAME}}",
       "blocks": [
         {
-          "type": "table",
-          "head": [
-            "Where you live",
-            "Minimum age",
-            "Under 18"
-          ],
-          "rows": [
-            [
-              "**India**",
-              "**18**",
-              "Not permitted. {{SITE_NAME}} is for adults only in India."
-            ],
-            [
-              "**European Economic Area**",
-              "**16**",
-              "Ages 16 and 17 need a parent or legal guardian's consent and supervision."
-            ],
-            [
-              "**Everywhere else**",
-              "**13**",
-              "Ages 13 to 17 need a parent or legal guardian's consent and supervision."
-            ]
-          ]
-        },
-        {
           "type": "ul",
           "items": [
-            "**In India, you must be 18 years of age or older.** {{SITE_NAME}} is offered in India only to adults who are competent to contract under the Indian Contract Act, 1872. By creating an account in India you confirm that you are at least 18.",
-            "**Outside India, you must be at least 13 years of age** (or **16 years of age** in the European Economic Area). If you are under 18, or under the age of majority where you live if that is higher, you may only create an account and use the service under the supervision and with the verifiable consent of your parent or legal guardian, who agrees to be bound by these terms on your behalf and is responsible for your use of the service.",
-            "**Only an adult can buy a subscription.** {{SITE_NAME}} Pro, including any free trial that renews into a paid subscription, may be purchased only by someone aged 18 or over, or the age of majority where they live if that is higher. If you are under 18, your parent or guardian must make the purchase on their own App Store or Google Play account.",
-            "We do not knowingly collect personal data from children under 13 anywhere, or from anyone under 18 in India. If we learn that an account belongs to someone below the minimum age for their country, or to someone under 18 outside India without a parent or guardian's consent, we may close it and delete its data.",
+            "{{SITE_NAME}} is intended solely for individuals who are **18 years of age or older**, or the age of majority where you live if that is higher, and who are legally competent to enter into a binding contract.",
+            "By creating an account, you represent and warrant that you are at least 18 years old. This applies to the free app, to free trials and to {{SITE_NAME}} Pro, in every country.",
+            "If we learn that an account has been created by someone under 18, we will promptly delete the account and the personal data associated with it.",
             "You must not be barred from using the service under the laws of your country or of India, the United States, the European Union or the United Kingdom, including sanctions and export-control laws.",
             "One person, one account. You are responsible for what happens under your account and for keeping your sign-in secure. Tell us at once if you think someone else has used it."
           ]
@@ -106,7 +80,7 @@
             "{{SITE_NAME}} is an **informational kitchen and meal-planning tool**. It is **not a medical device, a healthcare provider, or a licensed dietitian**, and it does not diagnose, treat or prevent any condition.",
             "Receipts read by AI, nutrition-label scans, macro estimates for restaurant and outside meals, BMR and Katch-McArdle calorie and macro calculations, and allergen and dietary filters are **automated approximations that can contain errors**. A filter can miss an allergen. A scan can misread a label.",
             "**If you have a food allergy, an intolerance or a medical condition, you must always check the physical product label yourself**, and consult a qualified physician before changing your diet. Do not rely on {{SITE_NAME}} to tell you a food is safe for you.",
-            "Calorie and macro targets, including weight-loss targets, are general estimates for healthy adults. They are not suitable as the sole guide for anyone who is under 18, pregnant or breastfeeding, has or has had an eating disorder, or has a condition affected by diet. **If you are under 18, do not follow a calorie-deficit or weight-loss target without your parent or guardian and a doctor.**"
+            "Calorie and macro targets, including weight-loss targets, are general estimates for healthy adults. They are not suitable as the sole guide for anyone who is pregnant or breastfeeding, has or has had an eating disorder, or has a condition affected by diet."
           ]
         }
       ]

@@ -26,7 +26,7 @@ export default function ClosingCta() {
   return (
     <section id="newsletter" className="section viewport-lock">
       <div className="shell max-w-[1100px]">
-        <div className="panel relative overflow-hidden px-6 py-10 text-center sm:px-12 md:py-12">
+        <div className="panel cta-panel relative overflow-hidden px-6 py-10 text-center sm:px-12 md:py-12">
           {/* Decoration, and kept honest about it: pointer-events-none,
               aria-hidden, positioned in the panel's margins well clear of the
               reading column, and only from lg up where that margin exists. */}
@@ -61,14 +61,14 @@ export default function ClosingCta() {
           </Reveal>
 
           <Reveal delay={80}>
-            <p className="standfirst mx-auto mt-4 text-center">
+            <p className="standfirst cta-standfirst mx-auto mt-4 text-center">
               Free to download, free to keep using. Pro is there if you want the
               AI doing the thinking.
             </p>
           </Reveal>
 
           <Reveal delay={160}>
-            <div className="mt-7 flex flex-col items-center justify-center gap-3.5 sm:flex-row">
+            <div className="cta-stores mt-7 flex flex-col items-center justify-center gap-3.5 sm:flex-row">
               <a
                 href={IOS_DOWNLOAD_LINK}
                 target="_blank"
@@ -101,7 +101,7 @@ export default function ClosingCta() {
           {/* ---- Newsletter ---------------------------------------------- */}
           <Reveal delay={240}>
             <div
-              className="mx-auto mt-8 max-w-lg pt-6"
+              className="cta-newsletter mx-auto mt-8 max-w-lg pt-6"
               style={{ borderTop: "1px solid var(--line-strong)" }}
             >
               {/* Names the newsletter outright rather than leaning on the

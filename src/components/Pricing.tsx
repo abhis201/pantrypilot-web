@@ -36,24 +36,28 @@ const PRO_FEATURES = [
 export default function Pricing() {
   return (
     <section id="pricing" className="section section--tight viewport-lock">
-      <div className="shell max-w-[1240px]">
-        <div className="mx-auto mb-6 max-w-2xl text-center">
-          <Reveal>
-            <h2 className="display display--sub">
-              Start free. <em>Upgrade if you want AI.</em>
-            </h2>
-          </Reveal>
-          <Reveal delay={80}>
-            <p className="standfirst mx-auto mt-3 text-center">
-              Everything you need to run a pantry is free, forever. Pro adds the
-              AI layer — meal suggestions, auto-planning, and analytics.
-            </p>
-          </Reveal>
-        </div>
+      {/* Two wrappers, one per phone page. From 901px up both are
+          display: contents and their children sit in one two-column grid
+          (heading across the top, the cards side by side, the small print
+          underneath), exactly as before. */}
+      <div className="shell pricing max-w-[1240px]">
+        <div className="pricing__page">
+          <div className="pricing__head mx-auto max-w-2xl text-center">
+            <Reveal>
+              <h2 className="display display--sub">
+                Start free. <em>Upgrade if you want AI.</em>
+              </h2>
+            </Reveal>
+            <Reveal delay={80}>
+              <p className="standfirst pricing__standfirst mx-auto mt-3 text-center">
+                Everything you need to run a pantry is free, forever. Pro adds
+                the AI layer — meal suggestions, auto-planning, and analytics.
+              </p>
+            </Reveal>
+          </div>
 
-        <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2">
           {/* ---- Free ---------------------------------------------------- */}
-          <Reveal delay={140} y={26} className="h-full">
+          <Reveal delay={140} y={26} className="pricing__free">
             <div className="price-card">
               <p className="text-[22px] font-bold tracking-[-0.01em] text-ink-muted">
                 Free
@@ -78,18 +82,16 @@ export default function Pricing() {
               </a>
             </div>
           </Reveal>
+        </div>
 
+        <div className="pricing__page">
           {/* ---- Pro ----------------------------------------------------- */}
-          <Reveal delay={220} y={26} className="h-full">
+          <Reveal delay={220} y={26} className="pricing__pro">
             <div className="price-card price-card--featured">
               <div className="flex items-center justify-between gap-4">
-                <p className="text-[22px] tracking-[-0.01em] text-ink">
-                  Pro
-                </p>
+                <p className="text-[22px] tracking-[-0.01em] text-ink">Pro</p>
                 <span className="tier-tag">AI embedded</span>
               </div>
-              
-              
 
               <ul className="my-4 space-y-1.5">
                 {PRO_FEATURES.map((feature) => (
@@ -110,14 +112,14 @@ export default function Pricing() {
               </a>
             </div>
           </Reveal>
-        </div>
 
-        <Reveal delay={300}>
-          <p className="mt-4 text-center text-[12.5px] text-ink-muted">
-            Prices may vary by region. Subscriptions are billed through the App
-            Store and can be cancelled at any time.
-          </p>
-        </Reveal>
+          <Reveal delay={300} className="pricing__fine">
+            <p className="text-center text-[12.5px] text-ink-muted">
+              Prices may vary by region. Subscriptions are billed through the
+              App Store and can be cancelled at any time.
+            </p>
+          </Reveal>
+        </div>
       </div>
     </section>
   );

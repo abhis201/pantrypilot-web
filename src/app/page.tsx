@@ -9,6 +9,7 @@ import Pricing from "@/components/Pricing";
 import ClosingCta from "@/components/ClosingCta";
 import Footer from "@/components/Footer";
 import Faq, { faqStructuredData } from "@/components/Faq";
+import PageScroll from "@/components/PageScroll";
 
 /**
  * Page order, restructured into a scroll-snapped, full-viewport stack (see
@@ -46,6 +47,10 @@ export default function Home() {
       </main>
 
       <Footer snap />
+
+      {/* One wheel gesture = one page, plus the dot rail shown while
+          scrolling. Home page only, like the snapping itself. */}
+      <PageScroll />
     </>
   );
 }

@@ -102,6 +102,13 @@
 
   /* --- Layout -------------------------------------------------------------- */
   --nav-height: 76px;
+  /* How much of the top of the screen the navbar permanently covers, which
+     is where a page's top edge snaps to. On desktop the navbar is always
+     there, so this is its height. On a phone the navbar folds into a dot once
+     you leave the hero (see .nav-shell[data-hidden] and Navbar.tsx), so
+     pages get the whole screen and this is 0. Everything about page
+     geometry uses this; --nav-height stays the bar's own size. */
+  --page-top: var(--nav-height);
   /* The height of one snapped section, and the single most load-bearing
      number in the scroll-snap system. html carries
      `scroll-padding-top: var(--nav-height)`, which makes the SNAPPORT
@@ -123,7 +130,13 @@
      intended escape hatch, not a regression. */
   /* HARD RULE (web/CLAUDE.md §1): every snapped section is exactly this tall
      and shows ALL of its content inside it. No section may grow past it. */
-  --section-h: calc(100dvh - var(--nav-height));
+  /* svh, not dvh: on a phone the browser's address bar slides away as you
+     scroll, and dvh changes with it. Every page above the one being read
+     would change height mid-scroll, dragging the snapped page out of place.
+     svh is the bar-showing height and never changes, so a page stays put;
+     with the bar hidden the page is a little shorter than the screen
+     instead. On desktop the two units are identical. */
+  --section-h: calc(100svh - var(--page-top));
   --gutter: 1.5rem;
 
   --focus-ring: 0 0 0 2px var(--ground), 0 0 0 4px var(--brand);
@@ -151,6 +164,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
+@media (max-width: 900px)  { :root { --page-top: 0px; } }
 @media (min-width: 640px)  { :root { --gutter: 2rem; } }
 @media (min-width: 1024px) { :root { --gutter: 3rem; } }
 
@@ -171,7 +185,7 @@
        extra gap beyond that, so a section's own background lands flush
        against the navbar rather than leaving a sliver of whatever is
        behind it exposed. */
-    scroll-padding-top: var(--nav-height);
+    scroll-padding-top: var(--page-top);
     /* Full-viewport sections (Features, AddItems, MealPlan, RecipeCookImport,
        About, Pricing, FAQ, the closing Newsletter band) each lock to one
        dvh and snap-align to their own top, so a scroll gesture always lands
@@ -533,6 +547,94 @@ html { scrollbar-color: #b9dca8 var(--ground); }
 .nav-shell[data-scrolled="true"] {
   border-bottom-color: var(--line);
   box-shadow: var(--e-1);
+}
+
+/* Phones: past the hero the bar folds away into a dot in the top-right
+   corner so each page gets the whole screen (Navbar.tsx sets data-hidden),
+   and a tap on it opens the bar again. The bar grows out of that corner
+   (transform-origin) and never from nothing (scale 0.9, not 0).
+   Opening eases out; closing is shorter and eases in. Keyboard focus
+   landing inside the bar always brings it back. */
+.nav-shell {
+  transform-origin: 100% 0;
+  transition:
+    transform var(--dur-base) var(--ease-out-expo),
+    opacity var(--dur-fast) var(--ease-out-expo),
+    box-shadow var(--dur-slow) var(--ease-out-expo),
+    border-color var(--dur-slow) var(--ease-out-expo);
+}
+
+.nav-shell[data-hidden="true"] {
+  opacity: 0;
+  transform: translate3d(0, -12px, 0) scale(0.9);
+  pointer-events: none;
+  box-shadow: none;
+  transition:
+    transform 200ms cubic-bezier(0.55, 0, 1, 0.45),
+    opacity 200ms cubic-bezier(0.55, 0, 1, 0.45);
+}
+
+.nav-shell[data-hidden="true"]:focus-within {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* The folded bar: a quarter circle stuck into the very top-right corner of
+   the screen, so it reads as a tab on the edge rather than a button
+   floating over the page. 44px along each edge, which is also the whole
+   tap target. It grows out of the corner a beat after the bar has gone and
+   leaves at once when tapped, so the two read as one object changing
+   shape rather than two things swapping. */
+.nav-dot {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: var(--z-nav);
+  /* 30px to look at; the ::after below keeps the tap target at 44px. */
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 0 0 0 100%; /* only the inner corner is round */
+  background: var(--brand);
+  box-shadow: var(--e-2);
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.3);
+  transform-origin: 100% 0;
+  pointer-events: none;
+  transition:
+    transform 120ms cubic-bezier(0.55, 0, 1, 0.45),
+    opacity 120ms cubic-bezier(0.55, 0, 1, 0.45);
+}
+
+/* Invisible, and anchored to the same corner. */
+.nav-dot::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 44px;
+}
+
+@media (max-width: 900px) {
+  .nav-dot { display: block; }
+}
+
+.nav-dot[data-visible="true"] {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+  transition:
+    transform var(--dur-base) var(--ease-out-expo) 140ms,
+    opacity var(--dur-fast) var(--ease-out-expo) 140ms;
+}
+
+.nav-dot[data-visible="true"]:active {
+  transform: scale(0.92);
 }
 
 .nav-link {
@@ -1149,26 +1251,6 @@ textarea.form-input { border-radius: var(--r-lg); }
   margin-right: auto;
 }
 
-/* Three columns of video + copy don't fit a narrow width — stack them and
-   drop the viewport lock, same fallback the rest of the site uses. Raised
-   to 900px (wider than the site's usual 760px stack point) specifically so
-   the three-column layout never runs at a width too narrow for the
-   one-line column titles below — it stacks to full-width single-column
-   before that happens, where a title has all the room it needs. */
-@media (max-width: 900px) {
-  .add-items { min-height: 0; }
-
-  .add-items__row { flex-direction: column; align-items: center; }
-
-  .add-column + .add-column { margin-top: 2.5rem; }
-
-  /* The one-line lock is a wide-layout call — once stacked, full column
-     width is available, so there's no need to force it. */
-  .add-items__head h2,
-  .add-column__title {
-    white-space: normal;
-  }
-}
 
 /* Shared snap targets. One rule for every full-viewport section rather than
    scattering `scroll-snap-align` across each component's own class — every
@@ -1210,6 +1292,10 @@ textarea.form-input { border-radius: var(--r-lg); }
 #newsletter,
 #footer {
   scroll-snap-align: start;
+  /* One gesture, one page. Without this a hard wheel flick or a fast swipe
+     carries its momentum past several snap points and lands three sections
+     down; `always` makes the scroll stop at the very next one. */
+  scroll-snap-stop: always;
 }
 
 /* Hero is the one section that can't be --section-h tall: it starts at
@@ -1226,7 +1312,7 @@ textarea.form-input { border-radius: var(--r-lg); }
    navbar's Download button already scrollTo(0)s to, so the two agree
    instead of the snap correcting the click. */
 #hero {
-  scroll-margin-top: calc(-1 * var(--nav-height));
+  scroll-margin-top: calc(-1 * var(--page-top));
 }
 
 /* The four sections that reach their viewport height through the shared
@@ -1244,12 +1330,22 @@ textarea.form-input { border-radius: var(--r-lg); }
   min-height: var(--section-h);
 }
 
+/* Phones. About and Pricing are each split into two one-screen pages (see
+   5.13), so the section itself has no height or padding of its own. FAQ and
+   the newsletter band stay one page each, centred like on desktop.
+   FAQ keeps min-height rather than height on purpose: opening an answer may
+   grow it past one screen, and that is content the reader asked for. */
 @media (max-width: 900px) {
   #about,
-  #pricing,
+  #pricing {
+    min-height: 0;
+    padding-block: 0;
+  }
+
   #faq,
   #newsletter {
-    min-height: 0;
+    display: flex;
+    padding-block: clamp(1rem, 3vh, 2rem);
   }
 }
 
@@ -1831,13 +1927,6 @@ textarea.form-input { border-radius: var(--r-lg); }
   margin-right: auto;
 }
 
-@media (max-width: 900px) {
-  .meal-plan { min-height: 0; }
-  .meal-plan__row { flex-direction: column; align-items: center; }
-  .plan-column + .plan-column { margin-top: 2.5rem; }
-  .meal-plan__head h2,
-  .plan-column__title { white-space: normal; }
-}
 
 /* --- 5.10e Recipe cook/import row ---------------------------------------
    Each recording is paired with its copy to use the viewport horizontally. */
@@ -1925,19 +2014,6 @@ textarea.form-input { border-radius: var(--r-lg); }
   text-wrap: pretty;
 }
 
-@media (max-width: 900px) {
-  .recipe-row-section { min-height: 0; }
-  .recipe-row-section__layout { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
-  .recipe-row-section__row { flex-direction: column; align-items: center; }
-  .recipe-column { width: 100%; max-width: 620px; }
-  .recipe-column + .recipe-column { margin-top: 2.5rem; }
-}
-
-@media (max-width: 520px) {
-  .recipe-column { grid-template-columns: minmax(0, 1fr); text-align: center; }
-  .recipe-column__screen { width: min(100%, 29.5vh, 210px); }
-  .recipe-column__desc { margin-inline: auto; }
-}
 
 /* --- 5.10f Phone recordings: sized to the space they have ----------------
    The three recording sections (AddItems, MealPlan, RecipeCookImport) used
@@ -1957,9 +2033,38 @@ textarea.form-input { border-radius: var(--r-lg); }
    those phones are capped at 640px tall (about 313 CSS px wide, which is
    the source's full detail on a 2x screen) rather than being upscaled.
 
-   Below 901px the sections keep their existing stacked layout (a size
-   container needs a definite height, which a stacked column doesn't have),
-   so none of this applies there. */
+   The phone sizing itself applies at every width. What differs is where
+   the definite height comes from: on desktop the whole section is one
+   --section-h box holding all its phones in a row; on a phone each
+   phone-and-copy pair is its own --section-h page (see 5.13). */
+.add-column__media,
+.plan-column__media,
+.recipe-column__media {
+  flex: 1;
+  min-height: 0;
+  align-items: center;
+  container-type: size;
+}
+
+.add-column__copy,
+.plan-column__copy,
+.recipe-column__copy {
+  flex: none;
+}
+
+.add-column__video,
+.plan-column__screen,
+.recipe-column__screen {
+  width: auto;
+  height: min(100cqh, 100cqw * 2465 / 1206);
+  max-width: 100%;
+  aspect-ratio: 1206 / 2465;
+  border-radius: clamp(14px, 2.4cqh, 22px);
+  box-shadow: var(--e-3);
+}
+
+.add-column__video { max-height: 640px; }
+
 @media (min-width: 901px) {
   .add-items,
   .meal-plan,
@@ -1997,18 +2102,8 @@ textarea.form-input { border-radius: var(--r-lg); }
     min-height: 0;
   }
 
-  .add-column__media,
-  .plan-column__media,
-  .recipe-column__media {
-    flex: 1;
-    min-height: 0;
-    align-items: center;
-    container-type: size;
-  }
-
   .add-column__copy,
   .plan-column__copy {
-    flex: none;
     margin-top: clamp(0.6rem, 1.8vh, 1.1rem);
   }
 
@@ -2017,19 +2112,6 @@ textarea.form-input { border-radius: var(--r-lg); }
      and come out the same size, tops and bottoms level. */
   .add-column__copy { min-height: 6.9em; }
   .plan-column__copy { min-height: 7.6em; }
-
-  .add-column__video,
-  .plan-column__screen,
-  .recipe-column__screen {
-    width: auto;
-    height: min(100cqh, 100cqw * 2465 / 1206);
-    max-width: 100%;
-    aspect-ratio: 1206 / 2465;
-    border-radius: clamp(14px, 2.4cqh, 22px);
-    box-shadow: var(--e-3);
-  }
-
-  .add-column__video { max-height: 640px; }
 
   /* Recipe: the head moves from beside the two columns to above them, so
      the columns get the section's full width and each phone gets far more
@@ -2133,10 +2215,17 @@ textarea.form-input { border-radius: var(--r-lg); }
   color: var(--ink-muted);
   text-wrap: pretty;
 }
-@media (min-width: 820px) {
-  .founder { grid-template-columns: minmax(0, 1fr) minmax(280px, 32%); }
-  .founder__figure { grid-column: 2; grid-row: 1; }
-  .founder__content { grid-column: 1; grid-row: 1; }
+@media (min-width: 901px) {
+  .founder {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 32%);
+    row-gap: 0;
+  }
+  /* The phone-page wrapper dissolves: portrait to the right column across
+     both rows, the note under the story in the left one. */
+  .founder__closing { display: contents; }
+  .founder__content { grid-column: 1; grid-row: 1; align-self: end; }
+  .founder__note-wrap { grid-column: 1; grid-row: 2; align-self: start; }
+  .founder__figure { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
 }
 @media (min-width: 901px) and (max-height: 780px) {
   #about { padding-block: 24px; }
@@ -2144,10 +2233,6 @@ textarea.form-input { border-radius: var(--r-lg); }
   .founder__detail { font-size: 15px; }
   .founder__note { margin-top: 14px; padding: 18px 22px; }
   .founder__quote { font-size: 15px; line-height: 1.5; }
-}
-@media (max-width: 819px) {
-  .founder__figure { max-width: 300px; justify-self: center; }
-  .founder__content { grid-row: 1; }
 }
 
 .placeholder-note {
@@ -2197,6 +2282,412 @@ textarea.form-input { border-radius: var(--r-lg); }
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.02em;
+}
+
+/* --- 5.13 One screen per scroll ------------------------------------------
+   The home page reads as a stack of pages: each scroll gesture moves exactly
+   one page, and every page shows all of its content. The snap itself is the
+   browser's own (scroll-snap-type on html, snap-align + snap-stop on each
+   page), so wheel, trackpad, touch and keyboard all behave natively and a
+   scroll can be reversed mid-flight. Nothing here listens to scroll events.
+
+   On desktop a page is a section. On a phone several sections hold more
+   than one screen can show, so each is split into pages of its own:
+     Add items   3 pages, one recording each
+     Meal plan   4 pages, one recording each
+     Recipes     2 pages, one recording each
+     About       2 pages: the story, then the portrait and personal note
+     Pricing     2 pages: Free, then Pro
+   The section's id stops being a snap target there (a box three screens
+   tall is oversized, and an oversized snap area lets the scroll rest
+   anywhere inside it, which is what let the last recording slide away), and
+   its pages take over. ---------------------------------------------------- */
+
+/* --- Hero ---------------------------------------------------------------- */
+
+.hero-shell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100svh;
+  /* Only a window too short for the copy itself grows the hero. */
+  min-height: min-content;
+  padding-top: calc(var(--nav-height) + clamp(1rem, 4vh, 3rem));
+  padding-bottom: clamp(1rem, 4vh, 3rem);
+}
+
+/* Two columns: the fan is as wide as before, but never taller than the
+   screen leaves room for (it used to push the hero 2px past 720). */
+@media (min-width: 1024px) {
+  .hero-fan__center {
+    width: min(clamp(180px, 34vw, 250px), 30vh) !important;
+    max-width: min(clamp(180px, 34vw, 250px), 30vh) !important;
+  }
+  .hero-fan__side {
+    width: min(clamp(126px, 25vw, 182px), 22vh) !important;
+    max-width: min(clamp(126px, 25vw, 182px), 22vh) !important;
+  }
+}
+
+/* Stacked: copy takes its natural height and the fan gets whatever is left,
+   sized from that leftover box so all three screens always fit. */
+@media (max-width: 1023px) {
+  .hero-shell { justify-content: flex-start; }
+
+  .hero-grid {
+    flex: 1;
+    min-height: 0;
+    grid-template-rows: auto minmax(0, 1fr);
+    row-gap: clamp(0.75rem, 2.5vh, 2rem);
+    align-items: stretch;
+  }
+
+  .hero-copy .standfirst { margin-top: clamp(0.75rem, 2vh, 1.75rem); }
+  .hero-cta { margin-top: clamp(1rem, 2.6vh, 2.25rem); }
+  .hero-copy .trust-row {
+    margin-top: clamp(0.9rem, 2.4vh, 2.25rem);
+    gap: 8px 18px;
+  }
+
+  .hero-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    container-type: size;
+  }
+
+  .hero-fan__center,
+  .hero-fan__side {
+    width: auto !important;
+    max-width: none !important;
+  }
+  /* Height-led, with a width cap written as a height (width / ratio). */
+  .hero-fan__center { height: min(90cqh, calc(38cqw / (var(--screen-ar)))); }
+  .hero-fan__side {
+    height: min(70cqh, calc(29cqw / (var(--screen-ar))));
+    margin: 0 -4cqw;
+  }
+}
+
+/* The two store buttons share a row on a phone rather than stacking: it gives
+   a whole button's height back to the page. Still 52px tall targets. */
+@media (max-width: 639px) {
+  .hero-cta,
+  .cta-stores {
+    flex-direction: row;
+    gap: 10px;
+  }
+  .hero-cta .store-button,
+  .cta-stores .store-button {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    min-height: 52px;
+    padding: 0 10px;
+    gap: 8px;
+    font-size: 15px;
+  }
+}
+
+/* --- "2 / 4" above each recording's title, phone pages only -------------- */
+
+.page-step { display: none; }
+
+/* --- Pricing grid (desktop shape; the phone pages are below) ------------- */
+
+.pricing {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.pricing__page { display: contents; }
+.pricing__head { grid-column: 1 / -1; margin-bottom: 0.5rem; }
+.pricing__free { grid-column: 1; grid-row: 2; }
+.pricing__pro { grid-column: 2; grid-row: 2; }
+.pricing__fine { grid-column: 1 / -1; }
+
+/* --- Page dots -----------------------------------------------------------
+   One dot per page down the right edge, the current one marked. Shown only
+   while the page is moving (PageScroll sets data-visible), then it fades
+   away so it never sits over content at rest. Purely an indicator: it takes
+   no clicks and is hidden from assistive tech. Opacity and transform only. */
+.page-dots {
+  position: fixed;
+  top: 50%;
+  right: clamp(8px, 1.4vw, 20px);
+  z-index: var(--z-content);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 7px;
+  border-radius: var(--r-full);
+  background: var(--card);
+  box-shadow: var(--e-1);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(6px, -50%, 0);
+  /* Leaving: quieter and a touch slower than arriving, like a scrollbar. */
+  transition:
+    opacity 250ms cubic-bezier(0.55, 0, 1, 0.45),
+    transform 250ms cubic-bezier(0.55, 0, 1, 0.45);
+}
+
+.page-dots[data-visible="true"] {
+  opacity: 1;
+  transform: translate3d(0, -50%, 0);
+  transition:
+    opacity var(--dur-fast) var(--ease-out-expo),
+    transform var(--dur-fast) var(--ease-out-expo);
+}
+
+.page-dots__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-full);
+  background: var(--ink);
+  opacity: 0.22;
+  transition:
+    opacity var(--dur-base) var(--ease-out-expo),
+    transform var(--dur-base) var(--ease-out-expo),
+    background-color var(--dur-base) var(--ease-out-expo);
+}
+
+/* Marked by colour AND size, so it doesn't rely on colour alone. */
+.page-dots__dot[data-active="true"] {
+  background: var(--brand);
+  opacity: 1;
+  transform: scale(1.6);
+}
+
+/* A phone has up to 18 pages; tighten the rail so it stays well inside a
+   667px-tall screen. */
+@media (max-width: 900px) {
+  .page-dots { gap: 6px; padding: 8px 5px; }
+  .page-dots__dot { width: 5px; height: 5px; }
+}
+
+/* --- Phone pages --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  #add-items,
+  #meal-plan,
+  #recipe-cook,
+  #about,
+  #pricing {
+    scroll-snap-align: none;
+  }
+
+  .add-column,
+  .plan-column,
+  .recipe-column,
+  .founder__content,
+  .founder__closing,
+  .pricing__page {
+    height: var(--section-h);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  /* Recordings. The section heading sticks under the navbar for as long as
+     its pages are on screen, so each swipe changes the phone and the copy
+     while the question they answer stays put. The heading keeps its own
+     height in flow and the pages are pulled up underneath it (negative
+     margin on the row, matching top padding on every page). The pull is on
+     the row, not the heading: a sticky box is held inside its section by its
+     margin box, so a heading with a negative margin of its own would hang
+     past the section's end, over the next section's first page. */
+  .add-items,
+  .meal-plan,
+  .recipe-row-section {
+    --page-head: clamp(3.25rem, 9vh, 4.75rem);
+    display: block;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .recipe-row-section__layout {
+    display: block;
+    padding-inline: 0;
+  }
+
+  .add-items__head,
+  .meal-plan__head,
+  .recipe-row-section__head {
+    position: sticky;
+    top: var(--page-top);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--page-head);
+    margin-bottom: 0;
+    padding-inline: var(--gutter);
+    text-align: center;
+  }
+  .add-items__head,
+  .recipe-row-section__head { background: var(--surface-soft); }
+  .meal-plan__head { background: var(--ground); }
+
+  .add-items__head h2,
+  .meal-plan__head h2,
+  .recipe-row-section__head .display {
+    font-size: clamp(1.1rem, 5vw, 1.45rem);
+    white-space: normal;
+  }
+
+  .add-items__row,
+  .meal-plan__row,
+  .recipe-row-section__row {
+    display: block;
+    max-width: none;
+    margin-top: calc(-1 * var(--page-head));
+  }
+
+  .add-column,
+  .plan-column,
+  .recipe-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: calc(var(--page-head) + clamp(0.25rem, 1vh, 0.75rem))
+      var(--gutter) clamp(1rem, 3vh, 1.75rem);
+    text-align: center;
+  }
+
+  .add-column__media,
+  .plan-column__media,
+  .recipe-column__media { width: 100%; }
+
+  .add-column__copy,
+  .plan-column__copy,
+  .recipe-column__copy { margin-top: clamp(0.75rem, 2.2vh, 1.25rem); }
+
+  .page-step {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--brand);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .add-column__title,
+  .plan-column__title,
+  .recipe-column__title {
+    font-size: clamp(1.15rem, 5vw, 1.4rem);
+    white-space: normal;
+  }
+
+  .add-column__desc,
+  .plan-column__desc,
+  .recipe-column__desc {
+    max-width: 34ch;
+    margin-inline: auto;
+    font-size: clamp(0.875rem, 2.1vh, 0.975rem);
+    line-height: 1.5;
+  }
+
+  /* About: page 1 the story, page 2 the portrait beside its caption with
+     the personal note under it. */
+  .founder { display: block; }
+
+  .founder__content,
+  .founder__closing {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: clamp(1rem, 3vh, 2rem);
+  }
+
+  .founder__content .display--sub { font-size: min(2rem, 8vw); }
+  .founder__intro {
+    margin-top: clamp(0.75rem, 2vh, 1.125rem);
+    font-size: clamp(15px, 2.3vh, 17px);
+    line-height: 1.55;
+  }
+  .founder__detail {
+    font-size: clamp(14.5px, 2.15vh, 16px);
+    line-height: 1.55;
+  }
+
+  .founder__closing { gap: clamp(1rem, 3vh, 1.75rem); }
+  .founder__figure {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: none;
+  }
+  .founder__portrait {
+    flex: none;
+    width: clamp(64px, 13vh, 112px);
+    border-radius: 18px;
+  }
+  .founder__caption { padding-top: 0; }
+  .founder__note {
+    margin-top: 0;
+    padding: clamp(14px, 2.4vh, 22px) 20px;
+  }
+  .founder__quote {
+    font-size: clamp(14.5px, 2.15vh, 16px);
+    line-height: 1.55;
+  }
+
+  /* Pricing: page 1 the heading and Free, page 2 Pro and the small print. */
+  .pricing { display: block; }
+
+  .pricing__page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(0.75rem, 2.2vh, 1.25rem);
+    padding-block: clamp(0.75rem, 2.5vh, 1.75rem);
+  }
+
+  .pricing__head { margin-bottom: 0; }
+  .pricing__standfirst { font-size: 1rem; line-height: 1.5; }
+
+  .price-card {
+    height: auto;
+    padding: clamp(1rem, 2.6vh, 1.5rem) 1.25rem;
+  }
+  .price-card ul { margin-block: clamp(0.6rem, 1.8vh, 1rem); }
+
+  /* FAQ: seven closed questions fit one screen. */
+  #faq .faq-item summary {
+    padding: clamp(0.6rem, 1.7vh, 1rem) 1.15rem;
+    font-size: 14.5px;
+  }
+
+  /* Newsletter band. */
+  .cta-panel { padding: clamp(1.25rem, 3.5vh, 2.5rem) 1.25rem; }
+  .cta-standfirst {
+    margin-top: clamp(0.5rem, 1.5vh, 1rem);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .cta-stores { margin-top: clamp(0.9rem, 2.4vh, 1.75rem); }
+  .cta-newsletter {
+    margin-top: clamp(1rem, 2.6vh, 2rem);
+    padding-top: clamp(0.9rem, 2.4vh, 1.5rem);
+  }
+}
+
+/* Short phones (an iPhone SE is 667 tall): the one supporting line on each
+   of these pages steps aside so the page's real content still fits. */
+@media (max-width: 900px) and (max-height: 700px) {
+  .pricing__standfirst,
+  .cta-standfirst { display: none; }
+}
+
+/* Short desktop windows (1280x720): Pricing and the newsletter band were 21
+   and 38px taller than the page. Their outer padding gives that back. */
+@media (min-width: 901px) and (max-height: 780px) {
+  #pricing,
+  #newsletter { padding-block: 1.25rem; }
+  .cta-panel { padding-block: 1.75rem; }
 }
 
 /* ============================================================================

@@ -1,4 +1,5 @@
 import Reveal from "./Reveal";
+import ScreenRecording from "./ScreenRecording";
 
 /**
  * Two columns: importing a recipe from a social link, and what happens
@@ -37,24 +38,18 @@ export default function RecipeCookImport() {
           <div className="recipe-column">
             <Reveal className="recipe-column__media" y={24}>
               <div className="recipe-column__screen">
-                <video
+                <ScreenRecording
                   className="recipe-column__video-el"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="auto"
-                  aria-label="Pasting a YouTube link into Import Recipe, extracting ingredients, steps and macros, then the recipe landing in Imported Recipes"
-                >
-                  <source
-                    src="/videos/recipe-cook/import.webm"
-                    type="video/webm"
-                  />
-                  <source src="/videos/recipe-cook/import.mp4" type="video/mp4" />
-                </video>
+                  src="/videos/recipe-cook/import"
+                  label="Pasting a YouTube link into Import Recipe, extracting ingredients, steps and macros, then the recipe landing in Imported Recipes"
+                />
               </div>
             </Reveal>
             <Reveal className="recipe-column__copy" delay={100} y={16}>
+              <p className="page-step">
+                1 <span aria-hidden="true">/</span>
+                <span className="sr-only">of</span> 2
+              </p>
               <h3 className="display display--xs recipe-column__title">
                 Import <em>from a link.</em>
               </h3>
@@ -69,27 +64,18 @@ export default function RecipeCookImport() {
           <div className="recipe-column">
             <Reveal className="recipe-column__media" delay={80} y={24}>
               <div className="recipe-column__screen">
-                <video
+                <ScreenRecording
                   className="recipe-column__video-el"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="auto"
-                  aria-label="A recipe's detail page with ingredients checked against the pantry and step-by-step instructions, then Cook This logging the calories and updating the pantry"
-                >
-                  <source
-                    src="/videos/recipe-cook/discover-cook.webm"
-                    type="video/webm"
-                  />
-                  <source
-                    src="/videos/recipe-cook/discover-cook.mp4"
-                    type="video/mp4"
-                  />
-                </video>
+                  src="/videos/recipe-cook/discover-cook"
+                  label="A recipe's detail page with ingredients checked against the pantry and step-by-step instructions, then Cook This logging the calories and updating the pantry"
+                />
               </div>
             </Reveal>
             <Reveal className="recipe-column__copy" delay={180} y={16}>
+              <p className="page-step">
+                2 <span aria-hidden="true">/</span>
+                <span className="sr-only">of</span> 2
+              </p>
               <h3 className="display display--xs recipe-column__title">
                 Discover our curated selection for <em>your taste</em>
               </h3>

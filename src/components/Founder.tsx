@@ -5,34 +5,16 @@ export default function Founder() {
   return (
     <section
       id="about"
-      className="section band band--flat relative overflow-hidden viewport-lock"
+      className="section band band--flat relative overflow-clip viewport-lock"
     >
       <div className="shell relative max-w-[1240px]">
         <div className="founder">
-          <Reveal y={24} as="figure" className="founder__figure">
-            {/* Deliberately a runtime `src` rather than a static import: the
-                file is supplied by the founder, and a missing static import
-                would fail the build instead of just failing the image. */}
-            <div className="founder__portrait">
-              <Image
-                src="/portrait.jpeg"
-                alt="Abhishek Singh, founder of KhanPaan"
-                fill
-                sizes="(min-width: 820px) 360px, 300px"
-                className="object-cover"
-              />
-            </div>
-            <figcaption className="founder__caption">
-              <strong>Abhishek Singh</strong>
-              <span>Founder &amp; CEO, KhanPaan</span>
-            </figcaption>
-          </Reveal>
-
           <div className="founder__content">
             <Reveal>
               <p className="founder__eyebrow">The story behind KhanPaan</p>
               <h2 className="display display--sub">
-                A little less waste.<br />A lot more <em>possibility.</em>
+                A little less waste.
+                <br />A lot more <em>possibility.</em>
               </h2>
             </Reveal>
 
@@ -53,18 +35,42 @@ export default function Founder() {
                 which is what makes it unique.
               </p>
             </Reveal>
+          </div>
 
-            <Reveal delay={200}>
+          {/* Portrait and personal note travel together. From 901px up this
+              wrapper is display: contents, so the two sit in the grid as
+              before (portrait right, note under the story). On a phone it is
+              the section's second one-screen page. */}
+          <div className="founder__closing">
+            <Reveal y={24} as="figure" className="founder__figure">
+              {/* Deliberately a runtime `src` rather than a static import: the
+                  file is supplied by the founder, and a missing static import
+                  would fail the build instead of just failing the image. */}
+              <div className="founder__portrait">
+                <Image
+                  src="/portrait.jpeg"
+                  alt="Abhishek Singh, founder of KhanPaan"
+                  fill
+                  sizes="(min-width: 820px) 360px, 300px"
+                  className="object-cover"
+                />
+              </div>
+              <figcaption className="founder__caption">
+                <strong>Abhishek Singh</strong>
+                <span>Founder &amp; CEO, KhanPaan</span>
+              </figcaption>
+            </Reveal>
+            <Reveal delay={200} className="founder__note-wrap">
               <blockquote className="founder__note">
                 <span className="founder__note-label">A personal note</span>
                 <p className="founder__quote">
                   “After moving to the US, I found myself asking the same
-                  question every day: what should I cook? I kept making the
-                  same few meals while ingredients I already had went unused
-                  and eventually expired. I built KhanPaan to change that —
-                  to help turn the food in my kitchen into meals I look forward
-                  to making. It started with my own kitchen, and I hope it
-                  makes life a little easier in yours.”
+                  question every day: what should I cook? I kept making the same
+                  few meals while ingredients I already had went unused and
+                  eventually expired. I built KhanPaan to change that — to help
+                  turn the food in my kitchen into meals I look forward to
+                  making. It started with my own kitchen, and I hope it makes
+                  life a little easier in yours.”
                 </p>
               </blockquote>
             </Reveal>

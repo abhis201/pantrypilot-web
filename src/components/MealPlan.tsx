@@ -1,4 +1,5 @@
 import Reveal from "./Reveal";
+import ScreenRecording from "./ScreenRecording";
 
 interface PlanMethod {
   id: string;
@@ -71,18 +72,11 @@ function PlanColumn({ method, index }: { method: PlanMethod; index: number }) {
       <Reveal className="plan-column__media" delay={index * 80} y={24}>
         <div className="plan-column__screen">
           {method.hasVideo ? (
-            <video
+            <ScreenRecording
               className="plan-column__video-el"
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              aria-label={method.screenLabel}
-            >
-              <source src={`/videos/meal-plan/${method.id}.webm`} type="video/webm" />
-              <source src={`/videos/meal-plan/${method.id}.mp4`} type="video/mp4" />
-            </video>
+              src={`/videos/meal-plan/${method.id}`}
+              label={method.screenLabel}
+            />
           ) : (
             <div className="placeholder-screen">
               <span>Screen pending</span>
@@ -92,6 +86,10 @@ function PlanColumn({ method, index }: { method: PlanMethod; index: number }) {
       </Reveal>
 
       <Reveal className="plan-column__copy" delay={index * 80 + 100} y={16}>
+        <p className="page-step">
+          {index + 1} <span aria-hidden="true">/</span>
+          <span className="sr-only">of</span> {PLAN_METHODS.length}
+        </p>
         <h3 className="display display--xs plan-column__title">
           {method.title} <em>{method.accent}</em>
         </h3>

@@ -3,23 +3,68 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Menu, Close } from "./Icons";
 import appIcon from "../../public/logoIcon2.png";
 import Wordmark from "./Wordmark";
 
 /** Homepage landmarks, in document order. Drives both the active nav link and
  *  the hash the URL is kept in sync with. */
-const SECTION_IDS = ["hero", "features", "about", "pricing", "faq", "newsletter"];
+const SECTION_IDS = [
+  "hero",
+  "features",
+  "about",
+  "pricing",
+  "faq",
+  "newsletter",
+];
+
+/** Scroll movement smaller than this is jitter, not a page turn. */
+const NAV_MOVE_PX = 4;
 
 export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeId, setActiveId] = useState("");
   const [scrolled, setScrolled] = useState(false);
+  // Phones only, home page only: past the hero the bar folds away into a
+  // small dot in the top-right corner, so every page gets the full screen.
+  // Tapping the dot opens the bar; scrolling, tapping elsewhere or Escape
+  // folds it away again. It never comes back on its own.
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(-1);
+  const menuOpenRef = useRef(false);
+  const navRef = useRef<HTMLElement>(null);
+  const dotRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    menuOpenRef.current = menuOpen;
+  }, [menuOpen]);
+
+  const folds = useCallback(
+    () =>
+      pathname === "/" &&
+      window.matchMedia("(max-width: 900px)").matches &&
+      // Still on the hero (the first page) until it is more than half gone:
+      // the bar is always there on the hero, however the scroll jitters.
+      window.scrollY > window.innerHeight / 2,
+    [pathname],
+  );
 
   const handleScroll = useCallback(() => {
-    setScrolled(window.scrollY > 16);
+    const y = window.scrollY;
+    setScrolled(y > 16);
+
+    const first = lastY.current < 0;
+    if (!folds()) {
+      // Desktop, other pages, and the hero itself: always there.
+      setHidden(false);
+    } else if (first || Math.abs(y - lastY.current) > NAV_MOVE_PX) {
+      // Turning a page in either direction puts it away, unless the menu
+      // is open and being read.
+      if (!menuOpenRef.current) setHidden(true);
+    }
+    lastY.current = y;
 
     if (pathname !== "/") return;
 
@@ -42,9 +87,13 @@ export default function Navbar() {
     // not "/#hero".
     const desired = current && current !== "hero" ? `#${current}` : "";
     if (window.location.hash !== desired) {
-      window.history.replaceState(null, "", desired || window.location.pathname);
+      window.history.replaceState(
+        null,
+        "",
+        desired || window.location.pathname,
+      );
     }
-  }, [pathname]);
+  }, [pathname, folds]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -55,6 +104,30 @@ export default function Navbar() {
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
+
+  // An opened bar is dismissed like any popover: a tap outside it, or Escape.
+  useEffect(() => {
+    const fold = () => {
+      if (!folds()) return;
+      setMenuOpen(false);
+      setHidden(true);
+    };
+    const onPointerDown = (e: PointerEvent) => {
+      const target = e.target as Node;
+      if (navRef.current?.contains(target) || dotRef.current?.contains(target))
+        return;
+      fold();
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") fold();
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [folds]);
 
   // Escape closes the mobile drawer — a drawer you can't dismiss by keyboard is
   // a trap for anyone not using a pointer.
@@ -86,14 +159,18 @@ export default function Navbar() {
     const target = document.getElementById(id);
     if (!target) return;
 
-    const navHeight =
-      parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--nav-height"
-        )
-      ) || 76;
+    // Where a page's top edge rests: under the navbar on desktop, at the
+    // very top on a phone (the bar hides there). html's scroll-padding-top
+    // is that same number, already resolved to px.
+    const padding = parseFloat(
+      getComputedStyle(document.documentElement).scrollPaddingTop,
+    );
+    const navHeight = Number.isFinite(padding) ? padding : 76;
     const available = window.innerHeight - navHeight;
-    const slack = Math.max(0, available - target.getBoundingClientRect().height);
+    const slack = Math.max(
+      0,
+      available - target.getBoundingClientRect().height,
+    );
 
     const top =
       window.scrollY +
@@ -106,7 +183,7 @@ export default function Navbar() {
 
   const handleNavClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
+    href: string,
   ) => {
     if (pathname === "/" && href === "/") {
       // Download always lands back at the very top of the page — the hero,
@@ -149,81 +226,80 @@ export default function Navbar() {
    * button — Download is the one thing styled to be clicked here.
    */
   const navItems = [
-    { href: "/#features",   label: "Features",   active: onHome && activeId === "features"   },
-    { href: "/#about",      label: "About",      active: onHome && activeId === "about"      },
-    { href: "/#pricing",    label: "Pricing",    active: onHome && activeId === "pricing"    },
-    { href: "/#faq",        label: "FAQ",        active: onHome && activeId === "faq"        },
-    { href: "/#newsletter", label: "Newsletter", active: onHome && activeId === "newsletter" },
+    {
+      href: "/#features",
+      label: "Features",
+      active: onHome && activeId === "features",
+    },
+    { href: "/#about", label: "About", active: onHome && activeId === "about" },
+    {
+      href: "/#pricing",
+      label: "Pricing",
+      active: onHome && activeId === "pricing",
+    },
+    { href: "/#faq", label: "FAQ", active: onHome && activeId === "faq" },
+    {
+      href: "/#newsletter",
+      label: "Newsletter",
+      active: onHome && activeId === "newsletter",
+    },
   ];
 
   return (
-    <nav className="nav-shell" data-scrolled={scrolled}>
-      <div className="shell flex max-w-[1240px] items-center justify-between py-4">
-        <Link href="/" className="group flex flex-shrink-0 items-center gap-[6px]">
-          <Image
-            src={appIcon}
-            alt=""
-            width={38}
-            height={38}
-            className="object-contain transition-transform duration-300 group-hover:scale-105"
-            style={{ borderRadius: 11 }}
-            priority
-          />
-          <Wordmark className="text-[19px]" />
-        </Link>
+    <>
+      {/* The folded-away bar. Sits where the menu button is, so the bar opens
+        out of the spot that was tapped. Phones only (see .nav-dot). */}
+      <button
+        ref={dotRef}
+        type="button"
+        className="nav-dot"
+        data-visible={hidden}
+        aria-label="Show navigation"
+        aria-expanded={!hidden}
+        tabIndex={hidden ? 0 : -1}
+        onClick={() => setHidden(false)}
+      />
+      <nav
+        ref={navRef}
+        className="nav-shell"
+        data-scrolled={scrolled}
+        data-hidden={hidden}
+      >
+        <div className="shell flex max-w-[1240px] items-center justify-between py-4">
+          {/* Needs the same handler as Download. On the home page the URL is
+              already "/" whenever the page on screen has no hash of its own
+              (the three recording sections), so a plain link to "/" is a
+              navigation to where you already are and does nothing. */}
+          <Link
+            href="/"
+            onClick={(e) => handleNavClick(e, "/")}
+            aria-label="KhanPaan home"
+            className="group flex flex-shrink-0 items-center gap-[6px]"
+          >
+            <Image
+              src={appIcon}
+              alt=""
+              width={38}
+              height={38}
+              className="object-contain transition-transform duration-300 group-hover:scale-105"
+              style={{ borderRadius: 11 }}
+              priority
+            />
+            <Wordmark className="text-[19px]" />
+          </Link>
 
-        {/* Desktop links. gap-6 until lg, gap-8 above it: a fifth link
+          {/* Desktop links. gap-6 until lg, gap-8 above it: a fifth link
             (Newsletter, the longest label of the set) pushed the row past the
             available width at the md breakpoint itself, where the bar is
             narrowest but still showing every link. The wider rhythm returns
             as soon as there's room for it. */}
-        <div className="hidden items-center gap-6 md:flex lg:gap-8">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={(e) => handleNavClick(e, item.href)}
-              className={`nav-link ${item.active ? "active" : ""}`}
-            >
-              {item.label}
-            </Link>
-          ))}
-          <Link
-            href="/"
-            onClick={(e) => handleNavClick(e, "/")}
-            className="btn btn--primary !min-h-[46px] !px-7 !text-[15px]"
-          >
-            Download
-          </Link>
-        </div>
-
-        {/* Mobile hamburger */}
-        <button
-          className="-mr-2.5 rounded-lg p-2.5 text-ink md:hidden"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={menuOpen}
-          aria-controls="mobile-menu"
-        >
-          {menuOpen ? <Close className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-      </div>
-
-      {/* Mobile drawer — height animates via grid-template-rows, so it slides
-          open smoothly without a hard-coded max-height. */}
-      <div id="mobile-menu" className="nav-drawer md:hidden" data-open={menuOpen}>
-        <div>
-          <div
-            className="shell flex flex-col border-t pb-7 pt-2"
-            style={{ borderColor: "var(--line)" }}
-          >
+          <div className="hidden items-center gap-6 md:flex lg:gap-8">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`nav-link nav-drawer-link ${item.active ? "active" : ""}`}
                 onClick={(e) => handleNavClick(e, item.href)}
-                tabIndex={menuOpen ? 0 : -1}
+                className={`nav-link ${item.active ? "active" : ""}`}
               >
                 {item.label}
               </Link>
@@ -231,14 +307,63 @@ export default function Navbar() {
             <Link
               href="/"
               onClick={(e) => handleNavClick(e, "/")}
-              className="btn btn--primary mt-6 w-full"
-              tabIndex={menuOpen ? 0 : -1}
+              className="btn btn--primary !min-h-[46px] !px-7 !text-[15px]"
             >
               Download
             </Link>
           </div>
+
+          {/* Mobile hamburger */}
+          <button
+            className="-mr-2.5 rounded-lg p-2.5 text-ink md:hidden"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+          >
+            {menuOpen ? (
+              <Close className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
         </div>
-      </div>
-    </nav>
+
+        {/* Mobile drawer — height animates via grid-template-rows, so it slides
+          open smoothly without a hard-coded max-height. */}
+        <div
+          id="mobile-menu"
+          className="nav-drawer md:hidden"
+          data-open={menuOpen}
+        >
+          <div>
+            <div
+              className="shell flex flex-col border-t pb-7 pt-2"
+              style={{ borderColor: "var(--line)" }}
+            >
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`nav-link nav-drawer-link ${item.active ? "active" : ""}`}
+                  onClick={(e) => handleNavClick(e, item.href)}
+                  tabIndex={menuOpen ? 0 : -1}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <Link
+                href="/"
+                onClick={(e) => handleNavClick(e, "/")}
+                className="btn btn--primary mt-6 w-full"
+                tabIndex={menuOpen ? 0 : -1}
+              >
+                Download
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </>
   );
 }

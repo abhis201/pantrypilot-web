@@ -89,16 +89,11 @@ export default function Hero() {
       />
 
       <div
-        className="shell flex max-w-[1240px] flex-col justify-center"
-        style={{
-          minHeight: "100dvh",
-          paddingTop: "calc(var(--nav-height) + clamp(1.5rem, 4vh, 3rem))",
-          paddingBottom: "clamp(1.5rem, 4vh, 3rem)",
-        }}
+        className="shell hero-shell max-w-[1240px]"
       >
-        <div className="grid grid-cols-1 items-center gap-x-14 gap-y-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+        <div className="hero-grid grid grid-cols-1 items-center gap-x-14 gap-y-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
           {/* ---- Copy column ------------------------------------------- */}
-          <div className="min-w-0 max-w-[42rem]">
+          <div className="hero-copy min-w-0 max-w-[42rem]">
             <h1
               className="rise display display--hero"
               style={{ "--rise-delay": "0ms" } as React.CSSProperties}
@@ -122,7 +117,7 @@ export default function Hero() {
                 button sat beside them. */}
             <div
               id="download"
-              className="rise mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
+              className="rise hero-cta mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
               style={{ "--rise-delay": "180ms" } as React.CSSProperties}
             >
               <a
@@ -176,7 +171,7 @@ export default function Hero() {
               or backdrop shape (see the 5.4b comment in globals.css for why),
               and no drawn phone bezel (see ScreenCard) — the screenshots carry
               their own chrome, and KhanPaan ships on both platforms. */}
-          <div className="relative min-w-0 px-4 py-8 sm:px-8 sm:py-10">
+          <div className="hero-media relative min-w-0 px-4 py-8 sm:px-8 sm:py-10">
             <div className="hero-fan">
               {/* Each screen rises on its own now (fan-rise, not the shared
                   .rise used elsewhere) rather than as one group — see the

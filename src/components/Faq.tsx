@@ -75,7 +75,7 @@ export default function Faq() {
                   the parent, the summary only spanned the inner content box and
                   the padding strips down each side of the card hit the
                   <details> instead — a dead zone that swallowed the click. */}
-              <details className="faq-item">
+              <details className="faq-item" name="faq">
                 <summary className="flex items-center justify-between gap-6 px-6 py-4 text-[15px] font-bold leading-[1.45] tracking-[-0.015em] text-ink">
                   {q}
                   <ChevronDown className="faq-chevron h-5 w-5 flex-shrink-0 text-brand" />

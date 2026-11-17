@@ -1,4 +1,5 @@
 import Reveal from "./Reveal";
+import ScreenRecording from "./ScreenRecording";
 
 interface AddMethod {
   id: string;
@@ -55,22 +56,19 @@ function AddColumn({ method, index }: { method: AddMethod; index: number }) {
     <div className="add-column">
       <Reveal className="add-column__media" delay={index * 80} y={24}>
         <div className="add-column__video">
-          <video
+          <ScreenRecording
             className="add-column__video-el"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            aria-label={method.screenLabel}
-          >
-            <source src={`/videos/add-items/${method.id}.webm`} type="video/webm" />
-            <source src={`/videos/add-items/${method.id}.mp4`} type="video/mp4" />
-          </video>
+            src={`/videos/add-items/${method.id}`}
+            label={method.screenLabel}
+          />
         </div>
       </Reveal>
 
       <Reveal className="add-column__copy" delay={index * 80 + 100} y={16}>
+        <p className="page-step">
+          {index + 1} <span aria-hidden="true">/</span>
+          <span className="sr-only">of</span> {ADD_METHODS.length}
+        </p>
         <h3 className="display display--xs add-column__title">
           {method.title} <em>{method.accent}</em>
         </h3>

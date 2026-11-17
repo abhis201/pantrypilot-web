@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL } from "@/lib/site";
+import { LEGAL_LAST_UPDATED as LEGAL_DATE, SITE_URL } from "@/lib/site";
 
 /** Terms and Privacy carry their own effective date; keep the sitemap honest. */
-const LEGAL_LAST_UPDATED = new Date("2026-04-02");
+const LEGAL_LAST_UPDATED = new Date(LEGAL_DATE);
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const buildDate = new Date();
@@ -22,6 +22,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${SITE_URL}/terms`,
+      lastModified: LEGAL_LAST_UPDATED,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${SITE_URL}/delete-account`,
       lastModified: LEGAL_LAST_UPDATED,
       changeFrequency: "yearly",
       priority: 0.3,

@@ -48,7 +48,8 @@ export default function NewsletterForm() {
 
   return (
     <div className="w-full">
-      <form ref={formRef} className="flex flex-col sm:flex-row gap-3" action={formAction}>
+      <form ref={formRef} className="newsletter-form" action={formAction}>
+        <div className="flex flex-col gap-3 sm:flex-row">
         <label htmlFor="newsletter-email" className="sr-only">
           Email address
         </label>
@@ -64,6 +65,22 @@ export default function NewsletterForm() {
           required
         />
         <SubmitButton subscribed={subscribed} />
+        </div>
+
+        {/* Marketing consent: unticked by default, required, and worded as
+            the thing being agreed to. The server action checks it again. */}
+        <label className="newsletter-consent">
+          <input
+            type="checkbox"
+            name="consent"
+            required
+            disabled={subscribed}
+          />
+          <span>
+            Email me KhanPaan news and releases. Unsubscribe in one click, any
+            time. See the <a href="/privacy#email">Privacy Policy</a>.
+          </span>
+        </label>
       </form>
 
       {/* aria-live so the result is announced without stealing focus. */}

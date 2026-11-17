@@ -20,7 +20,7 @@ const FAQS: QA[] = [
   },
   {
     q: "What happens to my data?",
-    a: "Your data is stored in an encrypted Supabase database (TLS 1.2+ in transit, AES-256 at rest). KhanPaan does not sell personal data, and the app ships with no advertising trackers and no third-party analytics SDKs. Our Privacy Policy documents exactly what is collected, why, and how long each type is retained.",
+    a: "Your data is stored in an encrypted Supabase database (TLS 1.2+ in transit, AES-256 at rest). KhanPaan does not sell personal data and shows no ads. The app uses Firebase Crashlytics and Analytics for crash and performance diagnostics only. Our Privacy Policy lists exactly what is collected, why, and every service that handles it.",
   },
   {
     q: "How do the AI meal suggestions actually work?",

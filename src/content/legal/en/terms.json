@@ -1,0 +1,481 @@
+{
+  "title": "Terms of Service",
+  "intro": "These terms are the agreement between you and {{LEGAL_ENTITY_NAME}} for using the {{SITE_NAME}} app and website. They cover subscriptions and free trials, what the app is and is not, and what each of us is responsible for.",
+  "changelog": [
+    {
+      "date": "2026-11-17",
+      "summary": "Rewritten in plain language. Added the regional free-trial and auto-renewal rules, the medical, nutrition and allergen disclaimer, AI output and recipe import terms, prohibited conduct under India's IT Rules, the copyright takedown procedure, country-specific consumer terms, and the Grievance Officer contact. Set the age rules: 18 and over in India; elsewhere 13 (16 in the EEA) with parent or guardian consent under 18; subscriptions limited to adults."
+    },
+    {
+      "date": "2026-04-02",
+      "summary": "First published version."
+    }
+  ],
+  "sections": [
+    {
+      "id": "summary",
+      "title": "Quick summary in plain English",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "The short version",
+          "items": [
+            "**{{SITE_NAME}} is a kitchen and meal-planning tool, not medical or dietary advice.** Its AI can be wrong. If you have a food allergy or a medical condition, always check the physical product label and talk to a doctor.",
+            "**The core app is free.** {{SITE_NAME}} Pro is a subscription billed by Apple or Google.",
+            "**Store free trials renew automatically into a paid subscription** unless you cancel at least 24 hours before the trial ends. The no-card trial in India does not: it simply ends.",
+            "**Cancel any time** in your App Store or Google Play subscription settings. Deleting the app does not cancel a subscription.",
+            "**Age:** 18 or older in India. Elsewhere, at least 13 (16 in the European Economic Area); under 18, you need your parent or guardian's consent, and they agree to these terms for you.",
+            "**Your content stays yours.** Recipes you publish to the public catalogue stay there, without your name, if you leave.",
+            "**Nothing here removes rights your country's consumer law gives you.**"
+          ]
+        },
+        {
+          "type": "p",
+          "text": "The rest of this page is the full agreement. If the summary and the full text ever disagree, the full text applies."
+        }
+      ]
+    },
+    {
+      "id": "agreement",
+      "title": "The agreement",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "By creating an account or using {{SITE_NAME}} you agree to these terms and to our [Privacy Policy](/privacy). If you do not agree, do not use the app."
+        },
+        {
+          "type": "p",
+          "text": "{{SITE_NAME}} is operated by **{{LEGAL_ENTITY_NAME}}**, {{REGISTERED_POSTAL_ADDRESS}} (\"{{SITE_NAME}}\", \"we\", \"us\"). Contact: [{{GRIEVANCE_EMAIL}}](mailto:{{GRIEVANCE_EMAIL}})."
+        }
+      ]
+    },
+    {
+      "id": "eligibility",
+      "title": "Who can use {{SITE_NAME}}",
+      "blocks": [
+        {
+          "type": "table",
+          "head": [
+            "Where you live",
+            "Minimum age",
+            "Under 18"
+          ],
+          "rows": [
+            [
+              "**India**",
+              "**18**",
+              "Not permitted. {{SITE_NAME}} is for adults only in India."
+            ],
+            [
+              "**European Economic Area**",
+              "**16**",
+              "Ages 16 and 17 need a parent or legal guardian's consent and supervision."
+            ],
+            [
+              "**Everywhere else**",
+              "**13**",
+              "Ages 13 to 17 need a parent or legal guardian's consent and supervision."
+            ]
+          ]
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**In India, you must be 18 years of age or older.** {{SITE_NAME}} is offered in India only to adults who are competent to contract under the Indian Contract Act, 1872. By creating an account in India you confirm that you are at least 18.",
+            "**Outside India, you must be at least 13 years of age** (or **16 years of age** in the European Economic Area). If you are under 18, or under the age of majority where you live if that is higher, you may only create an account and use the service under the supervision and with the verifiable consent of your parent or legal guardian, who agrees to be bound by these terms on your behalf and is responsible for your use of the service.",
+            "**Only an adult can buy a subscription.** {{SITE_NAME}} Pro, including any free trial that renews into a paid subscription, may be purchased only by someone aged 18 or over, or the age of majority where they live if that is higher. If you are under 18, your parent or guardian must make the purchase on their own App Store or Google Play account.",
+            "We do not knowingly collect personal data from children under 13 anywhere, or from anyone under 18 in India. If we learn that an account belongs to someone below the minimum age for their country, or to someone under 18 outside India without a parent or guardian's consent, we may close it and delete its data.",
+            "You must not be barred from using the service under the laws of your country or of India, the United States, the European Union or the United Kingdom, including sanctions and export-control laws.",
+            "One person, one account. You are responsible for what happens under your account and for keeping your sign-in secure. Tell us at once if you think someone else has used it."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "service",
+      "title": "What {{SITE_NAME}} is, and the medical, nutrition and allergen disclaimer",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "{{SITE_NAME}} helps you track what is in your kitchen, scan receipts, find and import recipes, plan meals and follow your nutrition."
+        },
+        {
+          "type": "callout",
+          "title": "Important: this is not medical advice",
+          "items": [
+            "{{SITE_NAME}} is an **informational kitchen and meal-planning tool**. It is **not a medical device, a healthcare provider, or a licensed dietitian**, and it does not diagnose, treat or prevent any condition.",
+            "Receipts read by AI, nutrition-label scans, macro estimates for restaurant and outside meals, BMR and Katch-McArdle calorie and macro calculations, and allergen and dietary filters are **automated approximations that can contain errors**. A filter can miss an allergen. A scan can misread a label.",
+            "**If you have a food allergy, an intolerance or a medical condition, you must always check the physical product label yourself**, and consult a qualified physician before changing your diet. Do not rely on {{SITE_NAME}} to tell you a food is safe for you.",
+            "Calorie and macro targets, including weight-loss targets, are general estimates for healthy adults. They are not suitable as the sole guide for anyone who is under 18, pregnant or breastfeeding, has or has had an eating disorder, or has a condition affected by diet. **If you are under 18, do not follow a calorie-deficit or weight-loss target without your parent or guardian and a doctor.**"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "title": "AI output and imported recipes",
+      "blocks": [
+        {
+          "type": "ul",
+          "items": [
+            "Recipes, shelf-life and expiry estimates, ingredient matches and food images are generated by AI models (Google Gemini and Imagen). They are **probabilistic outputs**: they may be inaccurate, incomplete, or not match the real dish.",
+            "**Food safety is your responsibility.** Follow safe food handling, cook to safe temperatures, and check food for spoilage yourself before eating it. An expiry estimate in the app is not proof that food is safe, and a missing warning is not proof either.",
+            "When you paste or share a recipe link (Instagram, TikTok, YouTube, a blog), we fetch the public page and extract ingredients and steps for your own use. The original content belongs to its creator. Import only content you are allowed to access and use, and do not republish someone else's recipe as your own.",
+            "We may limit how much AI processing an account can use, to keep the service fair and affordable."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "subscriptions",
+      "title": "Subscriptions, free trials, renewal and refunds",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The core features of {{SITE_NAME}} are free. **{{SITE_NAME}} Pro** is an optional subscription, offered monthly or annually. The price, in your currency and including any tax, is shown in the app and on the store's purchase screen before you confirm."
+        },
+        {
+          "type": "h3",
+          "text": "Free trials"
+        },
+        {
+          "type": "p",
+          "text": "Which trial you are offered depends on the country recorded when your account was created. Each sign-in can claim a free trial once."
+        },
+        {
+          "type": "table",
+          "head": [
+            "Trial",
+            "Who gets it",
+            "Payment method needed?",
+            "What happens when it ends"
+          ],
+          "rows": [
+            [
+              "**No-card trial (India)**",
+              "Eligible new users in India (`IN`) who skip the paywall during onboarding",
+              "**No**",
+              "After **3 days** your account returns to the Free tier automatically. **You are charged ₹0.** Nothing renews."
+            ],
+            [
+              "**Store trial, India**",
+              "Users in India who start a trial through the App Store or Google Play",
+              "Yes, on your Apple ID or Google Play account",
+              "After **3 days** it **renews automatically into a paid subscription** unless you cancel at least 24 hours before the trial ends."
+            ],
+            [
+              "**Store trial, rest of the world**",
+              "Users outside India who start a trial through the App Store or Google Play",
+              "Yes, on your Apple ID or Google Play account",
+              "After **7 days** it **renews automatically into a paid subscription** unless you cancel at least 24 hours before the trial ends."
+            ]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Billing and automatic renewal"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "Subscriptions and store trials are billed through your **Apple ID** or **Google Play** account, not by us. We never receive your card number or UPI PIN.",
+            "A subscription **renews automatically** for the same period at the then-current price until you cancel. Your store account is charged within 24 hours before the current period ends.",
+            "If the price changes, the store will notify you beforehand and, where the law or the store requires it, ask you to accept the new price."
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "How to cancel"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**iPhone or iPad:** Settings, then your name (Apple ID), then Subscriptions, then {{SITE_NAME}}, then Cancel.",
+            "**Android:** Google Play Store, then your profile, then Payments & subscriptions, then Subscriptions, then {{SITE_NAME}}, then Cancel.",
+            "Cancel **at least 24 hours before** the end of the trial or billing period to avoid the next charge. You keep Pro until the end of the period you have paid for.",
+            "**Deleting the app or your {{SITE_NAME}} account does not cancel a store subscription.** Cancel it in the store first."
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Refunds"
+        },
+        {
+          "type": "p",
+          "text": "Because Apple and Google take the payment, refunds are handled by them under their refund policies: request one from Apple at reportaproblem.apple.com or from Google Play through your order history. This does not limit any refund, withdrawal or cancellation right that the consumer law of your country gives you and that cannot be waived; see \"Country-specific terms\" below."
+        }
+      ]
+    },
+    {
+      "id": "your-content",
+      "title": "Your content",
+      "blocks": [
+        {
+          "type": "ul",
+          "items": [
+            "You own what you put into {{SITE_NAME}}: your pantry, lists, plans, photos and the recipes you write.",
+            "You give us a worldwide, royalty-free, non-exclusive licence to host, store, process and display that content **only to run the service for you**.",
+            "If you publish a recipe to the public catalogue, you also allow other {{SITE_NAME}} users to view and cook from it. If you later delete your account, public recipes you contributed remain in the catalogue with your identity detached from them.",
+            "You confirm that you have the right to upload what you upload, and that it does not break the rules in the next section."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "acceptable-use",
+      "title": "Rules of use and prohibited content",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "You agree not to host, display, upload, modify, publish, transmit, store, update or share through {{SITE_NAME}}, including by importing a URL or uploading an image, anything that:"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "belongs to another person and to which you have no right;",
+            "is obscene, pornographic, paedophilic, invasive of another's privacy including bodily privacy, insulting or harassing on the basis of gender, racially or ethnically objectionable, relates to or encourages money laundering or gambling, or promotes enmity between groups on the grounds of religion or caste with intent to incite violence;",
+            "is harmful to a child;",
+            "infringes any patent, trademark, copyright or other proprietary right;",
+            "deceives or misleads about the origin of a message, or knowingly communicates misinformation or information that is patently false, untrue or misleading;",
+            "impersonates another person;",
+            "threatens the unity, integrity, defence, security or sovereignty of India, friendly relations with foreign states, or public order, or incites the commission of an offence, or prevents the investigation of an offence, or insults another nation;",
+            "contains a software virus or any other code, file or program designed to interrupt, destroy or limit the functionality of a computer resource;",
+            "is unlawful under any law in force where you are."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "This list reflects Rule 3(1)(b) of India's Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, and applies to all users everywhere."
+        },
+        {
+          "type": "p",
+          "text": "You also agree not to: scrape or bulk-download the recipe catalogue; reverse engineer the app except where the law allows; get around usage limits or the free-trial rules, including by creating multiple accounts; resell the service; or use it to build a competing dataset or model."
+        },
+        {
+          "type": "p",
+          "text": "We may remove content that breaks these rules and suspend or close accounts that repeatedly or seriously break them. To report content, email [{{GRIEVANCE_EMAIL}}](mailto:{{GRIEVANCE_EMAIL}}). Reports are acknowledged within 24 hours and resolved within 15 days; reports about content that exposes a person's private parts, shows nudity or a sexual act, or impersonates someone are acted on within 24 hours."
+        }
+      ]
+    },
+    {
+      "id": "copyright",
+      "title": "Copyright complaints and takedown",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "We respect copyright. If you believe something in {{SITE_NAME}} infringes your copyright, send a notice to [{{GRIEVANCE_EMAIL}}](mailto:{{GRIEVANCE_EMAIL}}) with:"
+        },
+        {
+          "type": "ol",
+          "items": [
+            "your name, address, phone number and email address;",
+            "a description of the copyrighted work;",
+            "where the allegedly infringing material is in {{SITE_NAME}} (a recipe name or link is enough to find it);",
+            "a statement that you believe in good faith that the use is not authorised by the owner, its agent or the law;",
+            "a statement that the information in the notice is accurate and, under penalty of perjury, that you are the owner or are authorised to act for the owner;",
+            "your physical or electronic signature."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "This procedure follows the US Digital Millennium Copyright Act (17 U.S.C. § 512) and section 52(1)(c) of India's Copyright Act, 1957. We will remove or disable access to the material and tell the person who posted it, who may send a counter-notice with the same details and a statement, under penalty of perjury, that the material was removed by mistake. We close the accounts of repeat infringers."
+        }
+      ]
+    },
+    {
+      "id": "our-ip",
+      "title": "Our intellectual property",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The {{SITE_NAME}} app, name, logo, design and software belong to {{LEGAL_ENTITY_NAME}} or its licensors. We give you a personal, non-transferable, revocable licence to use the app for your own non-commercial household use, under these terms. Feedback you send us may be used without obligation to you."
+        }
+      ]
+    },
+    {
+      "id": "third-parties",
+      "title": "Stores and third-party services",
+      "blocks": [
+        {
+          "type": "ul",
+          "items": [
+            "**Product and nutrition data** comes from third-party catalogues (OpenFoodFacts, USDA FoodData Central and others) and may be incomplete or out of date.",
+            "**Apple.** If you got the app from the App Store: these terms are between you and us, not Apple. Apple is not responsible for the app or its content, has no obligation to provide maintenance or support, and is not responsible for any product claims, warranty claims beyond a refund of the purchase price where required, or third-party intellectual property claims. Apple and its subsidiaries are third-party beneficiaries of these terms and may enforce them. Your use must also comply with the App Store's terms.",
+            "**Google Play.** If you got the app from Google Play, your use must also comply with the Google Play Terms of Service."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "termination",
+      "title": "Ending the agreement",
+      "blocks": [
+        {
+          "type": "ul",
+          "items": [
+            "You can stop at any time by deleting your account in the app (Settings, then Account, then Delete Account) or at [/delete-account](/delete-account).",
+            "We may suspend or close your account if you seriously or repeatedly break these terms, if the law requires it, or if we stop offering the service. Where we reasonably can, we will warn you first and give you a chance to export your data.",
+            "If we close the service or your account without fault on your part during a paid period, you may be entitled to a refund for the unused part through the store, as your consumer law provides.",
+            "Sections that by their nature should survive (your content licence for public recipes, disclaimers, liability, disputes) continue after the agreement ends."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "disclaimers",
+      "title": "Disclaimers",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "We work to keep {{SITE_NAME}} accurate and available, but to the extent the law allows, it is provided **\"as is\" and \"as available\"**, without warranties of any kind, express or implied, including fitness for a particular purpose and accuracy of nutrition, allergen, expiry or price information. We do not promise the service will be uninterrupted or error-free."
+        },
+        {
+          "type": "p",
+          "text": "Some countries do not allow these exclusions for consumers. Where that is so, they do not apply to you, and you keep every guarantee your law gives you."
+        }
+      ]
+    },
+    {
+      "id": "liability",
+      "title": "Limit of liability",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "To the extent the law allows:"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "we are not liable for indirect or consequential loss, loss of profit, or loss of data that you could have avoided by keeping your own copy;",
+            "we are not liable for illness, allergic reaction or other harm that arises from relying on an AI estimate, a scan, a filter or a suggestion instead of checking the product label and using your own judgement, as these terms tell you to;",
+            "our total liability to you for all claims in any 12 months is limited to the amount you paid for {{SITE_NAME}} Pro in those 12 months."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "**Nothing in these terms limits liability that cannot be limited by law**, including liability for death or personal injury caused by negligence, for fraud, for gross negligence or wilful misconduct, or under mandatory consumer-protection law."
+        }
+      ]
+    },
+    {
+      "id": "indemnity",
+      "title": "Your responsibility to us",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "If someone brings a claim against us because of content you uploaded or because you broke these terms or the law, you agree to cover our reasonable losses and costs from that claim. This does not apply to consumers where the law does not allow it."
+        }
+      ]
+    },
+    {
+      "id": "country-terms",
+      "title": "Country-specific terms",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "{{SITE_NAME}} is offered worldwide. **If the mandatory consumer law of the country where you live gives you a right these terms do not, you have that right, and it overrides anything here that conflicts with it.** In particular:"
+        },
+        {
+          "type": "table",
+          "head": [
+            "Where you live",
+            "What applies to you"
+          ],
+          "rows": [
+            [
+              "**India**",
+              "The Consumer Protection Act, 2019 and the Consumer Protection (E-Commerce) Rules, 2020. You may complain to our Grievance Officer, who will acknowledge within 48 hours and resolve within one month, and you may approach a Consumer Disputes Redressal Commission. Prices shown include applicable taxes."
+            ],
+            [
+              "**European Economic Area**",
+              "You have the legal guarantee of conformity for digital services. You have a **14-day right of withdrawal** from a subscription bought at a distance; if you ask for the service to start during that period you may owe a proportionate amount, and the right may be lost once a digital service has been fully performed with your prior consent. Refunds are made through the store you paid. You may use the courts of your country of residence, and its mandatory law protects you."
+            ],
+            [
+              "**United Kingdom**",
+              "The Consumer Rights Act 2015 applies: digital content must be of satisfactory quality, fit for purpose and as described. You have a 14-day cancellation right for distance contracts on the same basis as above. You may bring proceedings in the courts of England and Wales, Scotland or Northern Ireland, wherever you live."
+            ],
+            [
+              "**United States**",
+              "Some states do not allow the exclusion of implied warranties or the limitation of incidental or consequential damages, so those parts may not apply to you. California residents may contact the Complaint Assistance Unit of the Division of Consumer Services of the California Department of Consumer Affairs. Automatic-renewal terms are set out in the Subscriptions section and you can cancel online in your store account at any time."
+            ],
+            [
+              "**Canada**",
+              "Provincial consumer-protection law applies and cannot be waived. In Quebec, the Consumer Protection Act applies and these terms are also available in French on request; the disclaimers and liability limits apply only as far as that Act allows."
+            ],
+            [
+              "**Australia**",
+              "Our service comes with guarantees that cannot be excluded under the Australian Consumer Law. For a major failure you are entitled to cancel and to a refund for the unused portion, and to compensation for reasonably foreseeable loss or damage."
+            ],
+            [
+              "**New Zealand**",
+              "The Consumer Guarantees Act 1993 applies to consumers and is not excluded."
+            ],
+            [
+              "**Brazil**",
+              "The Consumer Defence Code (CDC) applies, including the 7-day right of withdrawal for purchases made outside a physical store. You may bring proceedings where you live."
+            ],
+            [
+              "**Japan, South Korea, Singapore and elsewhere**",
+              "The mandatory consumer and e-commerce law of your country applies, including any cooling-off or cancellation right it gives you for digital subscriptions."
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "export",
+      "title": "Export and sanctions",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "You may not use {{SITE_NAME}} if you are in a country under a comprehensive embargo by India, the United States, the European Union or the United Kingdom, or if you are on a government list of prohibited or restricted parties. You may not export or re-export the app in breach of those laws."
+        }
+      ]
+    },
+    {
+      "id": "disputes",
+      "title": "Governing law and disputes",
+      "blocks": [
+        {
+          "type": "ul",
+          "items": [
+            "**Talk to us first.** Most problems are solved quickest by emailing [{{GRIEVANCE_EMAIL}}](mailto:{{GRIEVANCE_EMAIL}}). We will try in good faith to resolve any dispute within 30 days.",
+            "**Governing law.** These terms are governed by the laws of India.",
+            "**Arbitration.** A dispute we cannot resolve within 30 days will be referred to arbitration by a sole arbitrator under the Arbitration and Conciliation Act, 1996, seated in {{GOVERNING_LAW_JURISDICTION}} and conducted in English. Subject to that, the courts at {{GOVERNING_LAW_JURISDICTION}} have jurisdiction.",
+            "**Consumer carve-out.** Nothing above stops you, as a consumer, from filing a complaint before a Consumer Disputes Redressal Commission under the Consumer Protection Act, 2019, or from using a court, tribunal, regulator or consumer forum in the country where you live where your law gives you that right. If you are a consumer outside India, the mandatory law of your country of residence also protects you and you are not bound to arbitrate where your law does not allow it.",
+            "Either of us may go to court for urgent interim relief, for example to stop misuse of intellectual property."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "general",
+      "title": "Changes and general terms",
+      "blocks": [
+        {
+          "type": "ul",
+          "items": [
+            "**Changes to these terms.** We will update the \"Last updated\" date and the version history at the top of this page. For a material change, including to price or renewal terms, we will tell you in the app or by email at least 15 days before it takes effect. If you do not agree, cancel and stop using the service before then.",
+            "**If part of these terms is unenforceable**, the rest still applies.",
+            "**No waiver.** If we do not enforce a term once, we can still enforce it later.",
+            "**Transfer.** You may not transfer your account. We may transfer these terms to a successor that takes over the service, and will tell you.",
+            "**Language.** These terms are written in English. If a translation differs, the English version applies, unless your law says the local-language version does."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "title": "Grievance Officer and contact",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "For complaints, content reports, copyright notices, subscription questions or anything else under these terms, contact our Grievance Officer, appointed under India's Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021 and the Consumer Protection (E-Commerce) Rules, 2020."
+        },
+        {
+          "type": "contact"
+        }
+      ]
+    }
+  ]
+}

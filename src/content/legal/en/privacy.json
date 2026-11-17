@@ -1,0 +1,755 @@
+{
+  "title": "Privacy Policy",
+  "intro": "This policy explains what the {{SITE_NAME}} app and website collect about you, why, who else handles it, how long it is kept, and how you can see, change or delete it.",
+  "changelog": [
+    {
+      "date": "2026-11-17",
+      "summary": "Rewritten in plain language. Added the full data and sub-processor tables, the account deletion and retention rules, the India DPDP Act, EU/UK GDPR, US state and other-country sections, the Grievance Officer contact, and the website cookie and Global Privacy Control section. Set the age rules: 18 and over in India; elsewhere 13 (16 in the EEA) with parent or guardian consent under 18."
+    },
+    {
+      "date": "2026-04-02",
+      "summary": "First published version."
+    }
+  ],
+  "sections": [
+    {
+      "id": "summary",
+      "title": "Quick summary in plain English",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "The short version",
+          "items": [
+            "**What we collect:** your sign-in details, what is in your pantry and shopping list, the meals you plan and log, and, only if you choose to give them, your dietary needs and body measurements.",
+            "**Why:** to run the app: track your food, warn you before it expires, suggest recipes you can cook, and work out your calorie and macro targets.",
+            "**Photos:** receipt, food and label photos are sent to Google's Gemini AI to be read. Receipt images are processed and not shared publicly.",
+            "**Payments:** Apple or Google handle them. We never see or store your card number or UPI PIN.",
+            "**We do not sell your personal information, and we do not use it for targeted advertising.** There are no ads in {{SITE_NAME}}.",
+            "**Where it lives:** on servers in the United States (Google Cloud and Supabase).",
+            "**Deleting it:** delete your account in the app (Settings, then Account, then Delete Account) or at [{{SITE_URL}}/delete-account](/delete-account). Your data is permanently deleted; the one thing kept is a one-way hash that stops a free trial being claimed twice.",
+            "**Age:** in India you must be 18 or older. Elsewhere you must be at least 13 (16 in the European Economic Area), and if you are under 18 you need your parent or guardian's consent and supervision.",
+            "**Questions or complaints:** [{{GRIEVANCE_EMAIL}}](mailto:{{GRIEVANCE_EMAIL}}). We acknowledge within 24 to 48 hours."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "The rest of this page is the full policy. If the summary and the full text ever disagree, the full text applies."
+        }
+      ]
+    },
+    {
+      "id": "who-we-are",
+      "title": "Who we are and what this covers",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "{{SITE_NAME}} is operated by **{{LEGAL_ENTITY_NAME}}** (\"{{SITE_NAME}}\", \"we\", \"us\"). We decide why and how your personal data is processed, which makes us the data controller under the GDPR and the Data Fiduciary under India's Digital Personal Data Protection Act, 2023."
+        },
+        {
+          "type": "p",
+          "text": "This policy covers the {{SITE_NAME}} mobile apps for iOS (`{{IOS_BUNDLE_ID}}`) and Android (`{{ANDROID_PACKAGE_NAME}}`), and this website. It does not cover third-party sites you reach from a recipe link, or the App Store and Google Play, which have their own policies."
+        }
+      ]
+    },
+    {
+      "id": "data-we-collect",
+      "title": "What we collect and why",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "We collect only what the app needs to do its job. The table lists every category, what is in it, why we use it, and the legal ground we rely on."
+        },
+        {
+          "type": "table",
+          "head": [
+            "Category",
+            "What it includes",
+            "Why we use it",
+            "Legal basis"
+          ],
+          "rows": [
+            [
+              "**Account and identity**",
+              "Email address, phone number (through Firebase Phone Authentication), display name, profile avatar URL, and sign-in provider identifiers (`googleId`, `appleId`).",
+              "To create your account, sign you in without a password, sync your data across your devices, and prevent duplicate accounts.",
+              "Performance of our contract with you (GDPR Art. 6(1)(b)). Consent and voluntary provision (India DPDP Act ss. 4, 6 and 7)."
+            ],
+            [
+              "**Country at sign-up**",
+              "When your account is created, our server looks up your IP address with IPinfo and keeps only a 2-letter country code (for example `IN`, `US`, `GB`, or `ROW` for the rest of the world). **The IP address itself is never stored in our user database.**",
+              "To decide which free trial your region is eligible for.",
+              "Legitimate interests in offering the right trial and preventing abuse (GDPR Art. 6(1)(f)). Legitimate use (India DPDP Act s. 7)."
+            ],
+            [
+              "**Kitchen, pantry and shopping**",
+              "Pantry item names, brands, barcodes, quantities, weights, purchase dates, expiry dates, prices, currency preference, storage location (Fridge, Freezer, Pantry), and shopping list items.",
+              "Inventory tracking, expiry reminders, freshness scores, grocery spend and waste analytics, and matching recipes to the ingredients you have.",
+              "Performance of our contract with you."
+            ],
+            [
+              "**Dietary, health-related and nutrition**",
+              "Only if you choose to enter them: dietary preferences (such as Vegetarian, Vegan, Jain, Halal, Keto), food allergies and restrictions, age, gender, height, weight, body fat percentage, activity level and fitness goal, and the meals you log.",
+              "To leave allergens and excluded foods out of recipe suggestions, and to calculate your BMR/TDEE calorie and macro targets and daily progress.",
+              "**Your explicit consent** (GDPR Art. 9(2)(a); India DPDP Act s. 6). Some of this can reveal health information or religious belief, so we use it only for these purposes. You can change or clear it in Settings at any time."
+            ],
+            [
+              "**Camera, photos and imported links**",
+              "**Grocery receipt photos**, sent to our AI service to read line items and estimate shelf life. **Food, restaurant meal, product and nutrition-label photos**, used to identify produce, read expiry dates and nutrition panels, or estimate a meal's macros. **Recipe URLs** you paste or share into the app (Instagram, TikTok, YouTube, blogs), used to extract ingredients and steps.",
+              "To add items and recipes without typing them in.",
+              "Performance of our contract with you. The camera and photo library are used only when you choose to, under the permission you grant on your device."
+            ],
+            [
+              "**Subscription and billing**",
+              "Subscription tier (`FREE` or `PRO`), status, expiry time, and a RevenueCat `app_user_id` (an internal random identifier). **We never collect or store card numbers or UPI PINs.** Payments are processed by the Apple App Store or Google Play Billing.",
+              "To unlock Pro features and keep your subscription in step with the store.",
+              "Performance of our contract with you."
+            ],
+            [
+              "**Trial abuse prevention**",
+              "When an account claims a free trial, our server stores an **irreversible HMAC-SHA256 hash** of the sign-in identifier, made with a secret key held only on the server, in a ledger called `trial_claims`. It holds no user ID and no plaintext email or phone number.",
+              "To stop the same sign-in claiming the free trial more than once.",
+              "Legitimate interests in preventing fraud (GDPR Art. 6(1)(f)). Legitimate use (India DPDP Act s. 7)."
+            ],
+            [
+              "**Device and diagnostics**",
+              "Firebase Cloud Messaging push token (only if you turn notifications on), app version, and crash logs and performance diagnostics through Firebase Crashlytics and Firebase Analytics.",
+              "To send the reminders you asked for, and to find and fix crashes.",
+              "Consent for notifications. Legitimate interests in keeping the app stable for diagnostics."
+            ],
+            [
+              "**Messages you send us**",
+              "Your name, email address and message when you use the contact form, the account deletion and data request form, or email us; your email address if you subscribe to the newsletter.",
+              "To answer you, act on your request, and send the newsletter you opted into.",
+              "Legitimate interests in answering you; legal obligation for rights requests; consent for the newsletter."
+            ]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "What we do not do"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "We do not sell your personal information.",
+            "We do not share it for cross-context behavioural advertising, and there are no advertising SDKs in the app.",
+            "We do not store your raw IP address in our user database.",
+            "We do not collect your precise location.",
+            "We do not make decisions about you that have legal or similarly significant effects by automated means alone."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "title": "How AI is used",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "{{SITE_NAME}} uses Google's Gemini and Imagen models to read receipts and labels, match ingredients, extract recipes from links, estimate the macros of a meal from a photo, and draw recipe illustrations. To do that, the photo, link or text you submit is sent to Google's API and the result is returned to the app."
+        },
+        {
+          "type": "ul",
+          "items": [
+            "Receipt images are processed to produce the result and are not made public.",
+            "AI results are estimates and can be wrong. Read the [Terms of Service](/terms) for the nutrition, allergen and food-safety disclaimers.",
+            "You can avoid AI processing of a photo by adding the item by hand instead."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sub-processors",
+      "title": "Who else handles your data (sub-processors)",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "We use the companies below to run {{SITE_NAME}}. Each receives only what it needs for the job listed. We do not allow them to use your data for their own advertising."
+        },
+        {
+          "type": "table",
+          "head": [
+            "Sub-processor",
+            "What it does for us",
+            "Where"
+          ],
+          "rows": [
+            [
+              "**Google Cloud Platform** (GKE, Cloud Armor, Cloud Logging, Firebase Authentication, Firebase Cloud Messaging, Crashlytics, Analytics)",
+              "Hosting for our servers (`us-central1`), sign-in, push notifications, and crash and performance reporting.",
+              "USA"
+            ],
+            [
+              "**Supabase Inc.** (on AWS `us-east-1`, with Cloudflare CDN)",
+              "Managed PostgreSQL database and encrypted file storage.",
+              "USA, with a global content delivery network"
+            ],
+            [
+              "**Google Gemini and Imagen APIs** (Google LLC)",
+              "Reading receipts and labels, ingredient matching, recipe extraction, meal macro estimation, and recipe illustration.",
+              "USA"
+            ],
+            [
+              "**RevenueCat, Inc.**",
+              "Validating in-app subscription receipts and managing entitlements.",
+              "USA"
+            ],
+            [
+              "**Apple Inc. and Google LLC**",
+              "Sign in with Apple and Google Sign-In; App Store and Google Play in-app billing.",
+              "Global"
+            ],
+            [
+              "**IPinfo** (`ipinfo.io`)",
+              "One-time lookup of country from IP address at sign-up.",
+              "USA"
+            ],
+            [
+              "**Resend** (`resend.com`)",
+              "Delivering support, request-confirmation and newsletter emails.",
+              "USA"
+            ],
+            [
+              "**Food and currency catalogues:** OpenFoodFacts, USDA FoodData Central, Bluesoft Cosmos, Go-UPC, and Frankfurter (European Central Bank exchange rates)",
+              "Looking up products and exchange rates. They receive **only** a product barcode, a generic ingredient name or a currency code, and **no personal information**.",
+              "Various"
+            ]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "We may also disclose information if the law requires it, to protect someone's safety, or to a successor if {{SITE_NAME}} is merged or sold, in which case this policy continues to apply to your data and we will tell you."
+        }
+      ]
+    },
+    {
+      "id": "transfers",
+      "title": "Where your data is stored and international transfers",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Our servers are in the United States: Google Cloud `us-central1` and Supabase on AWS `us-east-1`. If you use {{SITE_NAME}} from another country, your data is transferred to and processed in the United States, whose privacy laws may differ from yours."
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**India:** this is a cross-border transfer under section 16 of the DPDP Act. We do not transfer personal data to any country the Government of India has restricted by notification.",
+            "**EEA, UK and Switzerland:** we rely on the EU-US Data Privacy Framework (and its UK Extension and Swiss counterpart) where the recipient is certified, and otherwise on the European Commission's Standard Contractual Clauses with the UK International Data Transfer Addendum.",
+            "**Elsewhere:** we rely on contractual safeguards with our sub-processors and, where your law requires it, on your consent."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "retention",
+      "title": "How long we keep it, and deleting your account",
+      "blocks": [
+        {
+          "type": "table",
+          "head": [
+            "Data",
+            "Kept for"
+          ],
+          "rows": [
+            [
+              "Your account and everything in it",
+              "Until you delete your account."
+            ],
+            [
+              "Receipt, food and label photos sent for AI reading",
+              "Only as long as needed to return the result, unless you save the item or recipe."
+            ],
+            [
+              "Push notification token",
+              "Until you turn notifications off, sign out, or delete your account."
+            ],
+            [
+              "Crash and performance diagnostics",
+              "For the retention period set by Google Firebase for those products."
+            ],
+            [
+              "Emails and privacy requests you send us",
+              "As long as needed to resolve them and to show we handled them lawfully."
+            ],
+            [
+              "Newsletter subscription",
+              "Until you unsubscribe."
+            ],
+            [
+              "The `trial_claims` hash",
+              "Kept after deletion; see below."
+            ]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Two ways to delete your account"
+        },
+        {
+          "type": "ol",
+          "items": [
+            "**In the app, instantly:** Settings, then Account, then Delete Account. This takes effect immediately.",
+            "**On the web, without the app:** send a request at [{{SITE_URL}}/delete-account](/delete-account) using your registered email address or phone number. We verify that the request is yours, then delete."
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "What happens when you delete"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "Your account record and all associated personal records are **permanently deleted**: pantry items, shopping items, meal plans, nutrition goals, saved recipes, receipt sessions, device tokens, code redemptions, AI usage budgets, stored files, and your private recipes.",
+            "Recipes you contributed to the public catalogue are **anonymised**: they stay available to others but are detached from you.",
+            "**What is kept, and why:** only the one-way HMAC-SHA256 hash in `trial_claims`. It cannot be turned back into an email address or phone number and is not linked to any profile. It is kept solely to prevent a free trial being claimed again after re-registration. Apple and Google also keep their own invoice and tax records for purchases made through them."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "title": "How we protect it",
+      "blocks": [
+        {
+          "type": "ul",
+          "items": [
+            "Data is encrypted in transit (TLS 1.2 or higher) and at rest (AES-256).",
+            "Trial identifiers are stored only as keyed one-way hashes.",
+            "We never hold your payment card or UPI details."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "No system is perfectly secure. If a breach affects your personal data, we will notify you and the relevant authorities as the law requires, including the Data Protection Board of India and, where applicable, the supervisory authority in your country."
+        }
+      ]
+    },
+    {
+      "id": "your-rights",
+      "title": "Your choices and rights",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Wherever you live, you can do the following. Most of it you can do yourself in the app."
+        },
+        {
+          "type": "table",
+          "head": [
+            "You can",
+            "How"
+          ],
+          "rows": [
+            [
+              "See and correct your data",
+              "In the app, or ask us for a copy."
+            ],
+            [
+              "Export your data",
+              "Send a request at [/delete-account](/delete-account)."
+            ],
+            [
+              "Delete your account and data",
+              "In the app, or at [/delete-account](/delete-account)."
+            ],
+            [
+              "Withdraw consent",
+              "Clear dietary and body data in Settings; turn off notifications, camera or photo access in your device settings; or send a request at [/delete-account](/delete-account). Withdrawal does not affect processing that already happened."
+            ],
+            [
+              "Stop the newsletter",
+              "Use the one-click unsubscribe link in any newsletter."
+            ],
+            [
+              "Complain",
+              "Email [{{GRIEVANCE_EMAIL}}](mailto:{{GRIEVANCE_EMAIL}}), or contact your regulator (see the sections below)."
+            ]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "We do not charge for these requests and will not treat you worse for making one. We may need to confirm your identity before acting, so that nobody else can obtain or delete your data. The sections that follow set out the specific rights the law gives you where you live."
+        }
+      ]
+    },
+    {
+      "id": "india",
+      "title": "India: your rights under the DPDP Act, 2023",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "If you are in India, you are a Data Principal and {{LEGAL_ENTITY_NAME}} is the Data Fiduciary. Under sections 11 to 14 of the Digital Personal Data Protection Act, 2023 you have:"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**The right to access information (s. 11):** a summary of the personal data we process about you and what we do with it, and the identities of the processors and other parties it has been shared with (listed in the sub-processors section above).",
+            "**The right to correction and erasure (s. 12):** to have inaccurate data corrected, incomplete data completed, and data erased when it is no longer needed.",
+            "**The right to withdraw consent (s. 6):** as easily as you gave it. You may also give, manage, review or withdraw consent through a Consent Manager registered with the Data Protection Board of India, and we will honour requests made that way.",
+            "**The right to grievance redressal (s. 13):** a readily available way to complain to us, and the right to approach the Data Protection Board of India once you have used it.",
+            "**The right to nominate (s. 14):** to name another individual who may exercise your rights if you die or become incapacitated. Email us to record or change a nomination."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "**Cross-border transfer (s. 16):** your data is processed in the United States, as described above."
+        },
+        {
+          "type": "p",
+          "text": "**Age:** in India, {{SITE_NAME}} is for people aged **18 and over only**. The Act treats anyone under 18 as a child (s. 2(f) and s. 9), and we do not offer the service to children in India or knowingly process their personal data. If we learn that an account in India belongs to someone under 18, we delete the account and its data."
+        },
+        {
+          "type": "p",
+          "text": "**Notice in your language:** you may ask for this notice in English or in any language listed in the Eighth Schedule to the Constitution of India. A Hindi version is being prepared; until it is published, email us and we will help."
+        },
+        {
+          "type": "p",
+          "text": "**Complaints:** write to the Grievance Officer named at the end of this policy first. If you are not satisfied with the outcome, you may complain to the Data Protection Board of India."
+        }
+      ]
+    },
+    {
+      "id": "gdpr",
+      "title": "EEA, UK and Switzerland: your rights under the GDPR",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "If you are in the European Economic Area, the United Kingdom or Switzerland, {{LEGAL_ENTITY_NAME}} is the controller of your personal data."
+        },
+        {
+          "type": "h3",
+          "text": "Legal bases"
+        },
+        {
+          "type": "table",
+          "head": [
+            "Purpose",
+            "Legal basis"
+          ],
+          "rows": [
+            [
+              "Running your account, pantry, meal planning, recipes and subscription",
+              "Performance of a contract (Art. 6(1)(b))"
+            ],
+            [
+              "Dietary needs, allergies, body measurements and nutrition logs",
+              "Explicit consent (Art. 6(1)(a) and Art. 9(2)(a))"
+            ],
+            [
+              "Push notifications and the newsletter",
+              "Consent (Art. 6(1)(a))"
+            ],
+            [
+              "Country lookup at sign-up, trial abuse prevention, crash diagnostics, security",
+              "Legitimate interests (Art. 6(1)(f)), which you may object to"
+            ],
+            [
+              "Handling rights requests and keeping legally required records",
+              "Legal obligation (Art. 6(1)(c))"
+            ]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Your rights (Articles 15 to 22)"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**Access** to your data and a copy of it (Art. 15).",
+            "**Rectification** of inaccurate data (Art. 16).",
+            "**Erasure** (Art. 17).",
+            "**Restriction** of processing (Art. 18).",
+            "**Data portability** in a structured, commonly used, machine-readable format (Art. 20).",
+            "**Objection** to processing based on legitimate interests, and to direct marketing at any time (Art. 21).",
+            "**Not to be subject to a decision based solely on automated processing** that has legal or similarly significant effects (Art. 22). We do not make such decisions.",
+            "**To withdraw consent** at any time, without affecting earlier processing."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "We respond within one month, which can be extended by two further months for complex requests."
+        },
+        {
+          "type": "p",
+          "text": "**Transfers:** see the international transfers section above for the Data Privacy Framework and Standard Contractual Clauses we rely on. You may ask us for a copy of the relevant safeguards."
+        },
+        {
+          "type": "p",
+          "text": "**Complaints:** you have the right to lodge a complaint with the supervisory authority where you live, work, or where you think the law was broken; in the UK, the Information Commissioner's Office; in Switzerland, the Federal Data Protection and Information Commissioner."
+        }
+      ]
+    },
+    {
+      "id": "us",
+      "title": "United States: state privacy rights (including California)",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "This section applies to residents of California and of other US states with comprehensive privacy laws (including Colorado, Connecticut, Virginia, Utah, Texas, Oregon and Montana), to the extent those laws apply to us."
+        },
+        {
+          "type": "h3",
+          "text": "Categories of personal information we collect"
+        },
+        {
+          "type": "table",
+          "head": [
+            "Category (as named in the CCPA)",
+            "Examples from {{SITE_NAME}}",
+            "Sold or shared?"
+          ],
+          "rows": [
+            [
+              "Identifiers",
+              "Email address, phone number, display name, sign-in provider IDs, RevenueCat ID, push token",
+              "No"
+            ],
+            [
+              "Commercial information",
+              "Subscription tier and status; pantry purchases and prices you enter",
+              "No"
+            ],
+            [
+              "Internet or network activity",
+              "App version, crash and performance diagnostics",
+              "No"
+            ],
+            [
+              "Geolocation",
+              "Country only, derived once from IP address at sign-up. No precise location.",
+              "No"
+            ],
+            [
+              "Sensory data",
+              "Photos you choose to submit",
+              "No"
+            ],
+            [
+              "Sensitive personal information",
+              "Dietary preferences that may indicate religious belief or health; allergies; body measurements",
+              "No. Used only to provide the features you asked for."
+            ],
+            [
+              "Inferences",
+              "Calorie and macro targets calculated from what you enter",
+              "No"
+            ]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "**{{SITE_NAME}} does not sell personal information and does not share it for cross-context behavioural advertising.** We have not done so in the preceding 12 months, including for anyone under 16. We use sensitive personal information only to provide the service, so there is nothing to limit."
+        },
+        {
+          "type": "h3",
+          "text": "Your rights"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "To know what personal information we collect, use and disclose, and to get a copy.",
+            "To delete it.",
+            "To correct it.",
+            "To opt out of sale, sharing and targeted advertising. We do none of these. Our website also honours the **Global Privacy Control** signal automatically.",
+            "Not to be discriminated against for using these rights.",
+            "To appeal if we decline your request: reply to our decision and we will review it."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Use the form at [/delete-account](/delete-account) or email [{{GRIEVANCE_EMAIL}}](mailto:{{GRIEVANCE_EMAIL}}). An authorised agent may act for you with your written permission. We respond within 45 days."
+        },
+        {
+          "type": "p",
+          "text": "**Children:** {{SITE_NAME}} is not directed to children under 13 and we do not knowingly collect personal information from them (COPPA). If you are 13 to 17, you need a parent or guardian's consent to use the app."
+        }
+      ]
+    },
+    {
+      "id": "other-regions",
+      "title": "Other countries",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "{{SITE_NAME}} is available worldwide. The rights in the \"Your choices and rights\" section apply to everyone. In addition:"
+        },
+        {
+          "type": "table",
+          "head": [
+            "Where you live",
+            "Law",
+            "What it adds"
+          ],
+          "rows": [
+            [
+              "Canada",
+              "PIPEDA; Quebec Law 25",
+              "Access and correction; withdrawal of consent; in Quebec, portability and information about automated processing. Your data is processed outside Canada (in the United States). Complaints: the Office of the Privacy Commissioner of Canada, or the Commission d'accès à l'information in Quebec."
+            ],
+            [
+              "Brazil",
+              "LGPD",
+              "Confirmation of processing, access, correction, anonymisation or deletion, portability, information about sharing, and withdrawal of consent. Complaints: the ANPD."
+            ],
+            [
+              "Australia",
+              "Privacy Act 1988 and the Australian Privacy Principles",
+              "Access and correction. We disclose data to recipients in the United States. Complaints: the Office of the Australian Information Commissioner."
+            ],
+            [
+              "New Zealand",
+              "Privacy Act 2020",
+              "Access and correction. Complaints: the Privacy Commissioner."
+            ],
+            [
+              "Japan",
+              "APPI",
+              "Disclosure, correction, suspension of use and deletion. Your data is transferred to the United States."
+            ],
+            [
+              "South Korea",
+              "PIPA",
+              "Access, correction, deletion and suspension of processing. Your data is transferred overseas to the sub-processors listed above, in the United States, for as long as you hold an account."
+            ],
+            [
+              "Singapore",
+              "PDPA",
+              "Access, correction and withdrawal of consent."
+            ],
+            [
+              "South Africa",
+              "POPIA",
+              "Access, correction, deletion and objection. Complaints: the Information Regulator."
+            ],
+            [
+              "United Arab Emirates, Saudi Arabia",
+              "UAE PDPL; Saudi PDPL",
+              "Access, correction, deletion and withdrawal of consent, subject to those laws."
+            ],
+            [
+              "Mainland China",
+              "PIPL",
+              "Access, copy, correction, deletion and withdrawal of consent. Your data is transferred to and stored in the United States. Where the law requires your separate consent for that transfer, we will ask for it."
+            ],
+            [
+              "Anywhere else",
+              "Your local data protection law",
+              "We will honour the rights your law gives you. Tell us where you are when you write."
+            ]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "To use any of these rights, use the form at [/delete-account](/delete-account) or email [{{GRIEVANCE_EMAIL}}](mailto:{{GRIEVANCE_EMAIL}})."
+        }
+      ]
+    },
+    {
+      "id": "children",
+      "title": "Age requirement and children",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "The minimum age depends on where you live, because the law does."
+        },
+        {
+          "type": "table",
+          "head": [
+            "Where you live",
+            "Minimum age",
+            "Under 18"
+          ],
+          "rows": [
+            [
+              "**India**",
+              "**18**",
+              "Not permitted. {{SITE_NAME}} is for adults only in India."
+            ],
+            [
+              "**European Economic Area**",
+              "**16**",
+              "Ages 16 and 17 need a parent or legal guardian's consent and supervision."
+            ],
+            [
+              "**Everywhere else**",
+              "**13**",
+              "Ages 13 to 17 need a parent or legal guardian's consent and supervision."
+            ]
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Where a parent or guardian's consent is needed, they agree to our [Terms of Service](/terms) on the young person's behalf."
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**India: adults only.** If we learn that an account in India belongs to someone under 18, we delete the account and its data.",
+            "**We do not knowingly collect personal data from children under 13** anywhere. If we learn that we have, we delete the account and its data.",
+            "**Outside India, if we learn that someone under 18 is using {{SITE_NAME}} without a parent or guardian's consent**, we will ask for that consent and, if we do not receive it, delete the account and its data.",
+            "**Parents and guardians** can see, correct or delete their child's data, or withdraw consent, at any time: use the form at [/delete-account](/delete-account) or email [{{GRIEVANCE_EMAIL}}](mailto:{{GRIEVANCE_EMAIL}}).",
+            "**Calorie and body-measurement features** are designed for adults. Anyone under 18 should use them only with a parent or guardian, and with a doctor's advice before trying to lose weight."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "website",
+      "title": "This website: cookies, fonts and Global Privacy Control",
+      "blocks": [
+        {
+          "type": "ul",
+          "items": [
+            "**No tracking by default.** This website loads no analytics, advertising pixels or session-replay scripts. If we ever add optional analytics, it will stay off until you choose Accept, and Reject will be just as easy to choose.",
+            "**Essential storage only.** We store your cookie choice in your browser so we do not ask again. You can change it at any time with the \"Cookie & Privacy Preferences\" link in the footer.",
+            "**Global Privacy Control.** If your browser sends the GPC signal, we treat it as a request to opt out and keep all non-essential tracking off.",
+            "**Fonts are self-hosted.** The site makes no requests to Google Fonts or any other font service, so your IP address is not disclosed to them.",
+            "**No third-party embeds.** Videos on this site are our own files, served from this site.",
+            "**Forms.** What you type into the contact, newsletter and data-request forms is sent to us and to Resend, our email provider, and is never recorded by a session-replay tool.",
+            "**Server logs.** Like any website, our host processes your IP address and browser details to deliver pages and to protect the site from abuse."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "email",
+      "title": "Emails we send",
+      "blocks": [
+        {
+          "type": "ul",
+          "items": [
+            "**Service emails** (a confirmation of a deletion or data request, a reply to your support message) are sent because you asked for something. They are not marketing.",
+            "**The newsletter** is sent only if you ticked the box to subscribe. Every issue has a one-click unsubscribe link and our postal address. Unsubscribing takes effect promptly and in any case within 10 business days."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "changes",
+      "title": "Changes to this policy",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "When we change this policy we update the \"Last updated\" date and add an entry to the version history at the top of the page. If a change materially affects how we use your data, we will tell you in the app or by email before it takes effect and, where the law requires it, ask for your consent again."
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "title": "Grievance Officer and privacy contact",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "For any question, request or complaint about your personal data or this policy, contact our Grievance Officer. This contact is appointed under India's Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021 and the Digital Personal Data Protection Act, 2023, and is also our data protection contact for every other country."
+        },
+        {
+          "type": "contact"
+        },
+        {
+          "type": "p",
+          "text": "If you are not satisfied with our response, you may escalate to the Data Protection Board of India (for India), your local data protection authority, or a consumer forum where one has jurisdiction."
+        }
+      ]
+    }
+  ]
+}

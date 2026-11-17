@@ -120,9 +120,6 @@ export default function ClosingCta() {
               <div className="mt-5">
                 <NewsletterForm />
               </div>
-              <p className="mt-3 text-[12px] text-ink-muted">
-                Unsubscribe any time. We don&apos;t share your address.
-              </p>
             </div>
           </Reveal>
         </div>

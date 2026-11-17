@@ -2,6 +2,7 @@
 
 import { Resend } from "resend";
 import { fromAddress, ADMIN_INBOX } from "@/lib/mail";
+import { escapeHtml } from "@/lib/rate-limit";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -20,6 +21,15 @@ export async function subscribeToNewsletter(
 
   if (typeof email !== "string" || !EMAIL_RE.test(email)) {
     return { status: "error", message: "Please enter a valid email address." };
+  }
+
+  // Marketing mail needs an explicit yes. The box on the form is unticked by
+  // default and `required`; this is the same check where it can't be skipped.
+  if (formData.get("consent") !== "on") {
+    return {
+      status: "error",
+      message: "Please tick the box to confirm you want the newsletter.",
+    };
   }
 
   const segmentId = process.env.RESEND_SEGMENT_ID;
@@ -50,7 +60,8 @@ export async function subscribeToNewsletter(
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
             <h2>New Newsletter Signup!</h2>
             <p>A new user has subscribed to the KhanPaan newsletter.</p>
-            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+            <p><strong>Consent:</strong> opt-in box ticked at ${new Date().toUTCString()}</p>
           </div>
         `,
       });

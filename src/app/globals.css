@@ -161,7 +161,7 @@
   --color-amber: var(--amber);
   --font-sans: var(--font-archivo);
   --font-display: var(--font-archivo);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 @media (max-width: 900px)  { :root { --page-top: 0px; } }
@@ -2690,6 +2690,139 @@ textarea.form-input { border-radius: var(--r-lg); }
   .cta-panel { padding-block: 1.75rem; }
 }
 
+/* --- 5.14 Privacy panel, newsletter opt-in, footer imprint --------------- */
+
+/* The cookie banner and the preferences panel (ConsentManager). Anchored to
+   the bottom edge, not a modal: nothing on the site is withheld until it is
+   answered, so it does not dim or block the page. Slides up from where it
+   sits; leaves a little faster than it arrives. */
+.consent {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(10px, 2vw, 20px);
+  z-index: var(--z-overlay);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 24px;
+  width: min(880px, calc(100vw - 2 * clamp(10px, 2vw, 20px)));
+  padding: clamp(14px, 2.2vw, 20px) clamp(16px, 2.6vw, 24px);
+  border-radius: var(--r-xl);
+  background: var(--card);
+  box-shadow: var(--e-3);
+  opacity: 0;
+  transform: translate3d(-50%, 16px, 0);
+  pointer-events: none;
+  transition:
+    opacity 200ms cubic-bezier(0.55, 0, 1, 0.45),
+    transform 200ms cubic-bezier(0.55, 0, 1, 0.45);
+}
+
+.consent[data-open="true"] {
+  opacity: 1;
+  transform: translate3d(-50%, 0, 0);
+  pointer-events: auto;
+  transition:
+    opacity var(--dur-base) var(--ease-out-expo),
+    transform var(--dur-base) var(--ease-out-expo);
+}
+
+.consent:focus { outline: none; }
+.consent__body { flex: 1 1 320px; min-width: 0; }
+.consent__title { color: var(--ink); font-size: 15px; font-weight: 800; }
+.consent__text {
+  margin-top: 4px;
+  color: var(--ink-muted);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.consent__text a { color: var(--brand); font-weight: 700; }
+.consent__status { margin-top: 6px; color: var(--ink); font-size: 13px; font-weight: 600; }
+.consent__gpc {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 10px;
+  border-radius: var(--r-full);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Accept and Reject are deliberately indistinguishable in weight: same
+   class, same width, same height. Do not restyle one of them. */
+.consent__actions { display: flex; flex: 0 1 auto; gap: 10px; }
+.consent__button {
+  flex: 1 1 0;
+  min-width: 168px;
+  min-height: 46px;
+  padding-inline: 16px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.consent__button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@media (max-width: 560px) {
+  .consent__actions { flex: 1 1 100%; }
+  .consent__button { min-width: 0; }
+}
+
+/* Newsletter opt-in. The whole row is the tap target, and it stays one or
+   two lines so the newsletter band still fits one phone screen. */
+.newsletter-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 12px;
+  color: var(--ink-muted);
+  font-size: 12.5px;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+}
+.newsletter-consent input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  accent-color: var(--brand);
+}
+.newsletter-consent a { color: var(--brand); font-weight: 700; }
+
+/* Small store links in the footer; the big buttons live in the hero. */
+.store-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--r-full);
+  background: var(--ink);
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background var(--dur-fast) ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .store-badge:hover { background: var(--ink-deep); }
+}
+
+.footer-imprint {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 28px;
+  margin-top: 3rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--line);
+  color: var(--ink-muted);
+  font-size: 13px;
+  font-style: normal;
+  line-height: 1.6;
+}
+.footer-imprint strong { color: var(--ink); font-weight: 700; }
+.footer-imprint a { color: var(--brand); }
+
 /* ============================================================================
    6. LONG-FORM (legal pages)
    ========================================================================== */
@@ -2775,6 +2908,130 @@ textarea.form-input { border-radius: var(--r-lg); }
   transition: border-color var(--dur-base) var(--ease-out-expo);
 }
 .legal-content a:hover { border-color: var(--brand); }
+
+.legal-content code {
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--surface-soft);
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.86em;
+}
+
+.legal-content h2 code { background: none; padding: 0; }
+
+/* The plain-English summary that opens each legal page. One soft field,
+   like every other grouped surface on the site; no coloured rail. */
+.legal-summary {
+  margin: 1.25rem 0 1.75rem;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  border-radius: var(--r-xl);
+  background: var(--surface);
+}
+.legal-summary__title {
+  margin-bottom: 0.75rem !important;
+  color: var(--ink) !important;
+  font-family: var(--font-archivo), sans-serif;
+  font-size: 1.125rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+.legal-summary ul { margin-bottom: 0; max-width: none; color: var(--ink); }
+.legal-summary li:last-child { margin-bottom: 0; }
+
+/* Effective date, last updated, language. */
+.legal-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.legal-badge {
+  display: inline-flex;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--r-full);
+  background: var(--surface);
+  color: var(--ink-muted);
+  font-size: 13.5px;
+}
+.legal-badge strong { color: var(--ink); font-weight: 700; }
+
+.legal-lang {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: auto;
+  padding: 4px;
+  border-radius: var(--r-full);
+  background: var(--surface-soft);
+  font-size: 13.5px;
+}
+.legal-lang a,
+.legal-lang span {
+  padding: 5px 12px;
+  border-radius: var(--r-full);
+  color: var(--ink-muted);
+  text-decoration: none;
+}
+.legal-lang a[aria-current="true"] {
+  background: var(--card);
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: var(--e-1);
+}
+.legal-lang span { opacity: 0.75; cursor: default; }
+.legal-lang small { font-size: 11px; }
+
+.legal-changelog { margin-top: 14px; font-size: 14px; color: var(--ink-muted); }
+.legal-changelog summary {
+  display: inline-block;
+  cursor: pointer;
+  color: var(--brand);
+  font-weight: 700;
+}
+.legal-changelog ul {
+  margin-top: 12px;
+  padding: 0;
+  list-style: none;
+  max-width: 70ch;
+}
+.legal-changelog li {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: 4px 16px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  line-height: 1.6;
+}
+.legal-changelog strong { color: var(--ink); }
+@media (max-width: 640px) {
+  .legal-changelog li { grid-template-columns: minmax(0, 1fr); }
+  .legal-lang { margin-left: 0; }
+}
+
+/* Grievance Officer block: who to write to, then how fast we answer. */
+.legal-contact {
+  margin: 1.25rem 0;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  border-radius: var(--r-xl);
+  background: var(--card);
+  box-shadow: var(--e-1);
+}
+.legal-contact dl { margin: 0 0 0.5rem; }
+.legal-contact dl > div {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 4px 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+.legal-contact dt { color: var(--ink-muted); }
+.legal-contact dd { color: var(--ink); font-weight: 600; overflow-wrap: anywhere; }
+@media (max-width: 520px) {
+  .legal-contact dl > div { grid-template-columns: minmax(0, 1fr); }
+}
 
 /* --- Legal page contents index -------------------------------------------
    A sticky, auto-highlighting section index. Long legal documents are far

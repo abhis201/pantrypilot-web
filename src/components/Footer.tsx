@@ -1,6 +1,19 @@
 import Link from "next/link";
 import Image from "next/image";
-import { SUPPORT_EMAIL, ANDROID_AVAILABLE } from "@/lib/site";
+import {
+  ANDROID_AVAILABLE,
+  ANDROID_DOWNLOAD_LINK,
+  GRIEVANCE_EMAIL,
+  GRIEVANCE_OFFICER_DESIGNATION,
+  GRIEVANCE_OFFICER_NAME,
+  IOS_AVAILABLE,
+  IOS_DOWNLOAD_LINK,
+  LEGAL_ENTITY_NAME,
+  REGISTERED_POSTAL_ADDRESS,
+  SUPPORT_EMAIL,
+} from "@/lib/site";
+import ConsentLinks from "./ConsentLinks";
+import { AppleMark, PlayMark } from "./Icons";
 import appIcon from "../../public/logoIcon2.png";
 import Wordmark from "./Wordmark";
 
@@ -23,8 +36,9 @@ const PRODUCT_LINKS = [
 ];
 
 const LEGAL_LINKS = [
-  { href: "/terms", label: "Terms & Conditions" },
+  { href: "/terms", label: "Terms of Service" },
   { href: "/privacy", label: "Privacy Policy" },
+  { href: "/delete-account", label: "Delete account or request data" },
 ];
 
 function Column({
@@ -76,6 +90,30 @@ export default function Footer({ snap = false }: { snap?: boolean }) {
             <p className="mt-5 text-[13px] font-bold text-ink">
               {ANDROID_AVAILABLE ? "iOS & Android" : "iOS today · Android soon"}
             </p>
+            <div className="mt-4 flex flex-wrap gap-2.5">
+              {IOS_AVAILABLE && (
+                <a
+                  href={IOS_DOWNLOAD_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="store-badge"
+                >
+                  <AppleMark className="h-[18px] w-[18px]" />
+                  App Store
+                </a>
+              )}
+              {ANDROID_AVAILABLE && (
+                <a
+                  href={ANDROID_DOWNLOAD_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="store-badge"
+                >
+                  <PlayMark className="h-[16px] w-[16px]" />
+                  Google Play
+                </a>
+              )}
+            </div>
           </div>
 
           <Column heading="Product">
@@ -92,6 +130,7 @@ export default function Footer({ snap = false }: { snap?: boolean }) {
                 {l.label}
               </Link>
             ))}
+            <ConsentLinks className={linkClass} />
           </Column>
 
           <Column heading="Support">
@@ -104,8 +143,25 @@ export default function Footer({ snap = false }: { snap?: boolean }) {
           </Column>
         </div>
 
+        {/* Legal imprint: who operates the service and who to complain to.
+            Required in India (IT Rules 2021, E-Commerce Rules 2020) and the
+            EU (Impressum). Every value comes from src/lib/site.ts. */}
+        <address className="footer-imprint">
+          <span>
+            <strong>Operated by</strong> {LEGAL_ENTITY_NAME}
+          </span>
+          <span>
+            <strong>Registered address</strong> {REGISTERED_POSTAL_ADDRESS}
+          </span>
+          <span>
+            <strong>{GRIEVANCE_OFFICER_DESIGNATION}</strong>{" "}
+            {GRIEVANCE_OFFICER_NAME},{" "}
+            <a href={`mailto:${GRIEVANCE_EMAIL}`}>{GRIEVANCE_EMAIL}</a>
+          </span>
+        </address>
+
         <div
-          className="mt-14 flex flex-col items-center justify-between gap-4 pt-7 sm:flex-row"
+          className="mt-8 flex flex-col items-center justify-between gap-4 pt-7 sm:flex-row"
           style={{ borderTop: "1px solid var(--line)" }}
         >
           <span className="text-[13.5px] text-ink-muted">

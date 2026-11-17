@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Geist_Mono } from "next/font/google";
+import ConsentManager from "@/components/ConsentManager";
 import "./globals.css";
 import {
   SITE_DESCRIPTION,
@@ -26,10 +26,9 @@ const archivo = localFont({
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// Archivo above is the only webfont, and it is served from this site
+// (public/fonts). Nothing is requested from Google Fonts or any other font
+// host, at build time or in the browser; monospace uses the system stack.
 
 const TITLE = `${SITE_NAME} — ${SITE_TAGLINE}`;
 
@@ -754,7 +753,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${geistMono.variable} antialiased`}
+      className={`${archivo.variable} antialiased`}
     >
       <head>
         {/* Reveal-on-scroll starts elements hidden and JavaScript brings them
@@ -777,6 +776,7 @@ export default function RootLayout({
           Skip to content
         </a>
         {children}
+        <ConsentManager />
       </body>
     </html>
   );
